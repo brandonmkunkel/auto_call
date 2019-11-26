@@ -1,3 +1,3 @@
 ///
-/// This file ahs functions used for automating phone calls from a list
+/// This file has functions used for automating phone calls from a list
 ///
