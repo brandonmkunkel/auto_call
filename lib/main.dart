@@ -1,7 +1,16 @@
+import 'package:auto_call/pages/file_selector.dart';
+import 'package:auto_call/pages/old_calls.dart';
 import 'package:flutter/material.dart';
 
-import 'home.dart';
 import 'ui/theme.dart';
+
+import 'home.dart';
+import 'pages/old_calls.dart';
+import 'pages/call_queue.dart';
+import 'pages/call_queue2.dart';
+import 'pages/legal.dart';
+
+
 
 void main() {
   runApp(MyApp());
@@ -13,10 +22,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: appTheme,
-      home: MyHomePage(),
-//      routes: {
-//        MyHomePage.routeName: (context) => MyHomePage(),
-//      }
+      home: HomePage(),
+      routes: {
+        HomePage.routeName: (context) => HomePage(),
+        OldCallsPage.routeName: (context) => OldCallsPage(),
+        CallQueuePage.routeName: (context) => CallQueuePage(),
+        CallQueuePage2.routeName: (context) => CallQueuePage2(),
+        FileSelectorPage.routeName: (context) => FileSelectorPage(),
+
+        LegalPage.routeName: (context) => LegalPage(),
+      }
     );
   }
 }

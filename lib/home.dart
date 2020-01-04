@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'call_queue.dart';
+import 'pages/call_queue.dart';
+import 'ui/drawer.dart';
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -13,18 +14,19 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  static String routeName = "/";
+  static String routeName = "/home";
   final String title = "Auto Call Home Page";
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: appDrawer(context),
         appBar: AppBar(
           title: Text(widget.title),
         ),

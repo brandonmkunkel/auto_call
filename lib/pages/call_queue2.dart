@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'services/file_reader.dart';
+import 'package:auto_call/services/animated_table.dart';
+import 'package:auto_call/ui/drawer.dart';
 
-class CallQueuePage extends StatefulWidget {
-  static String routeName = "/numbers";
+class CallQueuePage2 extends StatefulWidget {
+  static String routeName = "/call_queue2";
   final String title = "Call Queue";
 
   @override
-  CallQueueState createState() => new CallQueueState();
+  CallQueueState2 createState() => new CallQueueState2();
 }
 
-class CallQueueState extends State<CallQueuePage> {
+class CallQueueState2 extends State<CallQueuePage2> {
   bool inCall = false;
 
   @override
@@ -31,6 +32,7 @@ class CallQueueState extends State<CallQueuePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: appDrawer(context),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
@@ -69,7 +71,7 @@ class CallQueueState extends State<CallQueuePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    DataTableInStreamBuilder(),
+//                    DataTableInStreamBuilder(),
                   ],
                 ),
               )),
