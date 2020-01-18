@@ -1,18 +1,12 @@
+import 'package:auto_call/services/old_calls.dart';
 import 'package:flutter/material.dart';
 import 'pages/call_queue.dart';
+import 'pages/file_selector.dart';
 import 'ui/drawer.dart';
+import 'services/old_calls.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   static String routeName = "/home";
   final String title = "Auto Call Home Page";
@@ -22,7 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,30 +24,36 @@ class _HomePageState extends State<HomePage> {
           title: Text(widget.title),
         ),
         body: Center(
+//            child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
                 'Past call lists',
               ),
+              oldCalls(),
+              Divider(),
               Text(
                 "Something homepage here????",
+                style: Theme.of(context).textTheme.body1,
+              ),
+              Divider(),
+              Text(
+                "Use the button below to select a file for calls",
                 style: Theme.of(context).textTheme.display1,
+                textAlign: TextAlign.center,
               ),
             ],
           ),
+//        )
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CallQueuePage())
-            );
+            Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
           },
           tooltip: 'Upload List',
           child: Icon(Icons.file_upload),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat
-        );
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 }

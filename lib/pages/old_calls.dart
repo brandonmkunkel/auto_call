@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/old_calls.dart';
 import 'package:auto_call/ui/drawer.dart';
+
 
 class OldCallsPage extends StatefulWidget {
   static String routeName = "/old_calls";
@@ -32,16 +34,16 @@ class OldCallsState extends State<OldCallsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: appDrawer(context),
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child:
-        Container(
-          child: Text("Old call files will go here"),
+        drawer: appDrawer(context),
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: Column(
+          children: <Widget>[
+            Text("Old call files will go here"),
+            oldCalls()
+          ],
         )
-      )
     );
   }
 }
