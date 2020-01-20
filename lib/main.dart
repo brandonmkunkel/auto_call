@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
         CallQueuePage.routeName: (context) => CallQueuePage(),
         CallQueuePage2.routeName: (context) => CallQueuePage2(),
         FileSelectorPage.routeName: (context) => FileSelectorPage(),
-
         LegalPage.routeName: (context) => LegalPage(),
       }
     );

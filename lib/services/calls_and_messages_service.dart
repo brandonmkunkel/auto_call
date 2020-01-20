@@ -1,7 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get_it/get_it.dart';
 
-GetIt locator = GetIt();
+GetIt locator = GetIt.instance;
 
 class CallsAndMessagesService {
   void call(String number) => launch("tel://$number");
