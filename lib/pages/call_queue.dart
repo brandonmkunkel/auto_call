@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:auto_call/services/animated_table.dart';
+import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 
 class CallQueuePage extends StatefulWidget {

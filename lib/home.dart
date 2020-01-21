@@ -23,7 +23,8 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Column(
+        body: SingleChildScrollView(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
@@ -42,7 +43,8 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.center,
               ),
             ],
-          ),
+          )
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));

@@ -26,6 +26,7 @@ dependencies:
 
   # Other stuff
   shared_preferences:
+  string_similarity:
 
   # Phone calls
   get_it:

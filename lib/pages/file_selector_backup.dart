@@ -8,7 +8,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:auto_call/ui/drawer.dart';
 
 class FileSelectorPage extends StatefulWidget {
