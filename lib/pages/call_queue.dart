@@ -12,6 +12,7 @@ class CallQueuePage extends StatefulWidget {
 
 class CallQueueState extends State<CallQueuePage> {
   bool inCall = false;
+  PhoneList callList;
 
   @override
   void initState() {
@@ -29,8 +30,15 @@ class CallQueueState extends State<CallQueuePage> {
     });
   }
 
+  /// Go to the next call in the PhoneList
+  void nextCall() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
+    callList = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       drawer: appDrawer(context),
       appBar: AppBar(

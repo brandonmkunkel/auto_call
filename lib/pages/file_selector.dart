@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/pages/call_queue.dart';
 
 class FileSelectorPage extends StatefulWidget {
   static String routeName = "/file_selector";
@@ -53,9 +54,9 @@ class FileSelectorState extends State<FileSelectorPage> {
     }
   }
 
-  void readFile() {
+  PhoneList readFile() {
 //    print(["Reading file from", _path ]);
-    PhoneList(_path);
+    return PhoneList(_path);
   }
 
   @override
@@ -137,7 +138,11 @@ class FileSelectorState extends State<FileSelectorPage> {
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
                               color: Colors.greenAccent,
-                              onPressed: () => readFile(),
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                CallQueuePage.routeName,
+                                arguments: readFile(),
+                              ),
                               child: new Text("Yes", style: TextStyle(fontSize: 32.0)),
                             ),
                         ),
