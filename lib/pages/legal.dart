@@ -7,7 +7,7 @@ class LegalPage extends StatefulWidget {
   LegalPage({Key key}) : super(key: key);
 
   static String routeName = "/legal";
-  final String title = "Legal";
+  final String title = "Terms and Conditions";
 
   @override
   LegalPageState createState() => new LegalPageState();
@@ -22,7 +22,7 @@ class LegalPageState extends State<LegalPage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      drawer: appDrawer(context),
+      drawer: AppDrawer(context),
       body: new Stack(children: <Widget>[
         buildTermsConditions(context)
       ]),

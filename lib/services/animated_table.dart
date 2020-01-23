@@ -21,12 +21,10 @@ class Person {
 //  }
 //}
 
-class DataTableInStreamBuilder extends StatelessWidget {
+class AnimatedCallTable extends StatelessWidget {
   final double _titleFontSize = 24.0;
   final double _fontSize = 24.0;
-  int _numNumbers = 0;
   int iterator = 0;
-  final List<Person> people = [];
 
   Stream<int> timedCounter(Duration interval, [int maxCount]) async* {
     int i = 0;
@@ -44,7 +42,23 @@ class DataTableInStreamBuilder extends StatelessWidget {
       //print an integer every 2secs, 10 times
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Text("Loading");
+          return Center(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    width: 100.0,
+                    height: 100.0,
+                    child: Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: CircularProgressIndicator(strokeWidth: 8.0,)
+                    ),
+                  ),
+                  Text("Loading...",
+                      style: TextStyle(fontSize: 24.0)
+                  ),
+                ],
+              )
+          );
         }
         int count = snapshot.data;
 

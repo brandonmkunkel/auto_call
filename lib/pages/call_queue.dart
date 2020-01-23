@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
+import 'package:auto_call/services/calls_and_messages_service.dart';
+import 'package:auto_call/services/animated_table.dart';
 
 class CallQueuePage extends StatefulWidget {
   static String routeName = "/call_queue";
@@ -13,16 +16,12 @@ class CallQueuePage extends StatefulWidget {
 class CallQueueState extends State<CallQueuePage> {
   bool inCall = false;
   PhoneList callList;
+  Widget table;
 
   @override
   void initState() {
     super.initState();
   }
-
-//  @override
-//  void setState(){
-//    super.initState();
-//  }
 
   void changeCallState() {
     setState(() {
@@ -40,7 +39,7 @@ class CallQueueState extends State<CallQueuePage> {
     callList = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-      drawer: appDrawer(context),
+      drawer: AppDrawer(context),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
@@ -79,7 +78,7 @@ class CallQueueState extends State<CallQueuePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-//                    DataTableInStreamBuilder(),
+                    AnimatedCallTable(),
                   ],
                 ),
               )),

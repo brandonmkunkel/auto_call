@@ -6,12 +6,13 @@ import 'package:auto_call/pages/call_queue2.dart';
 import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/pages/old_calls.dart';
 import 'package:auto_call/pages/legal.dart';
+import 'package:auto_call/pages/settings.dart';
 
 
-class appDrawer extends StatelessWidget {
+class AppDrawer extends StatelessWidget {
   final double textScale = 1.5;
 
-  const appDrawer(BuildContext context);
+  const AppDrawer(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +73,13 @@ class appDrawer extends StatelessWidget {
                 navigatorUpdate(context, OldCallsPage.routeName);
               },
             ),
-//          new ListTile(
-//            leading: new Icon(Icons.settings),
-//            title: new Text('Settings', textScaleFactor: textScale),
-//            onTap: () {
-//              navigatorUpdate(context, SettingsPage.routeName);
-//            },
-//          ),
+          new ListTile(
+            leading: new Icon(Icons.settings),
+            title: new Text('Settings', textScaleFactor: textScale),
+            onTap: () {
+              navigatorUpdate(context, SettingsPage.routeName);
+            },
+          ),
 //          new ListTile(
 //            leading: new Icon(Icons.info),
 //            title: new Text('About', textScaleFactor: textScale),

@@ -9,6 +9,7 @@ import 'services/old_calls.dart';
 import 'pages/call_queue.dart';
 import 'pages/call_queue2.dart';
 import 'pages/legal.dart';
+import 'pages/settings.dart';
 
 
 
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         CallQueuePage2.routeName: (context) => CallQueuePage2(),
         FileSelectorPage.routeName: (context) => FileSelectorPage(),
         LegalPage.routeName: (context) => LegalPage(),
+        SettingsPage.routeName: (context) => SettingsPage(),
       }
     );
   }

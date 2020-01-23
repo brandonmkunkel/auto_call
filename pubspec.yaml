@@ -59,6 +59,7 @@ flutter:
     #    - images/logo/
     #    - text/
     #    - text/about/
+    - assets/text/terms_conditions.txt
     - assets/text/data/sample_numbers.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see

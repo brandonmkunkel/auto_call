@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:auto_call/ui/drawer.dart';
+
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:auto_call/ui/drawer.dart';
-import 'package:auto_call/ui/backgrounds.dart';
 
 class SettingsPage extends StatefulWidget {
   static String routeName = "/Settings";
@@ -32,7 +32,7 @@ class SettingsPageState extends State<SettingsPage> {
   static List<SettingPair> settingPairs = <SettingPair>[
     SettingPair(key: "splashed", text: "Has user opened app before", type: bool),
     SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool),
-    SettingPair(key: "_notificaitons", text: "Receive Push Notifications", type: bool),
+    SettingPair(key: "_notifications", text: "Receive Push Notifications", type: bool),
   ];
   static List<Setting> appSettings;
 
@@ -79,7 +79,7 @@ class SettingsPageState extends State<SettingsPage> {
         appBar: new AppBar(
           title: new Text(widget.title),
         ),
-        drawer: appDrawer(context),
+        drawer: AppDrawer(context),
         body: Stack(children: [
           buildScrollableSettings(context),
         ]));

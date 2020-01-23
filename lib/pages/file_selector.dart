@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:csv/csv.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -55,14 +54,13 @@ class FileSelectorState extends State<FileSelectorPage> {
   }
 
   PhoneList readFile() {
-//    print(["Reading file from", _path ]);
     return PhoneList(_path);
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: appDrawer(context),
+      drawer: AppDrawer(context),
       appBar: new AppBar(
         title: const Text('File Selection'),
       ),
@@ -138,11 +136,12 @@ class FileSelectorState extends State<FileSelectorPage> {
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
                               color: Colors.greenAccent,
-                              onPressed: () => Navigator.pushNamed(
-                                context,
-                                CallQueuePage.routeName,
-                                arguments: readFile(),
-                              ),
+                              onPressed: () =>  readFile(),
+//                              onPressed: () => Navigator.pushNamed(
+//                                context,
+//                                CallQueuePage.routeName,
+//                                arguments: readFile(),
+//                              ),
                               child: new Text("Yes", style: TextStyle(fontSize: 32.0)),
                             ),
                         ),

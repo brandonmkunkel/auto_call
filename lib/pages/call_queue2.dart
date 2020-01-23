@@ -32,7 +32,7 @@ class CallQueueState2 extends State<CallQueuePage2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: appDrawer(context),
+      drawer: AppDrawer(context),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
