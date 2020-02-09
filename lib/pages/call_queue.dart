@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/calls_and_messages_service.dart';
+import 'package:auto_call/services/streamline_call_services.dart';
 import 'package:auto_call/services/animated_table.dart';
 
 class CallQueuePage extends StatefulWidget {
@@ -14,6 +15,9 @@ class CallQueuePage extends StatefulWidget {
 }
 
 class CallQueueState extends State<CallQueuePage> {
+  final double _titleFontSize = 18.0;
+  final double _fontSize = 18.0;
+  int iterator = 0;
   bool inCall = false;
   PhoneList callList;
   Widget table;
@@ -23,15 +27,34 @@ class CallQueueState extends State<CallQueuePage> {
     super.initState();
   }
 
-  void changeCallState() {
+  void changeCallState() async {
+    // Call the number
+    locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
+//    bool callComplete = await launchCall(callList.people[iterator].number);
+//    launchCall(callList.people[iterator].number);
+
+//    if (inCall) {
+//      // If we are in the call then we should not do anything right now
+//
+//    } else {
+//      // If We are not in the call, then we need to do another call
+//      locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
+//    }
+
+    locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
+
     setState(() {
-      inCall = !inCall;
+//      inCall = !inCall;
+
+      callList.people[iterator].called = true;
+      nextCall();
     });
   }
 
-  /// Go to the next call in the PhoneList
   void nextCall() {
-
+    if (iterator < callList.people.length) {
+      iterator++;
+    }
   }
 
   @override
@@ -57,31 +80,17 @@ class CallQueueState extends State<CallQueuePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-//            Padding(
-//              padding: EdgeInsets.all(10.0),
-//              child: Container(
-//                alignment: Alignment.centerRight,
-//                child: FloatingActionButton(
-//                  heroTag: "btn_close",
-//                  onPressed: () {
-//                    Navigator.pop(context);
-//                  },
-//                  tooltip: 'Close Call Queue',
-//                  child: Icon(Icons.clear),
-//                ),
-//              ),
-//            ),
             Expanded(
-              child: Center(
-                  child: SingleChildScrollView(
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    AnimatedCallTable(),
+                    animatedTable(context),
+//                    otherAnimatedTable(context),
                   ],
                 ),
-              )),
+              ),
             ),
             Padding(
                 padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
@@ -89,18 +98,32 @@ class CallQueueState extends State<CallQueuePage> {
                     child: Row(
                   children: <Widget>[
                     FloatingActionButton(
-                        onPressed: () {}, heroTag: "btn_back", tooltip: "Back", child: Icon(Icons.arrow_back)),
+                        onPressed: () {
+                          setState(() {
+                            iterator > 0 ? iterator-- : iterator = 0;
+                          });
+                        },
+                        heroTag: "btn_back",
+                        tooltip: "Back",
+                        child: Icon(Icons.arrow_back)),
                     FloatingActionButton(
                       onPressed: () {
                         changeCallState();
                       },
-                      heroTag: "btn_cancel",
-                      tooltip: "Cancel",
+                      heroTag: "btn_call",
+                      tooltip: "Call",
                       child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
                       backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
                     ),
                     FloatingActionButton(
-                        onPressed: () {}, heroTag: "btn_forward", tooltip: "Forward", child: Icon(Icons.arrow_forward)),
+                        onPressed: () {
+                          setState(() {
+                            iterator < callList.people.length - 1 ? iterator++ : iterator = callList.people.length - 1;
+                          });
+                        },
+                        heroTag: "btn_forward",
+                        tooltip: "Forward",
+                        child: Icon(Icons.arrow_forward)),
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -109,7 +132,126 @@ class CallQueueState extends State<CallQueuePage> {
                 ),
           ],
         ),
-      ),
+      )
     );
   }
+
+  Widget animatedTable(BuildContext context) {
+    return DataTable(
+      columnSpacing: 10.0,
+      columns: [
+        DataColumn(
+          label: Text("", style: TextStyle(fontSize: _titleFontSize)),
+          numeric: false,
+        ),
+        DataColumn(
+            label: Expanded(
+                child: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+            ), numeric: false),
+        DataColumn(
+            label: Expanded(
+                child: Text("Phone Number", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold))), numeric: false),
+        DataColumn(label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)), numeric: false),
+      ],
+      rows: callList.people
+          .asMap()
+          .map((i, person) => MapEntry(
+          i,
+          DataRow.byIndex(index: i, selected: i == iterator ? true : false,
+//                  onSelectChanged: (bool selected) {
+////                    if (selected) {
+//////                    selected = selected;
+//////                    log.add('row-selected: ${itemRow.index}');
+////                    }
+//                  },
+              cells: [
+                DataCell(i == iterator ? Icon(Icons.forward) : Icon(null), placeholder: true, onTap: () {
+                  setState(() {
+                    iterator = i;
+                  });
+                }),
+                DataCell(Text(this.callList.people[i].name, style: Theme.of(context).textTheme.body1), onTap: () {
+                  setState(() {
+                    iterator = i;
+                  });
+                }),
+                DataCell(Text(this.callList.people[i].number, style: Theme.of(context).textTheme.body1), onTap: () {
+                  setState(() {
+                    iterator = i;
+                  });
+                }),
+                DataCell(Checkbox(
+                    value: this.callList.people[i].called,
+                    onChanged: (bool value) {
+                      setState(() {
+                        this.callList.people[i].called = value;
+                      });
+                    })),
+              ])))
+          .values
+          .toList(),
+//      rows: callList.people
+//          .asMap()
+//          .map((i, person) => MapEntry(
+//              i,
+//              DataRow.byIndex(index: i, selected: i == iterator ? true : false,
+////                  onSelectChanged: (bool selected) {
+//////                    if (selected) {
+////////                    selected = selected;
+////////                    log.add('row-selected: ${itemRow.index}');
+//////                    }
+////                  },
+//                  cells: [
+//                    DataCell(i == iterator ? Icon(Icons.forward) : Icon(null), placeholder: true, onTap: () {
+//                      setState(() {
+//                        iterator = i;
+//                      });
+//                    }),
+//                    DataCell(Text(this.callList.people[i].name, style: Theme.of(context).textTheme.body1), onTap: () {
+//                      setState(() {
+//                        iterator = i;
+//                      });
+//                    }),
+//                    DataCell(Text(this.callList.people[i].number, style: Theme.of(context).textTheme.body1), onTap: () {
+//                      setState(() {
+//                        iterator = i;
+//                      });
+//                    }),
+//                    DataCell(Checkbox(
+//                        value: this.callList.people[i].called,
+//                        onChanged: (bool value) {
+//                          setState(() {
+//                            this.callList.people[i].called = value;
+//                          });
+//                        })),
+//                  ])))
+//          .values
+//          .toList(),
+    );
+  }
+
+//  Widget otherAnimatedTable(BuildContext context) {
+//    return ListView.builder(itemBuilder: (BuildContext context, int idx) {
+//      // Build the Header row
+//      if (idx == 0) {
+//        return ListTile();
+//      } else {
+//        Person person = callList.people[idx];
+//        return new ListTile(
+//            leading: idx == iterator ? Icon(Icons.forward) : Icon(null),
+//            title: InkWell(
+//                child: Row(
+//              children: <Widget>[
+////                Expanded(flex: 1, child: Container(child: idx == iterator ? Icon(Icons.forward) : Icon(null))),
+////                Expanded(
+////                    flex: 2, child: Text(this.callList.people[idx].name, style: Theme.of(context).textTheme.body1)),
+////                Expanded(
+////                    flex: 2, child: Text(this.callList.people[idx].name, style: Theme.of(context).textTheme.body1)),
+////                Expanded(
+////                    flex: 1, child: Text(this.callList.people[idx].name, style: Theme.of(context).textTheme.body1)),
+//              ],
+//            )));
+//      }
+//    });
+//  }
 }

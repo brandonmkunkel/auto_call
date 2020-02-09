@@ -31,6 +31,7 @@ dependencies:
   # Phone calls
   get_it:
   url_launcher:
+  intent:
 
   #  Files
   csv:
@@ -41,6 +42,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons:
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

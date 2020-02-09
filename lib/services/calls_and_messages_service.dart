@@ -11,6 +11,15 @@ class CallsAndMessagesService {
   void sendEmail(String email) => launch("mailto:$email");
 }
 
+//_make_phone_call(String number) async {
+//  const String url = 'tel://'+number;
+//  if (await canLaunch(url)) {
+//    await launch(url);
+//  } else {
+//    throw 'Could not launch $url';
+//  }
+//}
+
 void setupLocator() {
   locator.registerSingleton(CallsAndMessagesService());
 }

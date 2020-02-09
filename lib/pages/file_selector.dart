@@ -6,6 +6,8 @@ import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/pages/call_queue.dart';
 
+import 'package:auto_call/ui/alerts/file_warning.dart';
+
 class FileSelectorPage extends StatefulWidget {
   static String routeName = "/file_selector";
 
@@ -78,40 +80,38 @@ class FileSelectorState extends State<FileSelectorPage> {
               Expanded(
                 child: new Builder(
                   builder: (BuildContext context) => _loadingPath
-                      ? Padding(padding: const EdgeInsets.only(bottom: 10.0), child: const CircularProgressIndicator())
+                      ? Center(child: SizedBox(height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
                       : _path != null || _paths != null
-                      ? new Container(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    height: MediaQuery.of(context).size.height * 0.50,
-                    child: new Scrollbar(
-                        child: new ListView.separated(
-                          itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
-                          itemBuilder: (BuildContext context, int index) {
-                            final bool isMultiPath = _paths != null && _paths.isNotEmpty;
-                            final String name =
-                                'File $index: ' + (isMultiPath ? _paths.keys.toList()[index] : _fileName ?? '...');
-                            final path = isMultiPath ? _paths.values.toList()[index].toString() : _path;
+                          ? new Container(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              height: MediaQuery.of(context).size.height * 0.50,
+                              child: new Scrollbar(
+                                  child: new ListView.separated(
+                                itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final bool isMultiPath = _paths != null && _paths.isNotEmpty;
+                                  final String name = 'File $index: ' +
+                                      (isMultiPath ? _paths.keys.toList()[index] : _fileName ?? '...');
+                                  final path = isMultiPath ? _paths.values.toList()[index].toString() : _path;
 
-                            return new ListTile(
-                              title: new Text(
-                                name,
-                              ),
-                              subtitle: new Text(path),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) => new Divider(),
-                        )),
-                  )
-                      : new Container(),
+                                  return new ListTile(
+                                    title: new Text(
+                                      name,
+                                    ),
+                                    subtitle: new Text(path),
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) => new Divider(),
+                              )),
+                            )
+                          : new Container(),
                 ),
               ),
-
               Divider(),
               new Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: new Column(
                   children: <Widget>[
-
                     Text(
                       "Are these files correct?",
                       style: TextStyle(fontSize: 24),
@@ -135,15 +135,20 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
-                              color: Colors.greenAccent,
-                              onPressed: () =>  readFile(),
-//                              onPressed: () => Navigator.pushNamed(
-//                                context,
-//                                CallQueuePage.routeName,
-//                                arguments: readFile(),
-//                              ),
-                              child: new Text("Yes", style: TextStyle(fontSize: 32.0)),
-                            ),
+                            color: Colors.greenAccent,
+                            onPressed: () {
+                              if (_path != null) {
+                                Navigator.pushNamed(
+                                  context,
+                                  CallQueuePage.routeName,
+                                  arguments: readFile(),
+                                );
+                              } else {
+                                showNoFileError(context);
+                              }
+                            },
+                            child: new Text("Yes", style: TextStyle(fontSize: 32.0)),
+                          ),
                         ),
                         Spacer(flex: 1)
                       ],
