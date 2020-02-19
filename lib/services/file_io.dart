@@ -8,6 +8,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:auto_call/services/phone_list.dart';
+
 
 
 // Read a CSV file
@@ -31,11 +33,15 @@ class FileIOWrapper {
 class FileManager {
   Map<String, FileIOWrapper> registeredInterfaces;
   String path;
+  PhoneList phoneList;
 
-  FileManager({this.path});
+  FileManager(String path){
+    this.path=path;
+    readFile();
+  }
 
   void readFile() {
-
+//    phoneList.fromData();
   }
 
   void saveFile() {

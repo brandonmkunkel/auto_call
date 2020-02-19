@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/calls_and_messages_service.dart';
-import 'package:auto_call/services/streamline_call_services.dart';
-import 'package:auto_call/services/animated_table.dart';
 
 class CallQueuePage extends StatefulWidget {
   static String routeName = "/call_queue";
@@ -31,7 +29,7 @@ class CallQueueState extends State<CallQueuePage> {
     // Call the number
     locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
 //    bool callComplete = await launchCall(callList.people[iterator].number);
-//    launchCall(callList.people[iterator].number);
+    launchCall(callList.people[iterator].number);
 
 //    if (inCall) {
 //      // If we are in the call then we should not do anything right now
@@ -146,7 +144,6 @@ class CallQueueState extends State<CallQueuePage> {
           label: Text("", style: TextStyle(fontSize: _titleFontSize)),
           numeric: false,
         ),
-
         DataColumn(
           label: Text("#", style: TextStyle(fontSize: _titleFontSize)),
           numeric: true,
@@ -172,8 +169,8 @@ class CallQueueState extends State<CallQueuePage> {
 //                  onSelectChanged: (bool selected) {
 //                    if (selected) {
 //                      iterator=i;
-////                    selected = selected;
-////                    log.add('row-selected: ${itemRow.index}');
+//                      selected = selected;
+//                      log.add('row-selected: ${itemRow.index}');
 //                    }
 //                  },
                   cells: [
@@ -187,8 +184,8 @@ class CallQueueState extends State<CallQueuePage> {
                         iterator = i;
                       });
                     }),
-                    DataCell(Text(i.toString(), style: Theme.of(context).textTheme.body1), placeholder: false,
-                        onTap: () {
+                    DataCell(Text(i.toString(), style: Theme.of(context).textTheme.body1),
+                        placeholder: false, onTap: () {
                       setState(() {
                         iterator = i;
                       });
@@ -210,10 +207,17 @@ class CallQueueState extends State<CallQueuePage> {
                             this.callList.people[i].called = value;
                           });
                         })),
+//                    DataCell(IconButton(
+//                        icon: this.callList.people[i].called ? Icon(Icons.check_circle, color: Colors.green,) : Icon(Icons.check_circle, color: Colors.white),
+////                        value: this.callList.people[i].called,
+//                        onPressed: () {
+//                          setState(() {
+//                            this.callList.people[i].called = !this.callList.people[i].called;
+//                          });
+//                        })),
                   ])))
           .values
           .toList(),
     );
   }
-
 }

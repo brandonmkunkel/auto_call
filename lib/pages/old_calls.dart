@@ -13,22 +13,11 @@ class OldCallsPage extends StatefulWidget {
 }
 
 class OldCallsState extends State<OldCallsPage> {
-  bool inCall = false;
+  OldCallManager manager;
 
   @override
   void initState() {
     super.initState();
-  }
-
-//  @override
-//  void setState(){
-//    super.initState();
-//  }
-
-  void changeCallState() {
-    setState(() {
-      inCall = !inCall;
-    });
   }
 
   @override

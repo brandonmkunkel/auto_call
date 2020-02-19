@@ -1,3 +1,4 @@
+import 'package:auto_call/services/file_io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
@@ -55,8 +56,9 @@ class FileSelectorState extends State<FileSelectorPage> {
     }
   }
 
-  PhoneList readFile() {
-    return PhoneList(_path);
+  Future<PhoneList> readFileAsync() async {
+    List<List<dynamic>> data = await readCSVFile(_path);
+    return PhoneList.fromData(data);
   }
 
   @override
@@ -136,12 +138,12 @@ class FileSelectorState extends State<FileSelectorPage> {
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
                             color: Colors.greenAccent,
-                            onPressed: () {
+                            onPressed: () async {
                               if (_path != null) {
                                 Navigator.pushNamed(
                                   context,
                                   CallQueuePage.routeName,
-                                  arguments: readFile(),
+                                  arguments: await readFileAsync(),
                                 );
                               } else {
                                 showNoFileError(context);
