@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/services/file_io.dart';
-import 'package:auto_call/services/old_calls.dart';
+import 'package:auto_call/services/old_call_manager.dart';
 import 'package:auto_call/ui/drawer.dart';
 
 
@@ -41,7 +41,6 @@ class OldCallsState extends State<OldCallsPage> {
         body: Column(
           children: <Widget>[
             Text("Old call files will go here"),
-            oldCalls()
           ],
         )
     );

@@ -27,6 +27,7 @@ dependencies:
   # Other stuff
   shared_preferences:
   string_similarity:
+  provider:
 
   # Phone calls
   get_it:
@@ -43,6 +44,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons:
+  test:
 
 flutter_icons:
   android: "launcher_icon"
@@ -62,12 +64,16 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    #    - images/backgrounds/
-    #    - images/logo/
-    #    - text/
-    #    - text/about/
     - assets/text/terms_conditions.txt
-    - assets/text/data/sample_numbers.txt
+    - assets/test/data/
+#    - assets/test/data/sample_numbers.csv
+#    - assets/test/data/sample_numbers.txt
+#    - assets/test/data/sample_numbers_different_headers.csv
+#    - assets/test/data/sample_numbers_no_header.txt
+#    - images/backgrounds/
+#    - images/logo/
+#    - text/
+#    - text/about/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

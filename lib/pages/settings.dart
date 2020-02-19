@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/ui/drawer.dart';
+import 'package:auto_call/services/settings_manager.dart';
 
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,29 +13,11 @@ class SettingsPage extends StatefulWidget {
   SettingsPageState createState() => new SettingsPageState();
 }
 
-class SettingPair {
-  const SettingPair({this.key, this.text, this.type});
-
-  final String key;
-  final String text;
-  final Type type;
-}
-
-class Setting {
-  Setting({this.settingPair, this.value});
-
-  final SettingPair settingPair;
-  var value;
-}
 
 class SettingsPageState extends State<SettingsPage> {
   static SharedPreferences prefs;
-  static List<SettingPair> settingPairs = <SettingPair>[
-    SettingPair(key: "splashed", text: "Has user opened app before", type: bool),
-    SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool),
-    SettingPair(key: "_notifications", text: "Receive Push Notifications", type: bool),
-  ];
-  static List<Setting> appSettings;
+  SettingManager manager = SettingManager();
+
 
   Future<SharedPreferences> loadSettings() async {
     // Pull the Settings from teh SharedPreferences file into the SettingsState
@@ -44,17 +27,16 @@ class SettingsPageState extends State<SettingsPage> {
   Future<List<Setting>> loadCreateSettingList() async {
     // Pull the Settings from teh SharedPreferences file into the SettingsState
     prefs = await SharedPreferences.getInstance();
-    return List.generate(settingPairs.length, storeSetting);
+    return List.generate(manager.settingPairs.length, storeSetting);
   }
 
   Setting storeSetting(int idx) {
     return Setting(
-        settingPair: settingPairs[idx],
-        value: prefs.getBool(settingPairs[idx].key) ?? false);
+        settingPair: manager.settingPairs[idx],
+        value: prefs.getBool(manager.settingPairs[idx].key) ?? false);
   }
 
-  void updateSettings() {
-    setState(() {});
+  void applySettingUpdates() {
   }
 
   @override
@@ -63,7 +45,7 @@ class SettingsPageState extends State<SettingsPage> {
 
     // Load Settings then re-update the state of the Settings Page
     loadCreateSettingList().then((List<Setting> _appSettings) {
-      appSettings = _appSettings;
+      manager.appSettings = _appSettings;
       setState(() {});
     });
   }
@@ -86,18 +68,20 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   Widget buildSettingWidget(int idx) {
-    switch (appSettings[idx].settingPair.type) {
+    switch (manager.appSettings[idx].settingPair.type) {
       case bool:
         {
-          return CheckboxListTile(
-            value: appSettings[idx].value,
-            title: Text(appSettings[idx].settingPair.text),
-            onChanged: (bool value) {
-              setState(() {
-                appSettings[idx].value = value;
-                prefs.setBool(appSettings[idx].settingPair.key, value);
-              });
-            },
+          return ListTile(
+            title: Text(manager.appSettings[idx].settingPair.text),
+            trailing: Switch(
+              value: manager.appSettings[idx].value,
+              onChanged: (bool value) {
+                setState(() {
+                  manager.appSettings[idx].value = value;
+                  prefs.setBool(manager.appSettings[idx].settingPair.key, value);
+                });
+              },
+            ),
           );
         }
       case int:  {
@@ -107,12 +91,12 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   Widget buildScrollableSettings(BuildContext context) {
-    if (appSettings != null) {
+    if (manager.appSettings != null) {
       // Check to see if the App Settings have loaded yet
       return new Scrollbar(
         child: new ListView(
           children:
-              List<Widget>.generate(settingPairs.length, buildSettingWidget),
+              List<Widget>.generate(manager.settingPairs.length, buildSettingWidget),
         ),
       );
     } else {

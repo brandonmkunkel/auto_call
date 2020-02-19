@@ -15,20 +15,20 @@ final List<dynamic> pageIndex = [
 ];
 
 
-//class AppIndex {
-//  static final List<dynamic> pageIndex = [
-//    HomePage,
-//    OldCallsPage,
-//    CallQueuePage,
-//    FileSelectorPage,
-//    SettingsPage,
-//    AboutPage,
-//    LegalPage,
-//  ];
-//
-//  static Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
-//    return Map<String, WidgetBuilder>.fromIterable(pageIndex, key: (e) => e.routeName, value: (e) => ((context) => e()));
-//  }
-//}
+class AppIndex {
+  static final List<dynamic> pageIndex = [
+    HomePage,
+    OldCallsPage,
+    CallQueuePage,
+    FileSelectorPage,
+    SettingsPage,
+    AboutPage,
+    LegalPage,
+  ];
+
+  static Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
+    return Map<String, WidgetBuilder>.fromIterable(pageIndex, key: (e) => e.routeName, value: (e) => ((context) => e()));
+  }
+}
 
 

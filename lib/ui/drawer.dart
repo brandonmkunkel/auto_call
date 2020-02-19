@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/pages/call_queue.dart';
+import 'package:auto_call/pages/call_queue2.dart';
 import 'package:auto_call/pages/old_calls.dart';
 import 'package:auto_call/pages/settings.dart';
 import 'package:auto_call/pages/about.dart';
@@ -50,9 +51,16 @@ class AppDrawer extends StatelessWidget {
         ),
         new ListTile(
           leading: new Icon(Icons.cloud_upload),
-          title: new Text('Dynamic Table 1', textScaleFactor: textScale),
+          title: new Text('Call Queue', textScaleFactor: textScale),
           onTap: () {
             navigatorUpdate(context, CallQueuePage.routeName);
+          },
+        ),
+        new ListTile(
+          leading: new Icon(Icons.cloud_upload),
+          title: new Text('Call Queue 2', textScaleFactor: textScale),
+          onTap: () {
+            navigatorUpdate(context, CallQueuePage2.routeName);
           },
         ),
         new ListTile(

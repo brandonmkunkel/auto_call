@@ -8,11 +8,13 @@ import 'dart:math';
 import 'package:path_provider/path_provider.dart';
 import 'package:csv/csv.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:auto_call/ui/alerts/file_warning.dart';
+import 'package:auto_call/services/file_io.dart';
 
 
 
 class MagicRegex {
-  static final String nameStr = r"/^[a-z ,.'-]+$/i";
+  static final String nameStr = r"^(\s)*[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*(\s)*$";
   static final String emailStr = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$";
   static final String numberStr = r"(?:(?:\+?([1-9]|[0-9][0-9]|[0-9][0-9][0-9])\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([0-9][1-9]|[0-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?";
 
@@ -52,7 +54,6 @@ class Person {
 }
 
 class PhoneList {
-  String path;
   List<List<dynamic>> data = [];
   int iterator = 0;
   bool headerPresent = false;
@@ -60,63 +61,58 @@ class PhoneList {
   List<Person> people = [];
 
   PhoneList(String path) {
-    this.path=path;
+    processFile(path);
+  }
 
-//    print(["phone_list.dart: Loading phone list", path]);
-    processFile();
+  PhoneList.fromString(String rawText) {
+    print("in here");
+    data = readTextAsCSV(rawText);
 
-//    print("phone_list.dart: Final PhoneList");
-//    people.asMap().forEach((i, value) {
-//      print('index=$i, value=$value');
-//    });
-//    print("phone_list.dart: Done instantiating the PhoneList class");
+    processData();
   }
 
   bool isNotEmpty() {
     return people.isNotEmpty;
   }
 
-  bool isEmpty() {
-    return !isNotEmpty();
+  void processText(String data) {
   }
 
-  void processFile() async {
-    data = await readFile();
+  void processFile(String path) async {
+    data = await readCSVFile(path);
 
+    processData();
+  }
+
+  void processData() {
     if (data.isNotEmpty) {
-//      print("phone_list.dart: Data is not empty");
+      print("phone_list.dart: Data is not empty");
       findHeaders();
       buildPeople();
     } else {
-//      print("phone_list.dart: Data is empty");
+      print("phone_list.dart: Data is empty");
     }
 
-//    print(encode());
+    print(encode());
   }
-
-  Future<List<List<dynamic>>> readFile() async {
-    // Read the file handed to the class at instantiation
-    final input = new File(path).openRead();
-    return await input.transform(utf8.decoder).transform(new CsvToListConverter()).toList();
-  }
-
-//  List<List<dynamic>> readString(String string) {
-//    return ;
-//  }
 
   void findHeaders() {
 //    print(["phone_list.dart: process_file", data]);
-    List<String> header = data[0].cast();
+    List<dynamic> header = data[0];
     BestMatch match;
+    print(data[0].runtimeType);
+    print(data[1].runtimeType);
+//    print(header);
 
 //    print(["phone_list.dart: First row", header]);
 
     // First look to see if there really is a header row
-    for (String label in header) {
-      match = StringSimilarity.findBestMatch(label, Person.labels);
+    for (int idx=0; idx<header.length; idx++) {
+      String label = header[idx].toString();
+      match = StringSimilarity.findBestMatch(label.toString().toLowerCase(), Person.labels);
 //      print(["Looping through header entries", label, match.bestMatch.target, match.bestMatch.rating, match.bestMatchIndex]);
 
-      if (match.bestMatch.rating > 0.80) {
+      if (match.bestMatch.rating > 0.75) {
         labelMapping[match.bestMatch.target] = match.bestMatchIndex;
       }
     }
@@ -147,9 +143,13 @@ class PhoneList {
       rows = data;
     }
 
+    print(labelMapping["name"]);
+    print(labelMapping["number"]);
+
     // By now we assume correct evaluation of the labels/matching indices to now do a proper lookup
     // within each `row`
     for (List<dynamic> entry in rows) {
+//      print([entry[labelMapping["name"]], entry[labelMapping["number"]].toString()]);
       people.add(
           Person(entry[labelMapping["name"]], entry[labelMapping["number"]].toString())
       );
@@ -168,17 +168,17 @@ class PhoneList {
     for (text in row) {
       // Check to see if we found a name already, and check if we haven't found one
       if (!nameFound) {
-        nameFound = checkName(text, index);
+        nameFound = checkName(text.toString(), index);
       }
 
       // Check to see if we found a phone number already, and check if we haven't found one
       if (!phoneFound) {
-        phoneFound = checkPhoneNumber(text, index);
+        phoneFound = checkPhoneNumber(text.toString(), index);
       }
 
       // Check to see if we found as email already, and check if we haven't found one
       if (!emailFound) {
-        emailFound = checkEmail(text, index);
+        emailFound = checkEmail(text.toString(), index);
       }
 
       index++; // Increase iterator by one so we can keep track of the current row index
@@ -214,8 +214,6 @@ class PhoneList {
     }
     return matched;
   }
-
-
 
   List<List> encode() {
     List<List> headers = [];

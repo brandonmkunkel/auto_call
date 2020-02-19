@@ -62,196 +62,158 @@ class CallQueueState extends State<CallQueuePage> {
     callList = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
-      drawer: AppDrawer(context),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.cancel, color: Theme.of(context).buttonColor),
-            iconSize: 40.0,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    animatedTable(context),
+        drawer: AppDrawer(context),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.cancel, color: Theme.of(context).buttonColor),
+              iconSize: 40.0,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          title: Text(widget.title),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      animatedTable(context),
 //                    otherAnimatedTable(context),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Padding(
-                padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
-                child: Center(
-                    child: Row(
-                  children: <Widget>[
-                    FloatingActionButton(
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+                  child: Center(
+                      child: Row(
+                    children: <Widget>[
+                      FloatingActionButton(
+                          onPressed: () {
+                            setState(() {
+                              iterator > 0 ? iterator-- : iterator = 0;
+                            });
+                          },
+                          heroTag: "btn_back",
+                          tooltip: "Back",
+                          child: Icon(Icons.arrow_back)),
+                      FloatingActionButton(
                         onPressed: () {
-                          setState(() {
-                            iterator > 0 ? iterator-- : iterator = 0;
-                          });
+                          changeCallState();
                         },
-                        heroTag: "btn_back",
-                        tooltip: "Back",
-                        child: Icon(Icons.arrow_back)),
-                    FloatingActionButton(
-                      onPressed: () {
-                        changeCallState();
-                      },
-                      heroTag: "btn_call",
-                      tooltip: "Call",
-                      child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                      backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
-                    ),
-                    FloatingActionButton(
-                        onPressed: () {
-                          setState(() {
-                            iterator < callList.people.length - 1 ? iterator++ : iterator = callList.people.length - 1;
-                          });
-                        },
-                        heroTag: "btn_forward",
-                        tooltip: "Forward",
-                        child: Icon(Icons.arrow_forward)),
-                  ],
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                ))
-                // fill in required params
-                ),
-          ],
-        ),
-      )
-    );
+                        heroTag: "btn_call",
+                        tooltip: "Call",
+                        child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
+                        backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
+                      ),
+                      FloatingActionButton(
+                          onPressed: () {
+                            setState(() {
+                              iterator < callList.people.length - 1
+                                  ? iterator++
+                                  : iterator = callList.people.length - 1;
+                            });
+                          },
+                          heroTag: "btn_forward",
+                          tooltip: "Forward",
+                          child: Icon(Icons.arrow_forward)),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  ))
+                  // fill in required params
+                  ),
+            ],
+          ),
+        ));
   }
 
   Widget animatedTable(BuildContext context) {
     return DataTable(
-      columnSpacing: 10.0,
+      horizontalMargin: 16.0,
+      columnSpacing: 16.0,
       columns: [
         DataColumn(
           label: Text("", style: TextStyle(fontSize: _titleFontSize)),
           numeric: false,
         ),
+
+        DataColumn(
+          label: Text("#", style: TextStyle(fontSize: _titleFontSize)),
+          numeric: true,
+        ),
         DataColumn(
             label: Expanded(
-                child: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
-            ), numeric: false),
+              child: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+            ),
+            numeric: false),
         DataColumn(
-            label: Expanded(
-                child: Text("Phone Number", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold))), numeric: false),
-        DataColumn(label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)), numeric: false),
+            label:
+                Expanded(child: Text("Phone", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold))),
+            numeric: false),
+        DataColumn(
+            label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+            numeric: false),
       ],
       rows: callList.people
           .asMap()
           .map((i, person) => MapEntry(
-          i,
-          DataRow.byIndex(index: i, selected: i == iterator ? true : false,
+              i,
+              DataRow.byIndex(index: i, selected: i == iterator ? true : false,
 //                  onSelectChanged: (bool selected) {
-////                    if (selected) {
-//////                    selected = selected;
-//////                    log.add('row-selected: ${itemRow.index}');
-////                    }
+//                    if (selected) {
+//                      iterator=i;
+////                    selected = selected;
+////                    log.add('row-selected: ${itemRow.index}');
+//                    }
 //                  },
-              cells: [
-                DataCell(i == iterator ? Icon(Icons.forward) : Icon(null), placeholder: true, onTap: () {
-                  setState(() {
-                    iterator = i;
-                  });
-                }),
-                DataCell(Text(this.callList.people[i].name, style: Theme.of(context).textTheme.body1), onTap: () {
-                  setState(() {
-                    iterator = i;
-                  });
-                }),
-                DataCell(Text(this.callList.people[i].number, style: Theme.of(context).textTheme.body1), onTap: () {
-                  setState(() {
-                    iterator = i;
-                  });
-                }),
-                DataCell(Checkbox(
-                    value: this.callList.people[i].called,
-                    onChanged: (bool value) {
+                  cells: [
+                    DataCell(
+                        Container(
+                          width: 10.0,
+                          child: i == iterator ? Icon(Icons.forward) : Icon(null),
+                        ),
+                        placeholder: true, onTap: () {
                       setState(() {
-                        this.callList.people[i].called = value;
+                        iterator = i;
                       });
-                    })),
-              ])))
+                    }),
+                    DataCell(Text(i.toString(), style: Theme.of(context).textTheme.body1), placeholder: false,
+                        onTap: () {
+                      setState(() {
+                        iterator = i;
+                      });
+                    }),
+                    DataCell(Text(this.callList.people[i].name, style: Theme.of(context).textTheme.body1), onTap: () {
+                      setState(() {
+                        iterator = i;
+                      });
+                    }),
+                    DataCell(Text(this.callList.people[i].number, style: Theme.of(context).textTheme.body1), onTap: () {
+                      setState(() {
+                        iterator = i;
+                      });
+                    }),
+                    DataCell(Checkbox(
+                        value: this.callList.people[i].called,
+                        onChanged: (bool value) {
+                          setState(() {
+                            this.callList.people[i].called = value;
+                          });
+                        })),
+                  ])))
           .values
           .toList(),
-//      rows: callList.people
-//          .asMap()
-//          .map((i, person) => MapEntry(
-//              i,
-//              DataRow.byIndex(index: i, selected: i == iterator ? true : false,
-////                  onSelectChanged: (bool selected) {
-//////                    if (selected) {
-////////                    selected = selected;
-////////                    log.add('row-selected: ${itemRow.index}');
-//////                    }
-////                  },
-//                  cells: [
-//                    DataCell(i == iterator ? Icon(Icons.forward) : Icon(null), placeholder: true, onTap: () {
-//                      setState(() {
-//                        iterator = i;
-//                      });
-//                    }),
-//                    DataCell(Text(this.callList.people[i].name, style: Theme.of(context).textTheme.body1), onTap: () {
-//                      setState(() {
-//                        iterator = i;
-//                      });
-//                    }),
-//                    DataCell(Text(this.callList.people[i].number, style: Theme.of(context).textTheme.body1), onTap: () {
-//                      setState(() {
-//                        iterator = i;
-//                      });
-//                    }),
-//                    DataCell(Checkbox(
-//                        value: this.callList.people[i].called,
-//                        onChanged: (bool value) {
-//                          setState(() {
-//                            this.callList.people[i].called = value;
-//                          });
-//                        })),
-//                  ])))
-//          .values
-//          .toList(),
     );
   }
 
-//  Widget otherAnimatedTable(BuildContext context) {
-//    return ListView.builder(itemBuilder: (BuildContext context, int idx) {
-//      // Build the Header row
-//      if (idx == 0) {
-//        return ListTile();
-//      } else {
-//        Person person = callList.people[idx];
-//        return new ListTile(
-//            leading: idx == iterator ? Icon(Icons.forward) : Icon(null),
-//            title: InkWell(
-//                child: Row(
-//              children: <Widget>[
-////                Expanded(flex: 1, child: Container(child: idx == iterator ? Icon(Icons.forward) : Icon(null))),
-////                Expanded(
-////                    flex: 2, child: Text(this.callList.people[idx].name, style: Theme.of(context).textTheme.body1)),
-////                Expanded(
-////                    flex: 2, child: Text(this.callList.people[idx].name, style: Theme.of(context).textTheme.body1)),
-////                Expanded(
-////                    flex: 1, child: Text(this.callList.people[idx].name, style: Theme.of(context).textTheme.body1)),
-//              ],
-//            )));
-//      }
-//    });
-//  }
 }
