@@ -111,12 +111,15 @@ class FileSelectorState extends State<FileSelectorPage> {
               ),
               Divider(),
               new Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
                 child: new Column(
                   children: <Widget>[
-                    Text(
-                      "Are these files correct?",
-                      style: TextStyle(fontSize: 24),
+                    SizedBox(
+                      height: 40.0,
+                      child: Text(
+                        "Are these files correct?",
+                        style: TextStyle(fontSize: 24),
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -127,7 +130,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
-                            color: Colors.redAccent,
+                            color: Colors.grey[400],
                             onPressed: () => _openFileExplorer(),
                             child: new Text("No", style: TextStyle(fontSize: 32.0)),
                           ),
@@ -137,7 +140,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
-                            color: Colors.greenAccent,
+                            color: Theme.of(context).accentColor,
                             onPressed: () async {
                               if (_path != null) {
                                 Navigator.pushNamed(

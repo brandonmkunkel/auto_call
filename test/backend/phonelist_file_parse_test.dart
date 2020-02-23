@@ -22,6 +22,16 @@ void main() {
     expect(phoneList.labelMapping["number"], 1);
   });
 
+  test('PhoneList Build from TXT', () async {
+    PhoneList phoneList = PhoneList.fromFile('assets/test/data/sample_numbers.txt');
+
+    // Verify that our counter has incremented.
+    expect(phoneList.headerPresent, true);
+    expect(phoneList.isNotEmpty(), true);
+    expect(phoneList.labelMapping["name"], 0);
+    expect(phoneList.labelMapping["number"], 1);
+  });
+
   test('PhoneList Build from CSV', () async {
     String data = await rootBundle.loadString('assets/test/data/sample_numbers.csv');
     PhoneList phoneList = PhoneList.fromString(data);

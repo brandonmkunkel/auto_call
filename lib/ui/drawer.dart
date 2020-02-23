@@ -37,49 +37,49 @@ class AppDrawer extends StatelessWidget {
 //          ),
         new ListTile(
           leading: new Icon(Icons.home),
-          title: new Text('Home', textScaleFactor: textScale),
+          title: new Text('Home', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, HomePage.routeName);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.note_add),
-          title: new Text('File Selector', textScaleFactor: textScale),
+          title: new Text('File Selector', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, FileSelectorPage.routeName);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.cloud_upload),
-          title: new Text('Call Queue', textScaleFactor: textScale),
+          title: new Text('Call Queue', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, CallQueuePage.routeName);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.cloud_upload),
-          title: new Text('Call Queue 2', textScaleFactor: textScale),
+          title: new Text('Call Queue 2', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, CallQueuePage2.routeName);
           },
         ),
         new ListTile(
-          leading: new Icon(Icons.file_upload),
-          title: new Text('Old Calls', textScaleFactor: textScale),
+          leading: new Icon(Icons.history),
+          title: new Text('Old Calls', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, OldCallsPage.routeName);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.settings),
-          title: new Text('Settings', textScaleFactor: textScale),
+          title: new Text('Settings', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, SettingsPage.routeName);
           },
         ),
         new ListTile(
           leading: new Icon(Icons.info),
-          title: new Text('About', textScaleFactor: textScale),
+          title: new Text('About', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, AboutPage.routeName);
           },

@@ -18,7 +18,6 @@ class CallQueueState extends State<CallQueuePage> {
   int iterator = 0;
   bool inCall = false;
   PhoneList callList;
-  Widget table;
 
   @override
   void initState() {
@@ -149,13 +148,10 @@ class CallQueueState extends State<CallQueuePage> {
           numeric: true,
         ),
         DataColumn(
-            label: Expanded(
-              child: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
-            ),
+            label: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
             numeric: false),
         DataColumn(
-            label:
-                Expanded(child: Text("Phone", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold))),
+            label: Text("Phone", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
             numeric: false),
         DataColumn(
             label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
@@ -170,7 +166,6 @@ class CallQueueState extends State<CallQueuePage> {
 //                    if (selected) {
 //                      iterator=i;
 //                      selected = selected;
-//                      log.add('row-selected: ${itemRow.index}');
 //                    }
 //                  },
                   cells: [
@@ -184,8 +179,8 @@ class CallQueueState extends State<CallQueuePage> {
                         iterator = i;
                       });
                     }),
-                    DataCell(Text(i.toString(), style: Theme.of(context).textTheme.body1),
-                        placeholder: false, onTap: () {
+                    DataCell(Text(i.toString(), style: Theme.of(context).textTheme.body1), placeholder: false,
+                        onTap: () {
                       setState(() {
                         iterator = i;
                       });
