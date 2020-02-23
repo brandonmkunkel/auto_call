@@ -165,8 +165,6 @@ void main() {
     expect(phoneList.labelMapping["number"], 1);
     expect(phoneList.labelMapping["email"], 2);
 
-    print(phoneList.export());
-
     // Verify additional headers
     expect(phoneList.labelMapping[data[0][3]], 3);
     expect(phoneList.labelMapping[data[0][4]], 4);

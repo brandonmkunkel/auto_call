@@ -8,7 +8,11 @@ import 'package:auto_call/services/regex.dart';
 import 'package:auto_call/ui/alerts/file_warning.dart';
 import 'package:auto_call/services/file_io.dart';
 
-
+enum Outcome {
+  voicemail,
+  answered,
+  success,
+}
 
 class Person {
   bool called = false;
@@ -144,9 +148,6 @@ class PhoneList {
     // within each `row`
 
     for (List<dynamic> entry in rows) {
-//      print(additionalLabels);
-//      print(List.generate(additionalLabels.length, (int index) => labelMapping[additionalLabels[index]]));
-//      print(List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]]));
       people.add(
           Person(
             entry[labelMapping["name"]],

@@ -6,7 +6,7 @@ import 'package:auto_call/ui/drawer.dart';
 
 class OldCallsPage extends StatefulWidget {
   static String routeName = "/old_calls";
-  final String title = "Call Queue";
+  final String title = "Old Calls";
 
   @override
   OldCallsState createState() => new OldCallsState();

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'file_selector.dart';
 import 'package:auto_call/ui/drawer.dart';
+import 'package:auto_call/ui/charts/call_breakdown.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -27,28 +28,40 @@ class _HomePageState extends State<HomePage> {
           title: Text(widget.title),
         ),
         body: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(10.0),
           child:SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Text(
+                Text("Welcome Back!", style: Theme.of(context).textTheme.headline),
+                Text(
                     "This app will help you get through a list of phone calls as fast as possible\n\n"
-                    "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
-                    "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.",
+                        "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
+                        "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.",
                     style: Theme.of(context).textTheme.body2,
                     textAlign: TextAlign.center),
+                Divider(),
+                Text("Call Stats", style: Theme.of(context).textTheme.headline),
+//                Container(
+//                  padding: EdgeInsets.all(20.0),
+//                  child:  DonutPieChart.withSampleData()
+//                ),
+
+//                Spacer()
+
               ],
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text("New Call Session"),
+          icon: Icon(Icons.add_call),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
           },
-          tooltip: 'Upload List',
-          child: Icon(Icons.file_upload),
+          tooltip: 'Start new call session',
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
+//        floatingActionButtonLocation: FloatingActionButtonLocation.startTop
+    );
   }
 }

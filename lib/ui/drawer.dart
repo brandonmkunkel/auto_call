@@ -20,9 +20,8 @@ class AppDrawer extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         new DrawerHeader(
-            child: new Center(child: new Text('Your Favorite Robot Assistant', textScaleFactor: 1.5)),
-            margin: const EdgeInsets.all(1.0),
-            padding: const EdgeInsets.fromLTRB(1.0, 1.0, 1.0, 1.0)),
+          child: new Center(child: new Text('Your Favorite Robot Assistant', textScaleFactor: 1.5)),
+        ),
 //          new ListTile(
 //            title: new Text('Splash', textScaleFactor: textScale),
 //            onTap: () {

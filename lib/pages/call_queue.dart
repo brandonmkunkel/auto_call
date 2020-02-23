@@ -52,29 +52,42 @@ class CallQueueState extends State<CallQueuePage> {
   }
 
   void checkCallState() {
-    firstUncalled = callList.people.indexWhere((Person p) {return !p.called;});
-    lastUncalled = callList.people.lastIndexWhere((Person p) {return !p.called;});
+    firstUncalled = callList.people.indexWhere((Person p) {
+      return !p.called;
+    });
+    lastUncalled = callList.people.lastIndexWhere((Person p) {
+      return !p.called;
+    });
 
     if (firstUncalled == -1 && lastUncalled == -1) {
       complete = true;
-      print("Calls are complete yo");
+      iterator = -1;
     }
+  }
+
+  void advanceIterator() {
+    int nextIterator = iterator + 1;
+
+    // Check to see if the next call is the last
+    if (nextIterator > lastUncalled) {
+      nextIterator = firstUncalled;
+    } else if (callList.people[nextIterator].called) {
+      // If the Next entry has been called already, skip
+      if (nextIterator > lastUncalled) {
+        nextIterator = firstUncalled;
+      } else {
+        while (callList.people[nextIterator].called) {
+          nextIterator++;
+        }
+      }
+    }
+
+    iterator = nextIterator;
   }
 
   void nextCall() {
     checkCallState();
-
-    if (iterator == callList.people.length-1) {
-      iterator = firstUncalled;
-    } else if (callList.people[iterator].called) {
-      if (iterator >= lastUncalled) {
-        iterator = firstUncalled;
-      } else {
-        while (callList.people[iterator].called) {
-          iterator++;
-        }
-      }
-    }
+    advanceIterator();
   }
 
   @override
@@ -95,8 +108,7 @@ class CallQueueState extends State<CallQueuePage> {
           ],
           title: Text(widget.title),
         ),
-        body: Center(
-          child: Column(
+        body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
@@ -141,21 +153,10 @@ class CallQueueState extends State<CallQueuePage> {
                         icon: Icon(Icons.arrow_forward),
                         onPressed: () {
                           setState(() {
-                            iterator < callList.people.length - 1 ? iterator++ : iterator = callList.people.length - 1;
-
+//                            iterator < callList.people.length - 1 ? iterator++ : iterator = callList.people.length - 1;
+                            print("arrow forward");
                             checkCallState();
-
-                            if (iterator == callList.people.length-1) {
-                              iterator = firstUncalled;
-                            } else if (callList.people[iterator].called) {
-                              if (iterator >= lastUncalled) {
-                                iterator = firstUncalled;
-                              } else {
-                                while (callList.people[iterator].called) {
-                                  iterator++;
-                                }
-                              }
-                            }
+                            advanceIterator();
                           });
                         },
                         heroTag: "btn_next",
@@ -169,7 +170,7 @@ class CallQueueState extends State<CallQueuePage> {
                   ),
             ],
           ),
-        ));
+        );
   }
 
   TextStyle calledTheme(bool called) {
@@ -180,7 +181,7 @@ class CallQueueState extends State<CallQueuePage> {
 
   Widget animatedTable(BuildContext context) {
     return DataTable(
-      horizontalMargin: 10.0,
+      horizontalMargin: 0.0,
       columnSpacing: 10.0,
       columns: [
             DataColumn(
@@ -193,7 +194,7 @@ class CallQueueState extends State<CallQueuePage> {
 //            ),
             DataColumn(
               label: Text("#", style: TextStyle(fontSize: _titleFontSize)),
-              numeric: true,
+              numeric: false,
             ),
             DataColumn(
                 label: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
@@ -233,14 +234,19 @@ class CallQueueState extends State<CallQueuePage> {
                   cells: [
                         DataCell(
                             Container(
-//                              width: 25.0,
-                              child: i == iterator ? Icon(Icons.forward) : IconButton(
-                                  icon: callList.people[i].called ? Icon(Icons.check_circle, color: Colors.green,) : Icon(Icons.check_circle, color: Colors.white),
-                                  onPressed: () {
-                                    setState(() {
-                                      callList.people[i].called = !callList.people[i].called;
-                                    });
-                                  }),
+                              width: 50.0,
+                              alignment: Alignment.center,
+                              child: i == iterator
+                                  ? Icon(Icons.forward)
+                                  : IconButton(
+                                      icon: callList.people[i].called
+                                          ? Icon(Icons.check_circle, color: Colors.green)
+                                          : Icon(Icons.check_circle, color: Colors.grey[300]),
+                                      onPressed: () {
+                                        setState(() {
+                                          callList.people[i].called = !callList.people[i].called;
+                                        });
+                                      }),
                             ),
                             placeholder: true, onTap: () {
                           setState(() {

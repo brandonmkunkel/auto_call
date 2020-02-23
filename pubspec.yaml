@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons:
 
   # Other stuff
+  charts_flutter:
   shared_preferences:
   string_similarity:
   provider:
