@@ -15,7 +15,10 @@ class CallQueuePage extends StatefulWidget {
 class CallQueueState extends State<CallQueuePage> {
   final double _titleFontSize = 18.0;
   final double _fontSize = 18.0;
+  int firstUncalled = 0;
+  int lastUncalled = 0;
   int iterator = 0;
+  bool complete = false;
   bool inCall = false;
   PhoneList callList;
 
@@ -48,16 +51,35 @@ class CallQueueState extends State<CallQueuePage> {
     });
   }
 
+  void checkCallState() {
+    firstUncalled = callList.people.indexWhere((Person p) {return !p.called;});
+    lastUncalled = callList.people.lastIndexWhere((Person p) {return !p.called;});
+
+    if (firstUncalled == -1 && lastUncalled == -1) {
+      complete = true;
+      print("Calls are complete yo");
+    }
+  }
+
   void nextCall() {
-    if (iterator < callList.people.length) {
-      iterator++;
+    checkCallState();
+
+    if (iterator == callList.people.length-1) {
+      iterator = firstUncalled;
+    } else if (callList.people[iterator].called) {
+      if (iterator >= lastUncalled) {
+        iterator = firstUncalled;
+      } else {
+        while (callList.people[iterator].called) {
+          iterator++;
+        }
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     callList = ModalRoute.of(context).settings.arguments;
-
     return Scaffold(
         drawer: AppDrawer(context),
         appBar: AppBar(
@@ -79,12 +101,12 @@ class CallQueueState extends State<CallQueuePage> {
             children: <Widget>[
               Expanded(
                 child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       animatedTable(context),
-//                    otherAnimatedTable(context),
                     ],
                   ),
                 ),
@@ -94,15 +116,17 @@ class CallQueueState extends State<CallQueuePage> {
                   child: Center(
                       child: Row(
                     children: <Widget>[
-                      FloatingActionButton(
-                          onPressed: () {
-                            setState(() {
-                              iterator > 0 ? iterator-- : iterator = 0;
-                            });
-                          },
-                          heroTag: "btn_back",
-                          tooltip: "Back",
-                          child: Icon(Icons.arrow_back)),
+                      FloatingActionButton.extended(
+                        label: Text('Back'),
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          setState(() {
+                            iterator > 0 ? iterator-- : iterator = 0;
+                          });
+                        },
+                        heroTag: "btn_back",
+                        tooltip: "Back",
+                      ),
                       FloatingActionButton(
                         onPressed: () {
                           changeCallState();
@@ -112,17 +136,31 @@ class CallQueueState extends State<CallQueuePage> {
                         child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
                         backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
                       ),
-                      FloatingActionButton(
-                          onPressed: () {
-                            setState(() {
-                              iterator < callList.people.length - 1
-                                  ? iterator++
-                                  : iterator = callList.people.length - 1;
-                            });
-                          },
-                          heroTag: "btn_forward",
-                          tooltip: "Forward",
-                          child: Icon(Icons.arrow_forward)),
+                      FloatingActionButton.extended(
+                        label: Text('Next'),
+                        icon: Icon(Icons.arrow_forward),
+                        onPressed: () {
+                          setState(() {
+                            iterator < callList.people.length - 1 ? iterator++ : iterator = callList.people.length - 1;
+
+                            checkCallState();
+
+                            if (iterator == callList.people.length-1) {
+                              iterator = firstUncalled;
+                            } else if (callList.people[iterator].called) {
+                              if (iterator >= lastUncalled) {
+                                iterator = firstUncalled;
+                              } else {
+                                while (callList.people[iterator].called) {
+                                  iterator++;
+                                }
+                              }
+                            }
+                          });
+                        },
+                        heroTag: "btn_next",
+                        tooltip: "Next Call",
+                      ),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,34 +172,58 @@ class CallQueueState extends State<CallQueuePage> {
         ));
   }
 
+  TextStyle calledTheme(bool called) {
+    return TextStyle(
+      color: called ? Colors.grey[500] : Colors.black,
+    );
+  }
+
   Widget animatedTable(BuildContext context) {
     return DataTable(
-      horizontalMargin: 16.0,
-      columnSpacing: 16.0,
+      horizontalMargin: 10.0,
+      columnSpacing: 10.0,
       columns: [
-        DataColumn(
-          label: Text("", style: TextStyle(fontSize: _titleFontSize)),
-          numeric: false,
-        ),
-        DataColumn(
-          label: Text("#", style: TextStyle(fontSize: _titleFontSize)),
-          numeric: true,
-        ),
-        DataColumn(
-            label: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
-            numeric: false),
-        DataColumn(
-            label: Text("Phone", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
-            numeric: false),
-        DataColumn(
-            label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
-            numeric: false),
-      ],
+            DataColumn(
+              label: Text("", style: TextStyle(fontSize: _titleFontSize)),
+              numeric: false,
+            ),
+//            DataColumn(
+//              label: Text("", style: TextStyle(fontSize: _titleFontSize)),
+//              numeric: true,
+//            ),
+            DataColumn(
+              label: Text("#", style: TextStyle(fontSize: _titleFontSize)),
+              numeric: true,
+            ),
+            DataColumn(
+                label: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                numeric: false),
+            DataColumn(
+                label: Text("Phone", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                numeric: false),
+//        DataColumn(
+//            label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+//            numeric: false),
+            DataColumn(
+                label: Text("Comment", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                numeric: false),
+            DataColumn(
+                label: Text("Outcome", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                numeric: false),
+          ] +
+          List.generate(callList.additionalLabels.length, (int idx) {
+            return DataColumn(
+                label: Text(callList.additionalLabels[idx],
+                    style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                numeric: false);
+          }),
       rows: callList.people
           .asMap()
           .map((i, person) => MapEntry(
               i,
-              DataRow.byIndex(index: i, selected: i == iterator ? true : false,
+              DataRow.byIndex(
+                  index: i,
+                  selected: i == iterator ? true : false,
 //                  onSelectChanged: (bool selected) {
 //                    if (selected) {
 //                      iterator=i;
@@ -169,48 +231,72 @@ class CallQueueState extends State<CallQueuePage> {
 //                    }
 //                  },
                   cells: [
-                    DataCell(
-                        Container(
-                          width: 10.0,
-                          child: i == iterator ? Icon(Icons.forward) : Icon(null),
-                        ),
-                        placeholder: true, onTap: () {
-                      setState(() {
-                        iterator = i;
-                      });
-                    }),
-                    DataCell(Text(i.toString(), style: Theme.of(context).textTheme.body1), placeholder: false,
-                        onTap: () {
-                      setState(() {
-                        iterator = i;
-                      });
-                    }),
-                    DataCell(Text(this.callList.people[i].name, style: Theme.of(context).textTheme.body1), onTap: () {
-                      setState(() {
-                        iterator = i;
-                      });
-                    }),
-                    DataCell(Text(this.callList.people[i].number, style: Theme.of(context).textTheme.body1), onTap: () {
-                      setState(() {
-                        iterator = i;
-                      });
-                    }),
-                    DataCell(Checkbox(
-                        value: this.callList.people[i].called,
-                        onChanged: (bool value) {
+                        DataCell(
+                            Container(
+//                              width: 25.0,
+                              child: i == iterator ? Icon(Icons.forward) : IconButton(
+                                  icon: callList.people[i].called ? Icon(Icons.check_circle, color: Colors.green,) : Icon(Icons.check_circle, color: Colors.white),
+                                  onPressed: () {
+                                    setState(() {
+                                      callList.people[i].called = !callList.people[i].called;
+                                    });
+                                  }),
+                            ),
+                            placeholder: true, onTap: () {
                           setState(() {
-                            this.callList.people[i].called = value;
+                            iterator = i;
                           });
-                        })),
-//                    DataCell(IconButton(
-//                        icon: this.callList.people[i].called ? Icon(Icons.check_circle, color: Colors.green,) : Icon(Icons.check_circle, color: Colors.white),
-////                        value: this.callList.people[i].called,
-//                        onPressed: () {
-//                          setState(() {
-//                            this.callList.people[i].called = !this.callList.people[i].called;
-//                          });
-//                        })),
-                  ])))
+                        }),
+//                        DataCell(Checkbox(
+//                            value: callList.people[i].called,
+//                            onChanged: (bool value) {
+//                              setState(() {
+//                                callList.people[i].called = value;
+//                              });
+//                            })),
+
+                        DataCell(Text(i.toString(), style: calledTheme(callList.people[i].called)), placeholder: false,
+                            onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(Text(callList.people[i].name, style: calledTheme(callList.people[i].called)),
+                            onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(Text(callList.people[i].number, style: calledTheme(callList.people[i].called)),
+                            onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(Text(callList.people[i].comment, style: calledTheme(callList.people[i].called)),
+                            onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(Text(callList.people[i].outcome, style: calledTheme(callList.people[i].called)),
+                            onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                      ] +
+                      List.generate(callList.additionalLabels.length, (int idx) {
+                        return DataCell(
+                            Text(
+                                callList
+                                    .people[i].additionalData[callList.labelMapping[callList.additionalLabels[idx]]],
+                                style: calledTheme(callList.people[i].called)), onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        });
+                      }))))
           .values
           .toList(),
     );

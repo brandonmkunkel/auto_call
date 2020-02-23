@@ -5,8 +5,8 @@ import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/calls_and_messages_service.dart';
 
 class CallQueuePage2 extends StatefulWidget {
-  static String routeName = "/call_queue";
-  final String title = "Call Queue";
+  static String routeName = "/call_queue2";
+  final String title = "Call Queue 2";
 
   @override
   CallQueueState2 createState() => new CallQueueState2();
@@ -138,6 +138,7 @@ class CallQueueState2 extends State<CallQueuePage2> {
   }
 
   Widget animatedTable(BuildContext context) {
+    print("CALL QUEUE 2");
     return DataTable(
       horizontalMargin: 16.0,
       columnSpacing: 16.0,
