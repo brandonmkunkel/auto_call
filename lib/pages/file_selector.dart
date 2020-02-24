@@ -56,9 +56,10 @@ class FileSelectorState extends State<FileSelectorPage> {
     }
   }
 
-  Future<PhoneList> readFileAsync() async {
-    List<List<dynamic>> data = await readCSVFile(_path);
-    return PhoneList.fromData(data);
+  Future<FileManager> readFileAsync() async {
+    FileManager fileManager = FileManager(_path);
+    await fileManager.readFile();
+    return fileManager;
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/calls_and_messages_service.dart';
@@ -20,42 +21,37 @@ class CallQueueState extends State<CallQueuePage> {
   int iterator = 0;
   bool complete = false;
   bool inCall = false;
-  PhoneList callList;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  FileManager fileManager;
 
   void changeCallState() async {
     // Call the number
-    locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
-//    bool callComplete = await launchCall(callList.people[iterator].number);
-    launchCall(callList.people[iterator].number);
+    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
+//    bool callComplete = await launchCall(fileManager.phoneList.people[iterator].number);
+    launchCall(fileManager.phoneList.people[iterator].number);
 
 //    if (inCall) {
 //      // If we are in the call then we should not do anything right now
 //
 //    } else {
 //      // If We are not in the call, then we need to do another call
-//      locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
+//      locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
 //    }
 
-    locator.get<CallsAndMessagesService>().call(callList.people[iterator].number);
+    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
 
     setState(() {
 //      inCall = !inCall;
 
-      callList.people[iterator].called = true;
+      fileManager.phoneList.people[iterator].called = true;
       nextCall();
     });
   }
 
   void checkCallState() {
-    firstUncalled = callList.people.indexWhere((Person p) {
+    firstUncalled = fileManager.phoneList.people.indexWhere((Person p) {
       return !p.called;
     });
-    lastUncalled = callList.people.lastIndexWhere((Person p) {
+    lastUncalled = fileManager.phoneList.people.lastIndexWhere((Person p) {
       return !p.called;
     });
 
@@ -71,12 +67,12 @@ class CallQueueState extends State<CallQueuePage> {
     // Check to see if the next call is the last
     if (nextIterator > lastUncalled) {
       nextIterator = firstUncalled;
-    } else if (callList.people[nextIterator].called) {
+    } else if (fileManager.phoneList.people[nextIterator].called) {
       // If the Next entry has been called already, skip
       if (nextIterator > lastUncalled) {
         nextIterator = firstUncalled;
       } else {
-        while (callList.people[nextIterator].called) {
+        while (fileManager.phoneList.people[nextIterator].called) {
           nextIterator++;
         }
       }
@@ -92,12 +88,19 @@ class CallQueueState extends State<CallQueuePage> {
 
   @override
   Widget build(BuildContext context) {
-    callList = ModalRoute.of(context).settings.arguments;
+    fileManager = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         drawer: AppDrawer(context),
         appBar: AppBar(
           automaticallyImplyLeading: false,
           actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.save, color: Theme.of(context).buttonColor),
+              iconSize: 40.0,
+              onPressed: () async {
+                await fileManager.saveFile();
+              },
+            ),
             IconButton(
               icon: Icon(Icons.cancel, color: Theme.of(context).buttonColor),
               iconSize: 40.0,
@@ -153,8 +156,6 @@ class CallQueueState extends State<CallQueuePage> {
                         icon: Icon(Icons.arrow_forward),
                         onPressed: () {
                           setState(() {
-//                            iterator < callList.people.length - 1 ? iterator++ : iterator = callList.people.length - 1;
-                            print("arrow forward");
                             checkCallState();
                             advanceIterator();
                           });
@@ -180,12 +181,14 @@ class CallQueueState extends State<CallQueuePage> {
   }
 
   Widget animatedTable(BuildContext context) {
+    TextStyle headerStyle = TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold);
+
     return DataTable(
       horizontalMargin: 0.0,
       columnSpacing: 10.0,
       columns: [
             DataColumn(
-              label: Text("", style: TextStyle(fontSize: _titleFontSize)),
+              label: Text("", style: headerStyle),
               numeric: false,
             ),
 //            DataColumn(
@@ -193,32 +196,31 @@ class CallQueueState extends State<CallQueuePage> {
 //              numeric: true,
 //            ),
             DataColumn(
-              label: Text("#", style: TextStyle(fontSize: _titleFontSize)),
+              label: Text("#", style: headerStyle),
               numeric: false,
             ),
             DataColumn(
-                label: Text("Name", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                label: Text("Name", style: headerStyle),
                 numeric: false),
             DataColumn(
-                label: Text("Phone", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                label: Text("Phone", style: headerStyle),
                 numeric: false),
 //        DataColumn(
-//            label: Text("Called", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+//            label: Text("Called", style: headerStyle),
 //            numeric: false),
             DataColumn(
-                label: Text("Comment", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                label: Text("Comment", style: headerStyle),
                 numeric: false),
             DataColumn(
-                label: Text("Outcome", style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                label: Text("Outcome", style: headerStyle),
                 numeric: false),
           ] +
-          List.generate(callList.additionalLabels.length, (int idx) {
+          List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
             return DataColumn(
-                label: Text(callList.additionalLabels[idx],
-                    style: TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold)),
+                label: Text(fileManager.phoneList.additionalLabels[idx], style: headerStyle),
                 numeric: false);
           }),
-      rows: callList.people
+      rows: fileManager.phoneList.people
           .asMap()
           .map((i, person) => MapEntry(
               i,
@@ -239,12 +241,12 @@ class CallQueueState extends State<CallQueuePage> {
                               child: i == iterator
                                   ? Icon(Icons.forward)
                                   : IconButton(
-                                      icon: callList.people[i].called
+                                      icon: fileManager.phoneList.people[i].called
                                           ? Icon(Icons.check_circle, color: Colors.green)
                                           : Icon(Icons.check_circle, color: Colors.grey[300]),
                                       onPressed: () {
                                         setState(() {
-                                          callList.people[i].called = !callList.people[i].called;
+                                          fileManager.phoneList.people[i].called = !fileManager.phoneList.people[i].called;
                                         });
                                       }),
                             ),
@@ -254,50 +256,50 @@ class CallQueueState extends State<CallQueuePage> {
                           });
                         }),
 //                        DataCell(Checkbox(
-//                            value: callList.people[i].called,
+//                            value: fileManager.phoneList.people[i].called,
 //                            onChanged: (bool value) {
 //                              setState(() {
-//                                callList.people[i].called = value;
+//                                fileManager.phoneList.people[i].called = value;
 //                              });
 //                            })),
 
-                        DataCell(Text(i.toString(), style: calledTheme(callList.people[i].called)), placeholder: false,
+                        DataCell(Text(i.toString(), style: calledTheme(fileManager.phoneList.people[i].called)), placeholder: false,
                             onTap: () {
                           setState(() {
                             iterator = i;
                           });
                         }),
-                        DataCell(Text(callList.people[i].name, style: calledTheme(callList.people[i].called)),
+                        DataCell(Text(fileManager.phoneList.people[i].name, style: calledTheme(fileManager.phoneList.people[i].called)),
                             onTap: () {
                           setState(() {
                             iterator = i;
                           });
                         }),
-                        DataCell(Text(callList.people[i].number, style: calledTheme(callList.people[i].called)),
+                        DataCell(Text(fileManager.phoneList.people[i].number, style: calledTheme(fileManager.phoneList.people[i].called)),
                             onTap: () {
                           setState(() {
                             iterator = i;
                           });
                         }),
-                        DataCell(Text(callList.people[i].comment, style: calledTheme(callList.people[i].called)),
+                        DataCell(Text(fileManager.phoneList.people[i].comment, style: calledTheme(fileManager.phoneList.people[i].called)),
                             onTap: () {
                           setState(() {
                             iterator = i;
                           });
                         }),
-                        DataCell(Text(callList.people[i].outcome, style: calledTheme(callList.people[i].called)),
+                        DataCell(Text(fileManager.phoneList.people[i].outcome, style: calledTheme(fileManager.phoneList.people[i].called)),
                             onTap: () {
                           setState(() {
                             iterator = i;
                           });
                         }),
                       ] +
-                      List.generate(callList.additionalLabels.length, (int idx) {
+                      List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
                         return DataCell(
                             Text(
-                                callList
-                                    .people[i].additionalData[callList.labelMapping[callList.additionalLabels[idx]]],
-                                style: calledTheme(callList.people[i].called)), onTap: () {
+                                fileManager.phoneList
+                                    .people[i].additionalData[fileManager.phoneList.labelMapping[fileManager.phoneList.additionalLabels[idx]]],
+                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
                           setState(() {
                             iterator = i;
                           });

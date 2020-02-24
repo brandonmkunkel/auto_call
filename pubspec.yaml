@@ -39,7 +39,7 @@ dependencies:
   csv:
   file_picker:
   path_provider:
-  open_file:
+  spreadsheet_decoder:
 
 dev_dependencies:
   flutter_test:

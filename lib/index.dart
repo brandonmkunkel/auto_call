@@ -8,13 +8,9 @@ import 'package:auto_call/pages/legal.dart';
 import 'package:auto_call/pages/about.dart';
 import 'package:auto_call/pages/settings.dart';
 
-// Page index used by the app for
-final List<dynamic> pageIndex = [
-  HomePage,
-
-];
-
-
+///
+/// This class handles storage of page indexing to take verbosity away from MAIN or DRAWER
+///
 class AppIndex {
   static final List<dynamic> pageIndex = [
     HomePage,
@@ -25,6 +21,9 @@ class AppIndex {
     AboutPage,
     LegalPage,
   ];
+  static final Map<String, dynamic> drawerIndex = {
+//    HomePage.title:
+  };
 
   static Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
     return Map<String, WidgetBuilder>.fromIterable(pageIndex, key: (e) => e.routeName, value: (e) => ((context) => e()));

@@ -1,11 +1,9 @@
 import 'package:flutter/services.dart';
 
 import 'package:path_provider/path_provider.dart';
-import 'package:csv/csv.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 import 'package:auto_call/services/regex.dart';
-import 'package:auto_call/ui/alerts/file_warning.dart';
 import 'package:auto_call/services/file_io.dart';
 
 enum Outcome {
@@ -23,19 +21,8 @@ class Person {
   String outcome = "";
   List<String> additionalData = [];
 
-  static final List<String> labels = ["name", "number", "email", "comment", "called"];
+  static final List<String> labels = ["name", "number", "email", "outcome", "comment", "called"];
   static final List<String> requiredLabels = ["name", "number"];
-
-//  Person(String name, String number, {String email, String outcome, String comment, bool called, List<dynamic> additionalData}) {
-//    this.name = name;
-//    this.number = number;
-//
-//    this.email=email;
-//    this.outcome = outcome;
-//    this.comment = comment;
-//    this.called = called;
-//    this.additionalData = additionalData != null ? additionalData.cast<String>() : [];
-//  }
 
   Person(String name, String number, {String email="", String outcome="", String comment="", bool called=false, List<dynamic> additionalData}) {
     this.name = name;
@@ -52,8 +39,12 @@ class Person {
     return name + ", " + number + ", " + email;
   }
 
+  static List<List<String>> orderedLabels() {
+    return [["name", "number", "email"], ["outcome", "comment", "called"]];
+  }
+
   List<String> encode() {
-    return [name, number, email, outcome, comment, called.toString()] + additionalData;
+    return [name, number, email] + additionalData + [outcome, comment, called.toString()];
   }
 }
 
@@ -88,7 +79,7 @@ class PhoneList {
   /// Methods for interacting with the final class
   ///
   List<List> export() {
-    List<List> headers = [Person.labels + additionalLabels];
+    List<List> headers = [Person.orderedLabels()[0] + additionalLabels + Person.orderedLabels()[1]];
     return headers + List<List>.generate(people.length, (int idx) => people[idx].encode());
   }
 
@@ -100,7 +91,7 @@ class PhoneList {
   /// Methods for processing information from data that was read
   ///
   void processFile(String path) async {
-    processData(await readCSVFile(path));
+    processData(await CSVWrapper().read(path));
   }
 
   void processData(List<List<dynamic>> inputData) {

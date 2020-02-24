@@ -12,7 +12,7 @@ void showNoFileError(BuildContext context) {
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           new FlatButton(
-            child: new Text("Ok"),
+            child: new Text("OK"),
             onPressed: () {
               Navigator.of(context).pop();
             },
@@ -36,7 +36,7 @@ void showFileEmptyError(BuildContext context) {
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           new FlatButton(
-            child: new Text("Ok"),
+            child: new Text("OK"),
             onPressed: () {
               Navigator.of(context).pop();
             },
