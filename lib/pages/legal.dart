@@ -24,21 +24,11 @@ class LegalPageState extends State<LegalPage> {
       ),
       drawer: AppDrawer(context),
       body: new Stack(children: <Widget>[
-        buildTermsConditions(context)
+        Container(
+          padding: EdgeInsets.all(20.0),
+          child: buildScrollableTerms(context),
+        )
       ]),
     );
-  }
-
-  Widget buildTermsConditions(BuildContext context) {
-    return Container(
-        child: new BackdropFilter(
-            filter: new ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-            child: new Container(
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.7),
-              ),
-              padding: EdgeInsets.all(20.0),
-              child: buildScrollableTerms(context),
-            )));
   }
 }

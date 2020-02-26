@@ -15,18 +15,18 @@ enum Outcome {
 class Person {
   bool called = false;
   String name = "";
-  String number = "";
+  String phone = "";
   String email = "";
   String comment = "";
   String outcome = "";
   List<String> additionalData = [];
 
-  static final List<String> labels = ["name", "number", "email", "outcome", "comment", "called"];
-  static final List<String> requiredLabels = ["name", "number"];
+  static final List<String> labels = ["name", "phone", "email", "outcome", "comment", "called"];
+  static final List<String> requiredLabels = ["name", "phone"];
 
-  Person(String name, String number, {String email="", String outcome="", String comment="", bool called=false, List<dynamic> additionalData}) {
-    this.name = name;
-    this.number = number;
+  Person(String name, String phone, {String email="", String outcome="", String comment="", bool called=false, List<dynamic> additionalData}) {
+    this.name=name;
+    this.phone=phone;
     this.email=email;
 
     this.called=called;
@@ -36,15 +36,15 @@ class Person {
   }
 
   String string() {
-    return name + ", " + number + ", " + email;
+    return name + ", " + phone + ", " + email;
   }
 
   static List<List<String>> orderedLabels() {
-    return [["name", "number", "email"], ["outcome", "comment", "called"]];
+    return [["name", "phone", "email"], ["outcome", "comment", "called"]];
   }
 
   List<String> encode() {
-    return [name, number, email] + additionalData + [outcome, comment, called.toString()];
+    return [name, phone, email] + additionalData + [outcome, comment, called.toString()];
   }
 }
 
@@ -121,7 +121,7 @@ class PhoneList {
       }
     }
 
-    // If the Label Map has both of the required "name" and "number" then say the header is valid
+    // If the Label Map has both of the required "name" and "phone" then say the header is valid
     if (labelMapping.containsKey(Person.requiredLabels[0]) && labelMapping.containsKey(Person.requiredLabels[1])) {
       headerPresent = true;
     } else {
@@ -139,17 +139,20 @@ class PhoneList {
     // within each `row`
 
     for (List<dynamic> entry in rows) {
-      people.add(
-          Person(
-            entry[labelMapping["name"]],
-            entry[labelMapping["number"]].toString(),
-            email: labelMapping.containsKey("email") ? entry[labelMapping["email"]] : "",
-            comment: labelMapping.containsKey("comment") ? entry[labelMapping["comment"]] : "",
-            outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]] : "",
-            called: labelMapping.containsKey("called") ? entry[labelMapping["called"]] : false,
-            additionalData: List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]]),
-          )
-      );
+//      print(entry);
+      if (MagicRegex.isName(entry[labelMapping["name"]].toString()) && MagicRegex.isNumber(entry[labelMapping["phone"]].toString())) {
+        people.add(
+            Person(
+              entry[labelMapping["name"]],
+              entry[labelMapping["phone"]].toString(),
+              email: labelMapping.containsKey("email") ? entry[labelMapping["email"]] : "",
+              comment: labelMapping.containsKey("comment") ? entry[labelMapping["comment"]] : "",
+              outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]] : "",
+              called: labelMapping.containsKey("called") ? entry[labelMapping["called"]].toString().toLowerCase() == true : false,
+              additionalData: List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString()),
+            )
+        );
+      }
     }
   }
 
@@ -207,7 +210,7 @@ class PhoneList {
 
     // If there is a match with the regular expression, then store this text's index entry into the LabelMap
     if (matched) {
-      labelMapping["number"] = index;
+      labelMapping["phone"] = index;
     }
     return matched;
   }
@@ -220,5 +223,13 @@ class PhoneList {
       labelMapping["email"] = index;
     }
     return matched;
+  }
+
+  List getAdditionalColumns() {
+    List.generate(people.length, (int i) {
+      return List.generate(additionalLabels.length, (int idx) {
+        return people[i].additionalData[labelMapping[additionalLabels[idx]]];
+      });
+    });
   }
 }

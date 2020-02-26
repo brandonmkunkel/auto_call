@@ -5,9 +5,10 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/pages/call_queue.dart';
+import 'package:auto_call/pages/call_session.dart';
 
 import 'package:auto_call/ui/alerts/file_warning.dart';
+
 
 class FileSelectorPage extends StatefulWidget {
   static String routeName = "/file_selector";
@@ -56,12 +57,6 @@ class FileSelectorState extends State<FileSelectorPage> {
         _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
       });
     }
-  }
-
-  Future<FileManager> readFileAsync() async {
-    FileManager fileManager = FileManager(_path);
-    await fileManager.readFile();
-    return fileManager;
   }
 
   @override
@@ -133,7 +128,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
-                            color: Colors.grey[400],
+//                            color: buttonColor(context, false),
+                            color: Theme.of(context).disabledColor,
                             onPressed: () => _openFileExplorer(),
                             child: new Text("No", style: TextStyle(fontSize: 32.0)),
                           ),
@@ -143,13 +139,14 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
+//                            color: buttonColor(context, true),
                             color: Theme.of(context).accentColor,
                             onPressed: () async {
                               if (_path != null) {
                                 Navigator.pushNamed(
                                   context,
-                                  CallQueuePage.routeName,
-                                  arguments: await readFileAsync(),
+                                  CallSessionPage.routeName,
+                                  arguments: await readFileAsync(_path),
                                 );
                               } else {
                                 showNoFileError(context);

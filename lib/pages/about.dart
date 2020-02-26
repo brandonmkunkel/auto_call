@@ -15,7 +15,6 @@ class AboutPage extends StatefulWidget {
 }
 
 class AboutPageState extends State<AboutPage> {
-//  final Widget background = buildFlagBackground();
 
   @override
   Widget build(BuildContext context) {

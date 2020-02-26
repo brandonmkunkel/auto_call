@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/file_selector.dart';
-import 'package:auto_call/pages/call_queue.dart';
-import 'package:auto_call/pages/call_queue2.dart';
+import 'package:auto_call/pages/call_session.dart';
 import 'package:auto_call/pages/old_calls.dart';
 import 'package:auto_call/pages/legal.dart';
 import 'package:auto_call/pages/about.dart';
@@ -16,8 +15,7 @@ class AppIndex {
   static final List<dynamic> pageIndex = [
     HomePage,
     OldCallsPage,
-    CallQueuePage,
-    CallQueuePage2,
+    CallSessionPage,
     FileSelectorPage,
     SettingsPage,
     AboutPage,
@@ -30,8 +28,7 @@ class AppIndex {
   static final List<List> drawerIndex = [
     [Icons.home, HomePage],
     [Icons.note_add, FileSelectorPage],
-    [Icons.cloud_upload, CallQueuePage],
-    [Icons.cloud_upload, CallQueuePage2],
+    [Icons.cloud_upload, CallSessionPage],
     [Icons.history, OldCallsPage],
     [Icons.settings, SettingsPage],
     [Icons.info, AboutPage],

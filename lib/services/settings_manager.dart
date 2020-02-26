@@ -39,7 +39,7 @@ class SettingManager {
     return await SharedPreferences.getInstance();
   }
 
-  Future<List<Setting>> loadSettings(bool premium) async {
+  Future<List<Setting>> loadSettings({bool premium=false}) async {
     List pairs = premium ? premiumPairs : standardPairs;
     var _settings = List.generate(standardPairs.length, (int index) {
       return Setting(settingPair: pairs[index], value: prefs.getBool(pairs[index].key) ?? false);
@@ -50,8 +50,8 @@ class SettingManager {
   Future<void> create() async {
     await startPreferencesInstance().then((SharedPreferences _prefs) async {
       prefs = _prefs;
-      standardSettings = await loadSettings(false);
-      premiumSettings = await loadSettings(true);
+      standardSettings = await loadSettings(premium: false);
+      premiumSettings = await loadSettings(premium: true);
     }
     );
   }
@@ -66,7 +66,7 @@ class SettingManager {
 
   bool isPremium() {
 //    return true;
-    return prefs==null ? false :  prefs.getBool("is_premium");
+    return prefs.getBool("is_premium") ?? false;
   }
 
 

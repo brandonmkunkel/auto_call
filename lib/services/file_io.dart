@@ -10,6 +10,15 @@ import 'dart:io';
 import 'package:auto_call/services/phone_list.dart';
 
 ///
+/// General Async function for reading files
+///
+Future<FileManager> readFileAsync(String path) async {
+  FileManager fileManager = FileManager(path);
+  await fileManager.readFile();
+  return fileManager;
+}
+
+///
 /// FileIOWrapper is a class that wraps function pointers
 ///
 class FileIOWrapper {
@@ -201,6 +210,17 @@ class FileManager {
     List _files = _oldCallsDir.listSync(recursive: false);
     return List.generate(_files.length, (int idx) {
       return _files[idx].path;
+    });
+  }
+
+  static Future<void> deleteFile(String path) async {
+    var filePath = File(path);
+    filePath.exists().then((isThere) {
+      print(isThere);
+      if (isThere) {
+        print("file exists");
+        filePath.deleteSync(recursive: false);
+      }
     });
   }
 

@@ -5,8 +5,7 @@ import 'services/calls_and_messages_service.dart';
 
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
-import 'pages/call_queue.dart';
-import 'pages/call_queue2.dart';
+import 'pages/call_session.dart';
 import 'pages/old_calls.dart';
 import 'pages/legal.dart';
 import 'pages/about.dart';
@@ -46,8 +45,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomePage.routeName: (context) => HomePage(),
           OldCallsPage.routeName: (context) => OldCallsPage(),
-          CallQueuePage.routeName: (context) => CallQueuePage(),
-          CallQueuePage2.routeName: (context) => CallQueuePage2(),
+          CallSessionPage.routeName: (context) => CallSessionPage(),
           FileSelectorPage.routeName: (context) => FileSelectorPage(),
           SettingsPage.routeName: (context) => SettingsPage(),
           LegalPage.routeName: (context) => LegalPage(),

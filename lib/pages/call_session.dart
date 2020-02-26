@@ -5,16 +5,16 @@ import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/calls_and_messages_service.dart';
 
-class CallQueuePage extends StatefulWidget {
+class CallSessionPage extends StatefulWidget {
   static String routeName = "/call_queue";
   final String title = "Call Queue";
   final String label = "Call Queue";
 
   @override
-  CallQueueState createState() => new CallQueueState();
+  CallSessionState createState() => new CallSessionState();
 }
 
-class CallQueueState extends State<CallQueuePage> {
+class CallSessionState extends State<CallSessionPage> {
   final double _titleFontSize = 18.0;
   final double _fontSize = 18.0;
   int firstUncalled = 0;
@@ -50,9 +50,9 @@ class CallQueueState extends State<CallQueuePage> {
 
   void changeCallState() async {
     // Call the number
-    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
+    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].phone);
 //    bool callComplete = await launchCall(fileManager.phoneList.people[iterator].number);
-    launchCall(fileManager.phoneList.people[iterator].number);
+    launchCall(fileManager.phoneList.people[iterator].phone);
 
 //    if (inCall) {
 //      // If we are in the call then we should not do anything right now
@@ -62,7 +62,7 @@ class CallQueueState extends State<CallQueuePage> {
 //      locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
 //    }
 
-    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
+    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].phone);
 
     setState(() {
 //      inCall = !inCall;
@@ -204,14 +204,23 @@ class CallQueueState extends State<CallQueuePage> {
     );
   }
 
-  TextStyle calledTheme(bool called) {
-    return TextStyle(
-      color: called ? Colors.grey[500] : Colors.black,
-    );
+  TextStyle calledTextColor(BuildContext context, bool called) {
+    return TextStyle(color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color);
+  }
+
+  Color calledIconColor(buildContext, bool called) {
+    return called ? Theme.of(context).accentColor : Theme.of(context).disabledColor;
+  }
+
+  void setStateIterator(int i) {
+    setState(() {
+      iterator = i;
+    });
   }
 
   Widget animatedTable(BuildContext context) {
-    TextStyle headerStyle = TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold);
+    TextStyle headerStyle = TextStyle(
+        fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color);
 
     return DataTable(
       horizontalMargin: 0.0,
@@ -221,14 +230,16 @@ class CallQueueState extends State<CallQueuePage> {
             DataColumn(label: Text("#", style: headerStyle), numeric: false),
             DataColumn(label: Text("Name", style: headerStyle), numeric: false),
             DataColumn(label: Text("Phone", style: headerStyle), numeric: false),
-//            DataColumn(label: Text("Email", style: headerStyle), numeric: false),
-            DataColumn(label: Text("Comment", style: headerStyle), numeric: false),
-            DataColumn(label: Text("Outcome", style: headerStyle), numeric: false),
           ] +
           List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
             return DataColumn(
                 label: Text(fileManager.phoneList.additionalLabels[idx], style: headerStyle), numeric: false);
-          }),
+          }) +
+          [
+//            DataColumn(label: Text("Email", style: headerStyle), numeric: false),
+            DataColumn(label: Text("Comment", style: headerStyle), numeric: false),
+            DataColumn(label: Text("Outcome", style: headerStyle), numeric: false),
+          ],
       rows: fileManager.phoneList.people
           .asMap()
           .map((i, person) => MapEntry(
@@ -250,9 +261,8 @@ class CallQueueState extends State<CallQueuePage> {
                               child: i == iterator
                                   ? Icon(Icons.forward)
                                   : IconButton(
-                                      icon: fileManager.phoneList.people[i].called
-                                          ? Icon(Icons.check_circle, color: Colors.green)
-                                          : Icon(Icons.check_circle, color: Colors.grey[300]),
+                                      icon: Icon(Icons.check_circle,
+                                          color: calledIconColor(context, fileManager.phoneList.people[i].called)),
                                       onPressed: () {
                                         setState(() {
                                           fileManager.phoneList.people[i].called =
@@ -260,11 +270,8 @@ class CallQueueState extends State<CallQueuePage> {
                                         });
                                       }),
                             ),
-                            placeholder: true, onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        }),
+                            placeholder: true,
+                            onTap: () => setStateIterator(i)),
 //                        DataCell(Checkbox(
 //                            value: fileManager.phoneList.people[i].called,
 //                            onChanged: (bool value) {
@@ -273,26 +280,18 @@ class CallQueueState extends State<CallQueuePage> {
 //                              });
 //                            })),
 
-                        DataCell(Text(i.toString(), style: calledTheme(fileManager.phoneList.people[i].called)),
-                            placeholder: false, onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        }),
+                        DataCell(
+                            Text(i.toString(), style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                            placeholder: false,
+                            onTap: () => setStateIterator(i)),
                         DataCell(
                             Text(fileManager.phoneList.people[i].name,
-                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        }),
+                                style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                            onTap: () => setStateIterator(i)),
                         DataCell(
-                            Text(fileManager.phoneList.people[i].number,
-                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        }),
+                            Text(fileManager.phoneList.people[i].phone,
+                                style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                            onTap: () => setStateIterator(i)),
 //                        DataCell(
 //                            Text(fileManager.phoneList.people[i].email,
 //                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
@@ -300,52 +299,45 @@ class CallQueueState extends State<CallQueuePage> {
 //                            iterator = i;
 //                          });
 //                        }),
+                      ] +
+                      List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
+                        return DataCell(
+                            Text(fileManager.phoneList.people[i].additionalData[idx],
+                                style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                            onTap: () => setStateIterator(i));
+                      }) +
+                      [
                         DataCell(
                             TextFormField(
                               autofocus: false,
-                              onChanged: (text) {
-                                fileManager.phoneList.people[i].comment = text;
-                                FocusScope.of(context).unfocus();
-                              },
+//                              onChanged: (String text) {
+//                                fileManager.phoneList.people[i].comment = text;
+//                                FocusScope.of(context).unfocus();
+//                              },
                               onTap: () {
                                 FocusScope.of(context).requestFocus(_focusNode);
                               },
                               onEditingComplete: () {
-                                print("on editing complete");
+                                FocusScope.of(context).unfocus();
+                              },
+                              onSaved: (String text) {
+                                fileManager.phoneList.people[i].comment = text;
                                 FocusScope.of(context).unfocus();
                               },
                               decoration: InputDecoration(
+                                  hintStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
+                                  labelStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
                                   border: InputBorder.none,
-                                  hintText: fileManager.phoneList.people[i].comment.isEmpty
-                                      ? '..................'
-                                      : fileManager.phoneList.people[i].comment),
+                                  hintText: '..................'),
                             ),
 //                            Text(fileManager.phoneList.people[i].comment,
 //                                style: calledTheme(fileManager.phoneList.people[i].called)),
-                            onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        }),
+                            onTap: () => setStateIterator(i)),
                         DataCell(
                             Text(fileManager.phoneList.people[i].outcome,
-                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        }),
-                      ] +
-                      List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
-                        return DataCell(
-                            Text(
-                                fileManager.phoneList.people[i].additionalData[
-                                    fileManager.phoneList.labelMapping[fileManager.phoneList.additionalLabels[idx]]],
-                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
-                          setState(() {
-                            iterator = i;
-                          });
-                        });
-                      }))))
+                                style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                            onTap: () => setStateIterator(i)),
+                      ])))
           .values
           .toList(),
     );

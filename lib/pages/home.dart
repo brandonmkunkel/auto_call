@@ -21,7 +21,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     //80% of screen width
-    double c_width = MediaQuery.of(context).size.width * 0.8;
+    double c_width = MediaQuery.of(context).size.width * 0.9;
+    double c_height = MediaQuery.of(context).size.width * 0.9;
+    double smallestDim =  c_width < c_height ? c_width : c_height;
 
     return Scaffold(
         drawer: AppDrawer(context),
@@ -34,22 +36,25 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Welcome Back!", style: Theme.of(context).textTheme.headline),
+                Text("Welcome Back!\n", style: Theme.of(context).textTheme.headline),
                 Text(
                     "This app will help you get through a list of phone calls as fast as possible\n\n"
                         "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
-                        "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.",
+                        "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.\n",
                     style: Theme.of(context).textTheme.body2,
                     textAlign: TextAlign.center),
                 Divider(),
-                Text("Call Stats", style: Theme.of(context).textTheme.headline),
-//                Container(
-//                  padding: EdgeInsets.all(20.0),
-//                  child:  DonutPieChart.withSampleData()
-//                ),
-
+                Text("\nCall Stats", style: Theme.of(context).textTheme.headline),
+                Row(
+                  children: [
+                    Container(
+                        width: smallestDim * 0.60,
+                        height: smallestDim * 0.60,
+                        child: DonutPieChart.withSampleData()
+                    )
+                  ]
+                ),
 //                Spacer()
-
               ],
             ),
           ),

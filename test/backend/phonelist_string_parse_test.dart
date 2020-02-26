@@ -25,7 +25,7 @@ void main() {
 
     // Verify that our counter has incremented.
     expect(person.name, name);
-    expect(person.number, number);
+    expect(person.phone, number);
     expect(person.email, "");
     expect(person.comment, "");
     expect(person.called, false);
@@ -40,7 +40,7 @@ void main() {
 
     // Verify that our counter has incremented.
     expect(person.name, name);
-    expect(person.number, number);
+    expect(person.phone, number);
     expect(person.email, email);
     expect(person.comment, "");
     expect(person.called, false);
@@ -66,7 +66,7 @@ void main() {
 
     // Verify that our counter has incremented.
     expect(person.name, name);
-    expect(person.number, number);
+    expect(person.phone, number);
     expect(person.email, email);
     expect(person.comment, comment);
     expect(person.outcome, outcome);
@@ -79,7 +79,7 @@ void main() {
   ///
   test('PhoneList Build from data with header', () async {
     List<List<dynamic>> data = [
-      ["name", "number"],
+      ["name", "phone"],
       ["bob", 8007766437],
       ["edward", 8007784339]
     ];
@@ -91,12 +91,12 @@ void main() {
     expect(phoneList.headerPresent, true);
     expect(phoneList.isNotEmpty(), true);
     expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["number"], 1);
+    expect(phoneList.labelMapping["phone"], 1);
   });
 
   test('PhoneList Build with email', () async {
     List<List<dynamic>> data = [
-      ["name", "number", "email"],
+      ["name", "phone", "email"],
       ["bob", 8007766437, "bob@squarepants.com"],
       ["edward", 8007784339, "edward@squid.com"],
     ];
@@ -108,13 +108,13 @@ void main() {
     expect(phoneList.headerPresent, true);
     expect(phoneList.isNotEmpty(), true);
     expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["number"], 1);
+    expect(phoneList.labelMapping["phone"], 1);
     expect(phoneList.labelMapping["email"], 2);
   });
 
 //  test('PhoneList Build from data with header but split names', () async {
 //    List<List<dynamic>> data = [
-//      ["first name", "last name", "number"],
+//      ["first name", "last name", "phone"],
 //      ["bob", "squarepants", 8007766437],
 //      ["edward", "tentacles", 8007784339]
 //    ];
@@ -125,13 +125,13 @@ void main() {
 //    expect(phoneList.headerPresent, true);
 //    expect(phoneList.isNotEmpty(), true);
 //    expect(phoneList.labelMapping["name"], 0);
-//    expect(phoneList.labelMapping["number"], 1);
+//    expect(phoneList.labelMapping["phone"], 1);
 //  });
 
 
   test('PhoneList Build from data with poor formatting', () async {
     List<List<dynamic>> data = [
-      ["NaMe", "NuMBeR", "EMAil"],
+      ["NaMe", "phone", "EMAil"],
       ["bob", 8007766437, "bob@squarepants.com"],
       ["edward", 8007784339, "edward@squid.com"],
     ];
@@ -143,14 +143,14 @@ void main() {
     expect(phoneList.headerPresent, true);
     expect(phoneList.isNotEmpty(), true);
     expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["number"], 1);
+    expect(phoneList.labelMapping["phone"], 1);
     expect(phoneList.labelMapping["email"], 2);
   });
 
 
   test('PhoneList Build from data with additional headers', () async {
     List<List<dynamic>> data = [
-      ["name", "number", "email", "policy number", "location"],
+      ["name", "phone", "email", "policy number", "location"],
       ["bob", 8007766437, "bob@squarepants.com", 1233, "Pineapple"],
       ["edward", 8007784339, "edward@squid.com", 1234, "Easter Island Head"],
     ];
@@ -162,7 +162,7 @@ void main() {
     expect(phoneList.headerPresent, true);
     expect(phoneList.isNotEmpty(), true);
     expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["number"], 1);
+    expect(phoneList.labelMapping["phone"], 1);
     expect(phoneList.labelMapping["email"], 2);
 
     // Verify additional headers
@@ -187,7 +187,7 @@ void main() {
     expect(phoneList.headerPresent, false);
     expect(phoneList.isNotEmpty(), true);
     expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["number"], 1);
+    expect(phoneList.labelMapping["phone"], 1);
     expect(phoneList.labelMapping["email"], 2);
   });
 
@@ -205,7 +205,7 @@ void main() {
     expect(phoneList.headerPresent, true);
     expect(phoneList.isNotEmpty(), true);
     expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["number"], 1);
+    expect(phoneList.labelMapping["phone"], 1);
     expect(phoneList.labelMapping["email"], 2);
   });
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/file_selector.dart';
-import 'package:auto_call/pages/call_queue.dart';
-import 'package:auto_call/pages/call_queue2.dart';
+import 'package:auto_call/pages/call_session.dart';
 import 'package:auto_call/pages/old_calls.dart';
+import 'package:auto_call/pages/contact_tracker.dart';
 import 'package:auto_call/pages/settings.dart';
 import 'package:auto_call/pages/about.dart';
 import 'package:auto_call/pages/legal.dart';
@@ -66,14 +66,7 @@ class AppDrawer extends StatelessWidget {
           leading: new Icon(Icons.cloud_upload),
           title: new Text('Call Queue', style: Theme.of(context).textTheme.title),
           onTap: () {
-            navigatorUpdate(context, CallQueuePage.routeName);
-          },
-        ),
-        new ListTile(
-          leading: new Icon(Icons.cloud_upload),
-          title: new Text('Call Queue 2', style: Theme.of(context).textTheme.title),
-          onTap: () {
-            navigatorUpdate(context, CallQueuePage2.routeName);
+            navigatorUpdate(context, CallSessionPage.routeName);
           },
         ),
         new ListTile(
@@ -81,6 +74,13 @@ class AppDrawer extends StatelessWidget {
           title: new Text('Old Calls', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, OldCallsPage.routeName);
+          },
+        ),
+        new ListTile(
+          leading: new Icon(Icons.contacts),
+          title: new Text('Contact Tracker', style: Theme.of(context).textTheme.title),
+          onTap: () {
+            navigatorUpdate(context, ContactTrackerPage.routeName);
           },
         ),
         new ListTile(
