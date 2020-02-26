@@ -1,0 +1,389 @@
+import 'package:flutter/material.dart';
+
+import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/ui/drawer.dart';
+import 'package:auto_call/services/calls_and_messages_service.dart';
+
+class CallQueuePage extends StatefulWidget {
+  static String routeName = "/call_queue";
+  final String title = "Call Queue";
+  final String label = "Call Queue";
+
+  @override
+  CallQueueState createState() => new CallQueueState();
+}
+
+class CallQueueState extends State<CallQueuePage> {
+  final double _titleFontSize = 18.0;
+  final double _fontSize = 18.0;
+  int firstUncalled = 0;
+  int lastUncalled = 0;
+  int iterator = 0;
+  bool complete = false;
+  bool inCall = false;
+  FileManager fileManager;
+
+  FocusNode _focusNode;
+  List<FocusNode> _focusNodeList = [];
+//  final myController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNodeList = [];
+//    _focusNode = FocusNode();
+//    _focusNode.addListener(() {
+////      print("_focusNode.hasFocus");
+//    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+//    _focusNode.dispose();
+
+    for (var node in _focusNodeList) {
+      node.dispose();
+    }
+  }
+
+  void changeCallState() async {
+    // Call the number
+    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
+//    bool callComplete = await launchCall(fileManager.phoneList.people[iterator].number);
+    launchCall(fileManager.phoneList.people[iterator].number);
+
+//    if (inCall) {
+//      // If we are in the call then we should not do anything right now
+//
+//    } else {
+//      // If We are not in the call, then we need to do another call
+//      locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
+//    }
+
+    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.people[iterator].number);
+
+    setState(() {
+//      inCall = !inCall;
+
+      fileManager.phoneList.people[iterator].called = true;
+      nextCall();
+    });
+  }
+
+  void checkCallState() {
+    firstUncalled = fileManager.phoneList.people.indexWhere((Person p) {
+      return !p.called;
+    });
+    lastUncalled = fileManager.phoneList.people.lastIndexWhere((Person p) {
+      return !p.called;
+    });
+
+    if (firstUncalled == -1 && lastUncalled == -1) {
+      complete = true;
+      iterator = -1;
+    }
+  }
+
+  void advanceIterator() {
+    int nextIterator = iterator + 1;
+
+    // Check to see if the next call is the last
+    if (nextIterator > lastUncalled) {
+      nextIterator = firstUncalled;
+    } else if (fileManager.phoneList.people[nextIterator].called) {
+      // If the Next entry has been called already, skip
+      if (nextIterator > lastUncalled) {
+        nextIterator = firstUncalled;
+      } else {
+        while (fileManager.phoneList.people[nextIterator].called) {
+          nextIterator++;
+        }
+      }
+    }
+
+    iterator = nextIterator;
+  }
+
+  void nextCall() {
+    checkCallState();
+    advanceIterator();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    fileManager = ModalRoute.of(context).settings.arguments;
+
+    return Scaffold(
+      drawer: AppDrawer(context),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: <Widget>[
+          SaveButton(),
+//          IconButton(
+//            icon: Icon(Icons.save, color: Theme.of(context).buttonColor),
+//            iconSize: 40.0,
+//            onPressed: () async {
+////              savedSnackBar(context);
+////              await fileManager.savePhoneList();
+//            },
+//          ),
+          IconButton(
+            icon: Icon(Icons.cancel, color: Theme.of(context).buttonColor),
+            iconSize: 40.0,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+        title: Text(widget.title),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: animatedTable(context),
+                    )
+                  ]),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+              child: Center(
+                  child: Row(
+                children: <Widget>[
+                  FloatingActionButton.extended(
+                    label: Text('Back'),
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      setState(() {
+                        iterator > 0 ? iterator-- : iterator = 0;
+                      });
+                    },
+                    heroTag: "btn_back",
+                    tooltip: "Back",
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      changeCallState();
+                    },
+                    heroTag: "btn_call",
+                    tooltip: "Call",
+                    child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
+                    backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
+                  ),
+                  FloatingActionButton.extended(
+                    label: Text('Next'),
+                    icon: Icon(Icons.arrow_forward),
+                    onPressed: () {
+                      setState(() {
+                        checkCallState();
+                        advanceIterator();
+                      });
+                    },
+                    heroTag: "btn_next",
+                    tooltip: "Next Call",
+                  ),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              ))
+              // fill in required params
+              ),
+        ],
+      ),
+    );
+  }
+
+  TextStyle calledTheme(bool called) {
+    return TextStyle(
+      color: called ? Colors.grey[500] : Colors.black,
+    );
+  }
+
+  Widget animatedTable(BuildContext context) {
+    TextStyle headerStyle = TextStyle(fontSize: _titleFontSize, fontWeight: FontWeight.bold);
+
+    return DataTable(
+      horizontalMargin: 0.0,
+      columnSpacing: 10.0,
+      columns: [
+            DataColumn(label: Text("", style: headerStyle), numeric: false),
+            DataColumn(label: Text("#", style: headerStyle), numeric: false),
+            DataColumn(label: Text("Name", style: headerStyle), numeric: false),
+            DataColumn(label: Text("Phone", style: headerStyle), numeric: false),
+//            DataColumn(label: Text("Email", style: headerStyle), numeric: false),
+            DataColumn(label: Text("Comment", style: headerStyle), numeric: false),
+            DataColumn(label: Text("Outcome", style: headerStyle), numeric: false),
+          ] +
+          List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
+            return DataColumn(
+                label: Text(fileManager.phoneList.additionalLabels[idx], style: headerStyle), numeric: false);
+          }),
+      rows: fileManager.phoneList.people
+          .asMap()
+          .map((i, person) => MapEntry(
+              i,
+              DataRow.byIndex(
+                  index: i,
+                  selected: i == iterator ? true : false,
+//                  onSelectChanged: (bool selected) {
+//                    if (selected) {
+//                      iterator=i;
+//                      selected = selected;
+//                    }
+//                  },
+                  cells: [
+                        DataCell(
+                            Container(
+                              width: 50.0,
+                              alignment: Alignment.center,
+                              child: i == iterator
+                                  ? Icon(Icons.forward)
+                                  : IconButton(
+                                      icon: fileManager.phoneList.people[i].called
+                                          ? Icon(Icons.check_circle, color: Colors.green)
+                                          : Icon(Icons.check_circle, color: Colors.grey[300]),
+                                      onPressed: () {
+                                        setState(() {
+                                          fileManager.phoneList.people[i].called =
+                                              !fileManager.phoneList.people[i].called;
+                                        });
+                                      }),
+                            ),
+                            placeholder: true, onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+//                        DataCell(Checkbox(
+//                            value: fileManager.phoneList.people[i].called,
+//                            onChanged: (bool value) {
+//                              setState(() {
+//                                fileManager.phoneList.people[i].called = value;
+//                              });
+//                            })),
+
+                        DataCell(Text(i.toString(), style: calledTheme(fileManager.phoneList.people[i].called)),
+                            placeholder: false, onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(
+                            Text(fileManager.phoneList.people[i].name,
+                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(
+                            Text(fileManager.phoneList.people[i].number,
+                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+//                        DataCell(
+//                            Text(fileManager.phoneList.people[i].email,
+//                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
+//                          setState(() {
+//                            iterator = i;
+//                          });
+//                        }),
+                        DataCell(
+                            TextFormField(
+                              autofocus: false,
+                              onChanged: (text) {
+                                fileManager.phoneList.people[i].comment = text;
+                                FocusScope.of(context).unfocus();
+                              },
+                              onTap: () {
+                                FocusScope.of(context).requestFocus(_focusNode);
+                              },
+                              onEditingComplete: () {
+                                print("on editing complete");
+                                FocusScope.of(context).unfocus();
+                              },
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: fileManager.phoneList.people[i].comment.isEmpty
+                                      ? '..................'
+                                      : fileManager.phoneList.people[i].comment),
+                            ),
+//                            Text(fileManager.phoneList.people[i].comment,
+//                                style: calledTheme(fileManager.phoneList.people[i].called)),
+                            onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                        DataCell(
+                            Text(fileManager.phoneList.people[i].outcome,
+                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        }),
+                      ] +
+                      List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
+                        return DataCell(
+                            Text(
+                                fileManager.phoneList.people[i].additionalData[
+                                    fileManager.phoneList.labelMapping[fileManager.phoneList.additionalLabels[idx]]],
+                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
+                          setState(() {
+                            iterator = i;
+                          });
+                        });
+                      }))))
+          .values
+          .toList(),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.save, color: Theme.of(context).buttonColor),
+      iconSize: 40.0,
+      onPressed: () async {
+        SnackBar snackBar = SnackBar(
+//          content: Text("Saved file to" + FileManager.updatedFilePath(fileManager.path)),
+          content: Text("Saving doesnt work yet. Get fucked nerd"),
+          backgroundColor: Colors.grey[600],
+          action: SnackBarAction(
+            label: 'Undo',
+            textColor: Colors.white,
+            onPressed: () {
+              // Some code to undo the change.
+            },
+          ),
+        );
+
+        // Find the Scaffold in the widget tree and use
+        // it to show a SnackBar.
+        Scaffold.of(context).showSnackBar(snackBar);
+//        await fileManager.savePhoneList();
+      },
+    );
+  }
+}
+
+class AfterCallPrompt extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}

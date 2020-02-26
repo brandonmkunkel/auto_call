@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/pages/call_queue.dart';
+import 'package:auto_call/pages/call_queue2.dart';
 import 'package:auto_call/pages/old_calls.dart';
 import 'package:auto_call/pages/legal.dart';
 import 'package:auto_call/pages/about.dart';
@@ -16,14 +17,25 @@ class AppIndex {
     HomePage,
     OldCallsPage,
     CallQueuePage,
+    CallQueuePage2,
     FileSelectorPage,
     SettingsPage,
     AboutPage,
     LegalPage,
   ];
-  static final Map<String, dynamic> drawerIndex = {
-//    HomePage.title:
-  };
+//  static final Map<String, dynamic> drawerIndex = {
+////    HomePage.title:
+//  };
+
+  static final List<List> drawerIndex = [
+    [Icons.home, HomePage],
+    [Icons.note_add, FileSelectorPage],
+    [Icons.cloud_upload, CallQueuePage],
+    [Icons.cloud_upload, CallQueuePage2],
+    [Icons.history, OldCallsPage],
+    [Icons.settings, SettingsPage],
+    [Icons.info, AboutPage],
+  ];
 
   static Map<String, WidgetBuilder> buildRoutes(BuildContext context) {
     return Map<String, WidgetBuilder>.fromIterable(pageIndex, key: (e) => e.routeName, value: (e) => ((context) => e()));

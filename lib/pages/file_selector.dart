@@ -11,6 +11,8 @@ import 'package:auto_call/ui/alerts/file_warning.dart';
 
 class FileSelectorPage extends StatefulWidget {
   static String routeName = "/file_selector";
+  static String title = "File Selector";
+  static String label = "File Selector";
 
   @override
   FileSelectorState createState() => FileSelectorState();

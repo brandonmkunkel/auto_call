@@ -8,6 +8,7 @@ class AboutPage extends StatefulWidget {
 
   static String routeName = "/about";
   final String title = "About";
+  final String label = "About";
 
   @override
   AboutPageState createState() => new AboutPageState();

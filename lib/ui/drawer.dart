@@ -11,6 +11,16 @@ import 'package:auto_call/pages/legal.dart';
 class AppDrawer extends StatelessWidget {
   final double textScale = 1.5;
 
+//  final List menuItems = [
+//    [Icons.home, HomePage],
+//    [Icons.note_add, FileSelectorPage],
+//    [Icons.cloud_upload, CallQueuePage],
+//    [Icons.cloud_upload, CallQueuePage2],
+//    [Icons.history, OldCallsPage],
+//    [Icons.settings, SettingsPage],
+//    [Icons.info, AboutPage],
+//  ];
+
   const AppDrawer(BuildContext context);
 
   @override
@@ -20,7 +30,10 @@ class AppDrawer extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         new DrawerHeader(
-          child: new Center(child: new Text('Your Favorite Robot Assistant', textScaleFactor: 1.5)),
+          child: new Center(
+              child: new Text('Your Favorite Robot Assistant',
+                  textScaleFactor: 1.5, style: TextStyle(color: Colors.white))),
+          decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         ),
 //          new ListTile(
 //            title: new Text('Splash', textScaleFactor: textScale),
@@ -34,6 +47,7 @@ class AppDrawer extends StatelessWidget {
 //              navigatorUpdate(context, WelcomePage.routeName);
 //            },
 //          ),
+
         new ListTile(
           leading: new Icon(Icons.home),
           title: new Text('Home', style: Theme.of(context).textTheme.title),

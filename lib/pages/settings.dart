@@ -7,6 +7,7 @@ import 'dart:async';
 class SettingsPage extends StatefulWidget {
   static String routeName = "/Settings";
   final String title = "Settings";
+  final String label = "Settings";
 
   @override
   SettingsPageState createState() => new SettingsPageState();

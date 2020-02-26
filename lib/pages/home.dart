@@ -9,6 +9,7 @@ class HomePage extends StatefulWidget {
 
   static String routeName = "/home";
   final String title = "Auto Call Home Page";
+  final String label = "Home";
 
   @override
   _HomePageState createState() => _HomePageState();
