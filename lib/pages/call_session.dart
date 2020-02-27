@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
+//import 'package:auto_call/ui/call_table.dart';
 import 'package:auto_call/services/calls_and_messages_service.dart';
 
 class CallSessionPage extends StatefulWidget {
   static String routeName = "/call_queue";
   final String title = "Call Queue";
   final String label = "Call Queue";
+  FileManager fileManager;
+
+  CallSessionPage({Key key, @required this.fileManager}) : super(key: key);
 
   @override
   CallSessionState createState() => new CallSessionState();
@@ -26,7 +30,6 @@ class CallSessionState extends State<CallSessionPage> {
 
   FocusNode _focusNode;
   List<FocusNode> _focusNodeList = [];
-//  final myController = TextEditingController();
 
   @override
   void initState() {
@@ -120,7 +123,7 @@ class CallSessionState extends State<CallSessionPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
-          SaveButton(),
+          SaveButton(fileManager: fileManager),
 //          IconButton(
 //            icon: Icon(Icons.save, color: Theme.of(context).buttonColor),
 //            iconSize: 40.0,
@@ -151,6 +154,7 @@ class CallSessionState extends State<CallSessionPage> {
                   children: <Widget>[
                     SingleChildScrollView(
                       scrollDirection: Axis.vertical,
+//                      child: CallTable(),
                       child: animatedTable(context),
                     )
                   ]),
@@ -212,6 +216,11 @@ class CallSessionState extends State<CallSessionPage> {
     return called ? Theme.of(context).accentColor : Theme.of(context).disabledColor;
   }
 
+  TextStyle headerStyle(BuildContext context) {
+    return TextStyle(
+        fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color);
+  }
+
   void setStateIterator(int i) {
     setState(() {
       iterator = i;
@@ -219,26 +228,23 @@ class CallSessionState extends State<CallSessionPage> {
   }
 
   Widget animatedTable(BuildContext context) {
-    TextStyle headerStyle = TextStyle(
-        fontSize: _titleFontSize, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color);
-
     return DataTable(
       horizontalMargin: 0.0,
       columnSpacing: 10.0,
       columns: [
-            DataColumn(label: Text("", style: headerStyle), numeric: false),
-            DataColumn(label: Text("#", style: headerStyle), numeric: false),
-            DataColumn(label: Text("Name", style: headerStyle), numeric: false),
-            DataColumn(label: Text("Phone", style: headerStyle), numeric: false),
+            DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
+            DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
+            DataColumn(label: Text("Name", style: headerStyle(context)), numeric: false),
+            DataColumn(label: Text("Phone", style: headerStyle(context)), numeric: false),
           ] +
           List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
             return DataColumn(
-                label: Text(fileManager.phoneList.additionalLabels[idx], style: headerStyle), numeric: false);
+                label: Text(fileManager.phoneList.additionalLabels[idx], style: headerStyle(context)), numeric: false);
           }) +
           [
-//            DataColumn(label: Text("Email", style: headerStyle), numeric: false),
-            DataColumn(label: Text("Comment", style: headerStyle), numeric: false),
-            DataColumn(label: Text("Outcome", style: headerStyle), numeric: false),
+//            DataColumn(label: Text("Email", style: headerStyle(context)), numeric: false),
+            DataColumn(label: Text("Comment", style: headerStyle(context)), numeric: false),
+            DataColumn(label: Text("Outcome", style: headerStyle(context)), numeric: false),
           ],
       rows: fileManager.phoneList.people
           .asMap()
@@ -345,6 +351,9 @@ class CallSessionState extends State<CallSessionPage> {
 }
 
 class SaveButton extends StatelessWidget {
+  final FileManager fileManager;
+  SaveButton({this.fileManager});
+
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -353,7 +362,7 @@ class SaveButton extends StatelessWidget {
       onPressed: () async {
         SnackBar snackBar = SnackBar(
 //          content: Text("Saved file to" + FileManager.updatedFilePath(fileManager.path)),
-          content: Text("Saving doesnt work yet. Get fucked nerd"),
+          content: Text("File saved to "+ await FileManager.savedFilePath(fileManager.path)),
           backgroundColor: Colors.grey[600],
           action: SnackBarAction(
             label: 'Undo',
@@ -367,7 +376,7 @@ class SaveButton extends StatelessWidget {
         // Find the Scaffold in the widget tree and use
         // it to show a SnackBar.
         Scaffold.of(context).showSnackBar(snackBar);
-//        await fileManager.savePhoneList();
+        await fileManager.saveCallSession();
       },
     );
   }

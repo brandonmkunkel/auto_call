@@ -128,7 +128,6 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
-//                            color: buttonColor(context, false),
                             color: Theme.of(context).disabledColor,
                             onPressed: () => _openFileExplorer(),
                             child: new Text("No", style: TextStyle(fontSize: 32.0)),
@@ -139,7 +138,6 @@ class FileSelectorState extends State<FileSelectorPage> {
                           minWidth: MediaQuery.of(context).size.width * 0.40,
                           height: MediaQuery.of(context).size.width * 0.15,
                           child: RaisedButton(
-//                            color: buttonColor(context, true),
                             color: Theme.of(context).accentColor,
                             onPressed: () async {
                               if (_path != null) {

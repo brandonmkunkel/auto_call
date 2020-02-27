@@ -36,6 +36,7 @@ dependencies:
   intent:
 
   #  Files
+  permission_handler:
   csv:
   file_picker:
   path_provider:

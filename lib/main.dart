@@ -6,6 +6,7 @@ import 'services/calls_and_messages_service.dart';
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
 import 'pages/call_session.dart';
+import 'pages/contact_tracker.dart';
 import 'pages/old_calls.dart';
 import 'pages/legal.dart';
 import 'pages/about.dart';
@@ -25,31 +26,43 @@ void main() {
 
 final ThemeData appTheme = ThemeData(
   brightness: Brightness.light,
-
   backgroundColor: Colors.grey[300],
   primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.white : Colors.green,
+  disabledColor: Colors.grey[400],
+
+  fontFamily: "Raleway"
 );
 
 final ThemeData appDarkTheme = ThemeData(
   brightness: Brightness.dark,
+  backgroundColor: Colors.black,
+  primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey[700] : Colors.green,
+  accentColor: Colors.green[600],
+  disabledColor: Colors.grey[700],
+
+  fontFamily: "Raleway"
 );
 
 class MyApp extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        theme: appTheme,
-        darkTheme: appDarkTheme,
+        theme: appDarkTheme,
+//        theme: appTheme,
+//        darkTheme: appDarkTheme,
         home: HomePage(),
         routes: {
           HomePage.routeName: (context) => HomePage(),
-          OldCallsPage.routeName: (context) => OldCallsPage(),
           CallSessionPage.routeName: (context) => CallSessionPage(),
           FileSelectorPage.routeName: (context) => FileSelectorPage(),
+          OldCallsPage.routeName: (context) => OldCallsPage(),
+          ContactTrackerPage.routeName: (context) => ContactTrackerPage(),
           SettingsPage.routeName: (context) => SettingsPage(),
           LegalPage.routeName: (context) => LegalPage(),
-          AboutPage.routeName: (context) => LegalPage(),
+          AboutPage.routeName: (context) => AboutPage(),
         }
 //      routes: AppIndex.buildRoutes(context),
     );
