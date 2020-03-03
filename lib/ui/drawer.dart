@@ -7,6 +7,7 @@ import 'package:auto_call/pages/contact_tracker.dart';
 import 'package:auto_call/pages/settings.dart';
 import 'package:auto_call/pages/about.dart';
 import 'package:auto_call/pages/legal.dart';
+import 'package:auto_call/pages/call_page.dart';
 
 class AppDrawer extends StatelessWidget {
   final double textScale = 1.5;
@@ -64,9 +65,16 @@ class AppDrawer extends StatelessWidget {
         ),
         new ListTile(
           leading: new Icon(Icons.cloud_upload),
-          title: new Text('Call Queue', style: Theme.of(context).textTheme.title),
+          title: new Text('Call Session', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, CallSessionPage.routeName);
+          },
+        ),
+        new ListTile(
+          leading: new Icon(Icons.history),
+          title: new Text('Call Page', style: Theme.of(context).textTheme.title),
+          onTap: () {
+            navigatorUpdate(context, CallPage.routeName);
           },
         ),
         new ListTile(
@@ -117,8 +125,9 @@ class AppDrawer extends StatelessWidget {
   }
 
   void navigatorUpdate(BuildContext context, String desiredRoute) {
-    // Pop the drawer
-    Navigator.of(context).pop();
+    if (Navigator.canPop(context)) {
+      Navigator.of(context).pop();
+    }
 
     // Push the selected route if it is not the current path
     Navigator.of(context).pushNamedAndRemoveUntil(

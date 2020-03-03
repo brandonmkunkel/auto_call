@@ -7,7 +7,7 @@ import 'package:auto_call/ui/charts/call_breakdown.dart';
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
-  static String routeName = "/home";
+  static const String routeName = "/home";
   final String title = "Auto Call Home Page";
   final String label = "Home";
 
@@ -21,9 +21,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     //80% of screen width
-    double c_width = MediaQuery.of(context).size.width * 0.9;
-    double c_height = MediaQuery.of(context).size.width * 0.9;
-    double smallestDim =  c_width < c_height ? c_width : c_height;
+    double cWidth = MediaQuery.of(context).size.width * 0.9;
+    double cHeight = MediaQuery.of(context).size.width * 0.9;
+    double smallestDim =  cWidth < cHeight ? cWidth : cHeight;
 
     return Scaffold(
         drawer: AppDrawer(context),

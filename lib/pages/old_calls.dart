@@ -1,17 +1,13 @@
-import 'package:auto_call/pages/file_selector.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_io.dart';
-import 'package:auto_call/services/old_call_manager.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/pages/call_session.dart';
 
-
-enum oldCallEnum { delete, load }
+enum oldCallEnum { load, email, delete }
 
 class OldCallsPage extends StatefulWidget {
-  static String routeName = "/old_calls";
+  static const String routeName = "/old_calls";
   final String title = "Old Calls";
   final String label = "Old Calls";
 
@@ -20,10 +16,7 @@ class OldCallsPage extends StatefulWidget {
 }
 
 class OldCallsState extends State<OldCallsPage> {
-//  OldCallManager manager;
-  var callHistoryFiles = new Container();
   List<String> files;
-
   bool multiSelect = false;
   List<bool> selected = [];
 
@@ -52,31 +45,31 @@ class OldCallsState extends State<OldCallsPage> {
                         textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline))),
             Expanded(
                 child: FutureBuilder(
-              future: showOldCalls(),
+              future: showOldCalls(context),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 return snapshot.hasData
                     ? snapshot.data
                     : Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
-
-                ///load until snapshot.hasData resolves to true
               },
             ))
           ],
         ));
   }
 
-  Future<Widget> showOldCalls() async {
+  Future<Widget> showOldCalls(BuildContext context) async {
     files = await FileManager.findOldCalls();
 
-    return ListView(
-        children: List<Widget>.generate(files.length, (int index) {
-      return ListTile(
-        title: Text(files[index]),
+    return files.isNotEmpty
+        ? ListView(
+            children: List<Widget>.generate(files.length, (int index) {
+            return ListTile(
+              title: Text(files[index]),
 //        onLongPress: () {multiSelect=true;},
 //        leading: multiSelect ? Checkbox(value: selected[index], onChanged: (bool value){selected[index]=!selected[index];}) : null,
-        trailing: _popUpFile(context, index),
-      );
-    }));
+              trailing: _popUpFile(context, index),
+            );
+          }))
+        : Container(child: Text("No old call sessions found.", style: Theme.of(context).textTheme.subhead));
   }
 
   void showMenuSelection(oldCallEnum value) {
@@ -92,10 +85,12 @@ class OldCallsState extends State<OldCallsPage> {
         onSelected: (oldCallEnum _enum) async {
           if (_enum == oldCallEnum.load) {
             Navigator.pushNamed(
-                context,
-                CallSessionPage.routeName,
-                arguments: await readFileAsync(files[index].toString()),
+              context,
+              CallSessionPage.routeName,
+              arguments: await readFileAsync(files[index].toString()),
             );
+          } else if (_enum == oldCallEnum.email){
+            print("trying to email");
           } else if (_enum == oldCallEnum.delete) {
             await FileManager.deleteFile(files[index].toString());
             setState(() {});
@@ -108,6 +103,10 @@ class OldCallsState extends State<OldCallsPage> {
               child: Text('Load'),
             ),
             PopupMenuItem<oldCallEnum>(
+              value: oldCallEnum.email,
+              child: Text('Email'),
+            ),
+            PopupMenuItem<oldCallEnum>(
               value: oldCallEnum.delete,
               child: Text('Delete'),
             )
@@ -115,6 +114,3 @@ class OldCallsState extends State<OldCallsPage> {
         });
   }
 }
-
-
-

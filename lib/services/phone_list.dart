@@ -1,37 +1,44 @@
-import 'package:flutter/services.dart';
-
-import 'package:path_provider/path_provider.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 import 'package:auto_call/services/regex.dart';
 import 'package:auto_call/services/file_io.dart';
 
 enum Outcome {
-  voicemail,
-  answered,
-  success,
+  None,
+  Voicemail,
+  Answered,
+  Success,
+  FollowUp,
 }
+
+Map<String, Outcome> outcomes = {
+  "None": Outcome.None,
+  "Voicemail": Outcome.Voicemail,
+  "Answered": Outcome.Answered,
+  "Success": Outcome.Success,
+  "Follow Up": Outcome.FollowUp,
+};
 
 class Person {
   bool called = false;
   String name = "";
   String phone = "";
   String email = "";
-  String comment = "";
-  String outcome = "";
+  String note = "";
+  String outcome = "None";
   List<String> additionalData = [];
 
-  static final List<String> labels = ["name", "phone", "email", "outcome", "comment", "called"];
+  static final List<String> labels = ["name", "phone", "email", "outcome", "note", "called"];
   static final List<String> requiredLabels = ["name", "phone"];
 
-  Person(String name, String phone, {String email="", String outcome="", String comment="", bool called=false, List<dynamic> additionalData}) {
+  Person(String name, String phone, {String email="", String outcome="", String note="None", bool called=false, List<dynamic> additionalData}) {
     this.name=name;
     this.phone=phone;
     this.email=email;
 
     this.called=called;
     this.outcome=outcome;
-    this.comment=comment;
+    this.note=note;
     this.additionalData = additionalData != null ? additionalData.cast<String>() : [];
   }
 
@@ -40,11 +47,11 @@ class Person {
   }
 
   static List<List<String>> orderedLabels() {
-    return [["name", "phone", "email"], ["outcome", "comment", "called"]];
+    return [["name", "phone", "email"], ["outcome", "note", "called"]];
   }
 
   List<String> encode() {
-    return [name, phone, email] + additionalData + [outcome, comment, called.toString()];
+    return [name, phone, email] + additionalData + [outcome, note, called.toString()];
   }
 }
 
@@ -55,6 +62,8 @@ class PhoneList {
   List<String> additionalLabels = [];
   List<Person> people = [];
   int iterator = 0;
+  int firstUncalled = 0;
+  int lastUncalled = 0;
 
   ///
   /// Constructors
@@ -146,9 +155,9 @@ class PhoneList {
               entry[labelMapping["name"]],
               entry[labelMapping["phone"]].toString(),
               email: labelMapping.containsKey("email") ? entry[labelMapping["email"]] : "",
-              comment: labelMapping.containsKey("comment") ? entry[labelMapping["comment"]] : "",
-              outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]] : "",
-              called: labelMapping.containsKey("called") ? entry[labelMapping["called"]].toString().toLowerCase() == true : false,
+              note: labelMapping.containsKey("note") ? entry[labelMapping["note"]] : "",
+              outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]] : "None",
+              called: labelMapping.containsKey("called") ? entry[labelMapping["called"]].toString().toLowerCase() == "true" : false,
               additionalData: List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString()),
             )
         );
@@ -226,10 +235,70 @@ class PhoneList {
   }
 
   List getAdditionalColumns() {
-    List.generate(people.length, (int i) {
+    return List.generate(people.length, (int i) {
       return List.generate(additionalLabels.length, (int idx) {
         return people[i].additionalData[labelMapping[additionalLabels[idx]]];
       });
     });
+  }
+
+  // Return the person at the current iterator
+  Person currentPerson() {
+    return people[iterator];
+  }
+
+  bool isComplete() {
+    return people.every((Person person) => person.called == true);
+  }
+
+  void checkRemainingCallRange() {
+    firstUncalled = people.indexWhere((Person p) => !p.called);
+    lastUncalled = people.lastIndexWhere((Person p) => !p.called);
+  }
+
+  void advanceIterator() {
+    checkRemainingCallRange();
+    int nextIterator = iterator + 1;
+
+    // Check to see if the next call is the last
+    if (isComplete()) {
+      nextIterator = -1;
+    } else if (nextIterator > lastUncalled) {
+        nextIterator = firstUncalled;
+    } else if (people[nextIterator].called) {
+      // If the Next entry has been called already, skip
+      if (nextIterator > lastUncalled) {
+        nextIterator = firstUncalled;
+      } else {
+        while (people[nextIterator].called) {
+          nextIterator++;
+        }
+      }
+    }
+
+    iterator = nextIterator;
+  }
+
+  void reverseIterator() {
+    checkRemainingCallRange();
+    int nextIterator = iterator - 1;
+
+    // Check to see if the next call is the last
+    if (isComplete()) {
+      nextIterator = -1;
+    } else if (nextIterator < firstUncalled) {
+      nextIterator = firstUncalled;
+    } else if (people[nextIterator].called) {
+      // If the Next entry has been called already, skip
+      if (nextIterator < firstUncalled) {
+        nextIterator = firstUncalled;
+      } else {
+        while (people[nextIterator].called) {
+          nextIterator--;
+        }
+      }
+    }
+
+    iterator = nextIterator;
   }
 }

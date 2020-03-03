@@ -6,7 +6,7 @@ import 'package:auto_call/ui/terms.dart';
 class LegalPage extends StatefulWidget {
   LegalPage({Key key}) : super(key: key);
 
-  static String routeName = "/legal";
+  static const String routeName = "/legal";
   final String title = "Terms and Conditions";
 
   @override

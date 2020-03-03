@@ -4,7 +4,7 @@ import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/ui/drawer.dart';
 
 class ContactTrackerPage extends StatefulWidget {
-  static String routeName = "/contact_tracker";
+  static const String routeName = "/contact_tracker";
   final String title = "Contact Tracker";
   final String label = "Contact Tracker";
 

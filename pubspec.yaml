@@ -33,7 +33,8 @@ dependencies:
   # Phone calls
   get_it:
   url_launcher:
-  intent:
+  flutter_phone_state: ^0.5.9
+  flutter_phone_direct_caller : ^1.0.1
 
   #  Files
   permission_handler:

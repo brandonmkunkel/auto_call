@@ -7,11 +7,11 @@ import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/pages/call_session.dart';
 
-import 'package:auto_call/ui/alerts/file_warning.dart';
+import 'package:auto_call/ui/prompts/file_warning.dart';
 
 
 class FileSelectorPage extends StatefulWidget {
-  static String routeName = "/file_selector";
+  static const String routeName = "/file_selector";
   static String title = "File Selector";
   static String label = "File Selector";
 
@@ -115,7 +115,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                     SizedBox(
                       height: 40.0,
                       child: Text(
-                        "Are these files correct?",
+                        "Is this file correct?",
                         style: TextStyle(fontSize: 24),
                       ),
                     ),
@@ -130,7 +130,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                           child: RaisedButton(
                             color: Theme.of(context).disabledColor,
                             onPressed: () => _openFileExplorer(),
-                            child: new Text("No", style: TextStyle(fontSize: 32.0)),
+                            child: new Text("Reselect", style: Theme.of(context).textTheme.display1),
                           ),
                         ),
                         Spacer(flex: 1),
@@ -150,7 +150,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                                 showNoFileError(context);
                               }
                             },
-                            child: new Text("Yes", style: TextStyle(fontSize: 32.0)),
+                            child: new Text("Yes", style: Theme.of(context).textTheme.display1),
                           ),
                         ),
                         Spacer(flex: 1)

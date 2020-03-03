@@ -1,8 +1,5 @@
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 
 import 'package:auto_call/services/phone_list.dart';
 
@@ -27,7 +24,7 @@ void main() {
     expect(person.name, name);
     expect(person.phone, number);
     expect(person.email, "");
-    expect(person.comment, "");
+    expect(person.note, "");
     expect(person.called, false);
   });
 
@@ -42,7 +39,7 @@ void main() {
     expect(person.name, name);
     expect(person.phone, number);
     expect(person.email, email);
-    expect(person.comment, "");
+    expect(person.note, "");
     expect(person.called, false);
   });
 
@@ -50,7 +47,7 @@ void main() {
     String name = "spongebob squarepants";
     String number = "8007766437";
     String email = "pineapple@binikin_bottom.com";
-    String comment = "oh yeah this is the stuff";
+    String note = "oh yeah this is the stuff";
     String outcome = "voicemail";
     bool called = false;
     List additionalData = ["12341234", "USA"];
@@ -58,7 +55,7 @@ void main() {
     Person person = Person(name,
       number,
       email: email,
-      comment: comment,
+      note: note,
       outcome: outcome,
       called: called,
       additionalData: additionalData
@@ -68,7 +65,7 @@ void main() {
     expect(person.name, name);
     expect(person.phone, number);
     expect(person.email, email);
-    expect(person.comment, comment);
+    expect(person.note, note);
     expect(person.outcome, outcome);
     expect(person.called, called);
     expect(person.additionalData, additionalData);

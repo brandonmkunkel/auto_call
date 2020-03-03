@@ -132,6 +132,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.4"
+  flutter_phone_direct_caller:
+    dependency: "direct main"
+    description:
+      name: flutter_phone_direct_caller
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
+  flutter_phone_state:
+    dependency: "direct main"
+    description:
+      name: flutter_phone_state
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -191,13 +205,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
-  intent:
-    dependency: "direct main"
-    description:
-      name: intent
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.0"
   intl:
     dependency: transitive
     description:
@@ -476,6 +483,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  stream_transform:
+    dependency: transitive
+    description:
+      name: stream_transform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
   string_scanner:
     dependency: transitive
     description:
@@ -553,6 +567,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+1"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   vector_math:
     dependency: transitive
     description:

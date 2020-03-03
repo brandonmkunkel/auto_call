@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
-import 'dart:async';
-
 class SettingsPage extends StatefulWidget {
-  static String routeName = "/Settings";
+  static const String routeName = "/Settings";
   final String title = "Settings";
   final String label = "Settings";
 
@@ -92,8 +90,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   Widget buildStandardSettingWidget(List<Setting> settings, int idx) {
     switch (settings[idx].settingPair.type) {
-      case bool:
-        {
+      case bool: {
           return ListTile(
             title: Text(settings[idx].settingPair.text),
             trailing: Switch(
@@ -106,11 +103,13 @@ class SettingsPageState extends State<SettingsPage> {
               },
             ),
           );
-        }
-      case int:
-        {
+      }
+      break;
+
+      case int: {
           return Container();
-        }
+      }
+      break;
     }
   }
 

@@ -6,7 +6,7 @@ import 'package:auto_call/ui/terms.dart';
 class AboutPage extends StatefulWidget {
   AboutPage({Key key}) : super(key: key);
 
-  static String routeName = "/about";
+  static const String routeName = "/about";
   final String title = "About";
   final String label = "About";
 
@@ -15,7 +15,6 @@ class AboutPage extends StatefulWidget {
 }
 
 class AboutPageState extends State<AboutPage> {
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(

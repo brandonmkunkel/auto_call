@@ -1,5 +1,4 @@
 import 'package:csv/csv.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
@@ -102,6 +101,7 @@ class FileManager {
     "xlsx": ExcelWrapper(),
   };
   String path;
+  String directory;
   String fileName;
   String ext;
   String formattedTime;
@@ -109,9 +109,10 @@ class FileManager {
 
   FileManager(String path) {
     this.path = path;
-    this.formattedTime = getFormattedTime();
+    this.directory = getDirectory(path);
     this.fileName = getFileName(path);
     this.ext = getExtension(path);
+    this.formattedTime = getFormattedTime();
   }
 
   bool checkValidExtension() {
@@ -160,6 +161,12 @@ class FileManager {
   static String getFileName(String path) {
     List pathComponents = path.split("/");
     return pathComponents.last;
+  }
+
+  static String getDirectory(String path) {
+    List pathComponents = path.split("/");
+    pathComponents.removeLast();
+    return pathComponents.join("/");
   }
 
   static String getExtension(String path) {
