@@ -27,7 +27,9 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: new Column(
+        child: new Container(
+          decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+            child: Column(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         new DrawerHeader(
@@ -121,7 +123,7 @@ class AppDrawer extends StatelessWidget {
               )),
         ),
       ],
-    ));
+    )));
   }
 
   void navigatorUpdate(BuildContext context, String desiredRoute) {

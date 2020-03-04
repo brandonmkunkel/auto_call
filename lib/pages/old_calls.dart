@@ -87,7 +87,8 @@ class OldCallsState extends State<OldCallsPage> {
             Navigator.pushNamed(
               context,
               CallSessionPage.routeName,
-              arguments: await readFileAsync(files[index].toString()),
+//              arguments: await readFileAsync(files[index].toString()),
+              arguments: FileManager(files[index].toString()),
             );
           } else if (_enum == oldCallEnum.email){
             print("trying to email");

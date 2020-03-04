@@ -13,11 +13,11 @@ import 'package:auto_call/services/phone_list.dart';
 ///
 /// General Async function for reading files
 ///
-Future<FileManager> readFileAsync(String path) async {
-  FileManager fileManager = FileManager(path);
-  await fileManager.readFile();
-  return fileManager;
-}
+//Future<FileManager> readFileAsync(String path) async {
+//  FileManager fileManager = FileManager(path);
+//  await fileManager.readFile();
+//  return fileManager;
+//}
 
 ///
 /// FileIOWrapper is a class that wraps function pointers
@@ -136,9 +136,14 @@ class FileManager {
   }
 
   Future<void> saveToOldCalls() async {
-    // Create the path for the file to be saved in /old_calls
-    String oldCallsPath = await oldCallsDirectory() + oldCallsFileName(path, date: formattedTime);
-    await _saveFile(oldCallsPath, this.phoneList.export());
+    String oldCallsDir = await oldCallsDirectory();
+
+    // Check to see if this file is already stored as an old call
+    if (this.directory != oldCallsDir) {
+      // Create the path for the file to be saved in /old_calls
+      String oldCallsPath = oldCallsDir + oldCallsFileName(path, date: formattedTime);
+      await _saveFile(oldCallsPath, this.phoneList.export());
+    }
   }
 
   // Save the file to the same location but under a new name
@@ -153,6 +158,11 @@ class FileManager {
     } else {
       print("Not a valid file type");
     }
+  }
+
+  // Use the Share interface for sending the file over email?s
+  Future<void> emailFile() async {
+
   }
 
   ///
@@ -188,6 +198,10 @@ class FileManager {
 
   static Future<String> savedFilePath(String path) async {
     return updatedFilePath(path);
+  }
+
+  static Future<String> oldCallsPath(String path) async {
+    return await oldCallsDirectory() + oldCallsFileName(path);
   }
 
   static Future<String> oldCallsDirectory() async {
@@ -227,13 +241,9 @@ class FileManager {
   static Future<void> deleteFile(String path) async {
     var filePath = File(path);
     filePath.exists().then((isThere) {
-      print(isThere);
       if (isThere) {
-        print("file exists");
         filePath.deleteSync(recursive: false);
       }
     });
   }
-
-  void emailFile() async {}
 }

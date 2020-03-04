@@ -30,15 +30,18 @@ final ThemeData appTheme = ThemeData(
     backgroundColor: Colors.grey[300],
     primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.white : Colors.green,
     disabledColor: Colors.grey[400],
-    fontFamily: "Raleway");
+    fontFamily: "Raleway"
+);
 
 final ThemeData appDarkTheme = ThemeData(
     brightness: Brightness.dark,
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.grey[900],
+    scaffoldBackgroundColor: Colors.grey[900],
     primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey[700] : Colors.green,
     accentColor: Colors.green[600],
     disabledColor: Colors.grey[700],
-    fontFamily: "Raleway");
+    fontFamily: "Raleway"
+);
 
 class MyApp extends StatelessWidget {
   @override

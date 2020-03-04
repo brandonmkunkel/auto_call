@@ -144,7 +144,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                                 Navigator.pushNamed(
                                   context,
                                   CallSessionPage.routeName,
-                                  arguments: await readFileAsync(_path),
+//                                  arguments: await readFileAsync(_path),
+                                  arguments: FileManager(_path),
                                 );
                               } else {
                                 showNoFileError(context);
