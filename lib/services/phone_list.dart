@@ -248,7 +248,7 @@ class PhoneList {
   }
 
   bool isComplete() {
-    return people.every((Person person) => person.called == true);
+    return people?.every((Person person) => person.called == true) ?? false;
   }
 
   void checkRemainingCallRange() {

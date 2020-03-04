@@ -1,47 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'package:auto_call/services/calls_and_messages_service.dart';
 import 'package:auto_call/services/file_io.dart';
-import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_table.dart';
-import 'package:auto_call/services/calls_and_messages_service.dart';
-
-class SaveButton extends StatelessWidget {
-  final FileManager fileManager;
-  SaveButton({this.fileManager});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.save, color: Theme.of(context).accentColor),
-      iconSize: 40.0,
-      onPressed: () async {
-        // Find the Scaffold in the widget tree and use
-        // it to show a SnackBar.
-        await fileManager.saveCallSession();
-        await fileManager.saveToOldCalls();
-
-        // Show the snack
-        SnackBar snackBar = SnackBar(
-          content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
-          backgroundColor: Colors.grey[600],
-          action: SnackBarAction(
-            label: 'Undo',
-            textColor: Colors.white,
-            onPressed: () async {
-              // SDelete the files that were just saved
-              await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
-              await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
-            },
-          ),
-        );
-
-        // Show the snackbar
-        Scaffold.of(context).showSnackBar(snackBar);
-      },
-    );
-  }
-}
+import 'package:auto_call/services/settings_manager.dart';
 
 class CallSessionPage extends StatefulWidget {
   static const String routeName = "/call_session";
@@ -155,17 +118,10 @@ class CallSessionState extends State<CallSessionPage> {
     return Scaffold(
       drawer: AppDrawer(context),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        title: Text(widget.title),
+        automaticallyImplyLeading: true,
         actions: <Widget>[
           SaveButton(fileManager: fileManager),
-//          IconButton(
-//            icon: Icon(Icons.save, color: Theme.of(context).buttonColor),
-//            iconSize: 40.0,
-//            onPressed: () async {
-////              savedSnackBar(context);
-////              await fileManager.savePhoneList();
-//            },
-//          ),
           IconButton(
             icon: Icon(Icons.cancel, color: Theme.of(context).accentColor),
             iconSize: 40.0,
@@ -174,138 +130,155 @@ class CallSessionState extends State<CallSessionPage> {
             },
           )
         ],
-        title: Text(widget.title),
       ),
       body: FutureBuilder(
           future: callTableFuture(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return !snapshot.hasData
                 ? Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()))
-                : Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                    Expanded(
-                        child: SingleChildScrollView(
-                      controller: _controller,
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(children: <Widget>[
-                                  DataTable(
-                                    horizontalMargin: 0.0,
-                                    columnSpacing: 10.0,
-                                    dataRowHeight: rowSize,
-                                    columns: [
-                                          DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
-                                          DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
-                                          DataColumn(label: Text("Name", style: headerStyle(context)), numeric: false),
-                                          DataColumn(label: Text("Phone", style: headerStyle(context)), numeric: false),
-                                        ] +
-                                        List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
-                                          return DataColumn(
-                                              label: Text(fileManager.phoneList.additionalLabels[idx],
-                                                  style: headerStyle(context)),
-                                              numeric: false);
-                                        }) +
-                                        [
+                : Stack(children: [
+                    Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+                      Expanded(
+                          child: SingleChildScrollView(
+                        controller: _controller,
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(children: <Widget>[
+                                    DataTable(
+                                      horizontalMargin: 0.0,
+                                      columnSpacing: 10.0,
+                                      dataRowHeight: rowSize,
+                                      columns: [
+                                            DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
+                                            DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
+                                            DataColumn(
+                                                label: Text("Name", style: headerStyle(context)), numeric: false),
+                                            DataColumn(
+                                                label: Text("Phone", style: headerStyle(context)), numeric: false),
+                                          ] +
+                                          List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
+                                            return DataColumn(
+                                                label: Text(fileManager.phoneList.additionalLabels[idx],
+                                                    style: headerStyle(context)),
+                                                numeric: false);
+                                          }) +
+                                          [
 //            DataColumn(label: Text("Email", style: headerStyle(context)), numeric: false),
-                                          DataColumn(label: Text("Note", style: headerStyle(context)), numeric: false),
-                                          DataColumn(
-                                              label: Text("Outcome", style: headerStyle(context)), numeric: false),
-                                        ],
-                                    rows: fileManager.phoneList.people
-                                        .asMap()
-                                        .map((i, person) => MapEntry(i, rowBuilder(context, i)))
-                                        .values
-                                        .toList(),
+                                            DataColumn(
+                                                label: Text("Note", style: headerStyle(context)), numeric: false),
+                                            DataColumn(
+                                                label: Text("Outcome", style: headerStyle(context)), numeric: false),
+                                          ],
+                                      rows: fileManager.phoneList.people
+                                          .asMap()
+                                          .map((i, person) => MapEntry(i, rowBuilder(context, i)))
+                                          .values
+                                          .toList(),
+                                    ),
+                                  ])),
+                              Container(
+                                  height: rowSize,
+                                  alignment: Alignment.center,
+                                  child: Text("End of Phone List", textAlign: TextAlign.center)),
+                              Container(height: rowSize * 2.0)
+                            ]),
+                      )),
+                    ]),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: fileManager.phoneList.isComplete()
+                          ? Container(
+                              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Theme.of(context).backgroundColor.withOpacity(1.0),
+                                        Theme.of(context).backgroundColor.withOpacity(0.0)
+                                      ])),
+                              child: FloatingActionButton.extended(
+                                  label: Text('Calls Completed'),
+                                  icon: Icon(Icons.check_circle),
+                                  onPressed: () {
+                                    print("call_session.dart: COMPLETED");
+                                  }))
+                          : Container(
+//              padding: EdgeInsets.symmetric(vertical: 10.0),
+                              padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).scaffoldBackgroundColor,
+                                  gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
+                                        Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
+                                      ])),
+                              child: Row(
+                                children: <Widget>[
+                                  FloatingActionButton.extended(
+                                    label: Text('Back'),
+                                    icon: Icon(Icons.arrow_back),
+                                    onPressed: () {
+                                      setState(() {
+                                        int origIterator = fileManager.phoneList.iterator;
+                                        fileManager.phoneList.reverseIterator();
+                                        int offset = fileManager.phoneList.iterator - origIterator;
+                                        updateController(offset);
+                                      });
+                                    },
+                                    heroTag: "btn_back",
+                                    tooltip: "Back",
                                   ),
-                                ])),
-                            Container(
-                                height: rowSize,
-                                alignment: Alignment.center,
-                                child: Text("End of Phone List", textAlign: TextAlign.center)),
-                            Container(height: rowSize * 2.0)
-                          ]),
-                    )),
+                                  FloatingActionButton(
+                                    onPressed: () {
+//                                      makeCall();
+
+                                      afterCallPrompt(context, fileManager.phoneList.iterator);
+
+                                      setState(() {
+                                        // Advance iterator and update the scroll controller
+                                        int origIterator = fileManager.phoneList.iterator;
+                                        fileManager.phoneList.advanceIterator();
+                                        int offset = fileManager.phoneList.iterator - origIterator;
+                                        updateController(offset);
+                                      });
+                                    },
+                                    heroTag: "btn_call",
+                                    tooltip: "Call",
+                                    child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
+                                    backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
+                                  ),
+                                  FloatingActionButton.extended(
+                                    label: Text('Next'),
+                                    icon: Icon(Icons.arrow_forward),
+                                    onPressed: () {
+                                      setState(() {
+                                        int origIterator = fileManager.phoneList.iterator;
+                                        fileManager.phoneList.advanceIterator();
+                                        int offset = fileManager.phoneList.iterator - origIterator;
+                                        updateController(offset);
+                                      });
+                                    },
+                                    heroTag: "btn_next",
+                                    tooltip: "Call",
+                                  ),
+                                ],
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              )
+                              // fill in required params
+                              ),
+                    )
                   ]);
           }),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: fileManager.phoneList.isComplete()
-          ? Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).backgroundColor.withOpacity(0.9),
-                  gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [
-                    Theme.of(context).backgroundColor.withOpacity(1.0),
-                    Theme.of(context).backgroundColor.withOpacity(0.0)
-                  ])),
-              child: FloatingActionButton.extended(
-                  label: Text('Calls Completed'),
-                  icon: Icon(Icons.check_circle),
-                  onPressed: () {
-                    print("call_session.dart: COMPLETED");
-                  }))
-          : Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [
-                    Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
-                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
-                  ])),
-              child: Row(
-                children: <Widget>[
-                  FloatingActionButton.extended(
-                    label: Text('Back'),
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      setState(() {
-                        int origIterator = fileManager.phoneList.iterator;
-                        fileManager.phoneList.reverseIterator();
-                        int offset = fileManager.phoneList.iterator - origIterator;
-                        updateController(offset);
-                      });
-                    },
-                    heroTag: "btn_back",
-                    tooltip: "Back",
-                  ),
-                  FloatingActionButton(
-                    onPressed: () {
-                      makeCall();
-
-                      // Advance iterator and update the scroll controller
-                      int origIterator = fileManager.phoneList.iterator;
-                      fileManager.phoneList.advanceIterator();
-                      int offset = fileManager.phoneList.iterator - origIterator;
-                      updateController(offset);
-                    },
-                    heroTag: "btn_call",
-                    tooltip: "Call",
-                    child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                    backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
-                  ),
-                  FloatingActionButton.extended(
-                    label: Text('Next'),
-                    icon: Icon(Icons.arrow_forward),
-                    onPressed: () {
-                      setState(() {
-                        int origIterator = fileManager.phoneList.iterator;
-                        fileManager.phoneList.advanceIterator();
-                        int offset = fileManager.phoneList.iterator - origIterator;
-                        updateController(offset);
-                      });
-                    },
-                    heroTag: "btn_next",
-                    tooltip: "Call",
-                  ),
-                ],
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              )
-              // fill in required params
-              ),
     );
   }
 
@@ -358,12 +331,8 @@ class CallSessionState extends State<CallSessionPage> {
                   ),
                   placeholder: true,
                   onTap: () => setStateIterator(i)),
-              DataCell(
-                  Text(i.toString(),
-                      textAlign: TextAlign.center,
-                      style: calledTextColor(context, fileManager.phoneList.people[i].called)),
-                  placeholder: false,
-                  onTap: () => setStateIterator(i)),
+              DataCell(Text(i.toString(), style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                  placeholder: false, onTap: () => setStateIterator(i)),
               DataCell(
                   Text(fileManager.phoneList.people[i].name,
                       style: calledTextColor(context, fileManager.phoneList.people[i].called)),
@@ -415,8 +384,9 @@ class CallSessionState extends State<CallSessionPage> {
                   DropdownButton<String>(
                       value: fileManager.phoneList.people[i].outcome,
                       onChanged: (String outcome) {
-                        fileManager.phoneList.people[i].outcome = outcome;
-                        setState(() {});
+                        setState(() {
+                          fileManager.phoneList.people[i].outcome = outcome;
+                        });
                       },
 //                                icon: Icon(Icons.arrow_downward),
 //                                iconSize: 24,
@@ -432,5 +402,128 @@ class CallSessionState extends State<CallSessionPage> {
                       ).toList()),
                   onTap: () => setStateIterator(i)),
             ]);
+  }
+
+  void afterCallPrompt(BuildContext context, int i) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+          title: Text("Call Completed to:"),
+          content: Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(children: <Widget>[
+                      ListTile(dense: true, contentPadding: EdgeInsets.all(0.0), title: Text("Name: "), trailing: Text("${fileManager.phoneList.people[i].name}")),
+                      ListTile(dense: true, contentPadding: EdgeInsets.all(0.0), title: Text("Phone: "), trailing: Text("${fileManager.phoneList.people[i].phone}")),
+                    ]),
+
+                    Divider(),
+                    TextFormField(
+                      initialValue: fileManager.phoneList.people[i].note,
+                      autofocus: false,
+                      maxLines: 2,
+                      onChanged: (String text) {
+                        fileManager.phoneList.people[i].note = text;
+                      },
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(_focusNode);
+                      },
+                      onEditingComplete: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      onSaved: (String text) {
+                        setState(() {
+                          fileManager.phoneList.people[i].note = text;
+                        });
+                        FocusScope.of(context).unfocus();
+                      },
+                      onFieldSubmitted: (String text) {
+                        setState(() {
+                          fileManager.phoneList.people[i].note = text;
+                        });
+                      },
+                      decoration: InputDecoration(
+                          labelText: "Note:", border: OutlineInputBorder(), hintText: 'Take a note here'),
+                    ),
+                    Divider(),
+                    ListTile(
+                      dense: true,
+                      title: Text("Call Outcome:"),
+                      trailing: DropdownButton<String>(
+                          value: fileManager.phoneList.people[i].outcome,
+                          onChanged: (String outcome) {
+                            setState(() {
+                              fileManager.phoneList.people[i].outcome = outcome;
+                            });
+                          },
+                          elevation: 16,
+                          items: <String>['None', 'Voicemail', 'Answered', 'Follow Up', 'Success']
+                              .map<DropdownMenuItem<String>>(
+                            (String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            },
+                          ).toList()),
+                    ),
+                  ]))),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Done", style: Theme.of(context).accentTextTheme.button),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  final FileManager fileManager;
+  SaveButton({this.fileManager});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.save, color: Theme.of(context).accentColor),
+      iconSize: 40.0,
+      onPressed: () async {
+        // Find the Scaffold in the widget tree and use
+        // it to show a SnackBar.
+        await fileManager.saveCallSession();
+        await fileManager.saveToOldCalls();
+
+        // Show the snack
+        SnackBar snackBar = SnackBar(
+          content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
+          backgroundColor: Colors.grey[600],
+          action: SnackBarAction(
+            label: 'Undo',
+            textColor: Colors.white,
+            onPressed: () async {
+              // SDelete the files that were just saved
+              await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
+              await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
+            },
+          ),
+        );
+
+        // Show the snackbar
+        Scaffold.of(context).showSnackBar(snackBar);
+      },
+    );
   }
 }

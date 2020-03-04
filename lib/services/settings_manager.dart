@@ -23,10 +23,12 @@ class SettingManager {
   static final List<SettingPair> standardPairs = [
     SettingPair(key: "splashed", text: "Has user opened app before", type: bool, premium: false),
     SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool, premium: false),
+    SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
+    SettingPair(key: "comment_prompt", text: "Prompt on call completion", type: bool, premium: false),
+    SettingPair(key: "one_touch_call", text: "One Touch Call", type: bool, premium: false),
     SettingPair(key: "is_premium", text: "Is the user a premium user", type: bool, premium: false),
   ];
   static final List<SettingPair> premiumPairs = [
-    SettingPair(key: "comment_prompt", text: "Post-Call Comment Prompt", type: bool, premium: true),
     SettingPair(key: "dark_mode", text: "Dark Mode", type: bool, premium: true),
     SettingPair(key: "statistics", text: "Enable User statistics", type: bool, premium: true),
   ];
@@ -41,9 +43,10 @@ class SettingManager {
 
   Future<List<Setting>> loadSettings({bool premium=false}) async {
     List pairs = premium ? premiumPairs : standardPairs;
-    var _settings = List.generate(standardPairs.length, (int index) {
+    var _settings = List.generate(pairs.length, (int index) {
       return Setting(settingPair: pairs[index], value: prefs.getBool(pairs[index].key) ?? false);
     });
+    print(_settings);
     return _settings;
   }
 
@@ -52,23 +55,22 @@ class SettingManager {
       prefs = _prefs;
       standardSettings = await loadSettings(premium: false);
       premiumSettings = await loadSettings(premium: true);
-    }
-    );
+    });
   }
 
-  void printSettings() {
-    print(prefs);
-  }
+  void printSettings() {}
 
   List<Setting> getSettingList(bool premium) {
     return premium ? premiumSettings : standardSettings;
   }
 
   bool isPremium() {
-//    return true;
     return prefs.getBool("is_premium") ?? false;
   }
 
+  dynamic getSetting(String key) async {
+    return true;
+  }
 
 //  void applySettingUpdates(BuildContext context) {
 //    bool changed = false;
