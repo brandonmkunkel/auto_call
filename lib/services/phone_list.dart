@@ -27,11 +27,13 @@ class Person {
   String note = "";
   String outcome = "None";
   List<String> additionalData = [];
+  List<String> additionalLabels = [];
 
   static final List<String> labels = ["name", "phone", "email", "outcome", "note", "called"];
   static final List<String> requiredLabels = ["name", "phone"];
+  static final List<String> possibleOutcomes = ['None', 'Voicemail', 'Answered', 'Follow Up', 'Success'];
 
-  Person(String name, String phone, {String email="", String outcome="", String note="None", bool called=false, List<dynamic> additionalData}) {
+  Person(String name, String phone, {String email="", String outcome="None", String note="", bool called=false, List<dynamic> additionalLabels, List<dynamic> additionalData}) {
     this.name=name;
     this.phone=phone;
     this.email=email;
@@ -40,6 +42,7 @@ class Person {
     this.outcome=outcome;
     this.note=note;
     this.additionalData = additionalData != null ? additionalData.cast<String>() : [];
+    this.additionalLabels = additionalLabels != null ? additionalData.cast<String>() : [];
   }
 
   String string() {
@@ -87,14 +90,20 @@ class PhoneList {
   ///
   /// Methods for interacting with the final class
   ///
+  Person operator[](int idx) => people[idx];
+
+  bool isNotEmpty() {
+    return people.isNotEmpty;
+  }
+
   List<List> export() {
     List<List> headers = [Person.orderedLabels()[0] + additionalLabels + Person.orderedLabels()[1]];
     return headers + List<List>.generate(people.length, (int idx) => people[idx].encode());
   }
 
-  bool isNotEmpty() {
-    return people.isNotEmpty;
-  }
+
+
+
 
   ///
   /// Methods for processing information from data that was read
@@ -152,13 +161,14 @@ class PhoneList {
       if (MagicRegex.isName(entry[labelMapping["name"]].toString()) && MagicRegex.isNumber(entry[labelMapping["phone"]].toString())) {
         people.add(
             Person(
-              entry[labelMapping["name"]],
-              entry[labelMapping["phone"]].toString(),
-              email: labelMapping.containsKey("email") ? entry[labelMapping["email"]] : "",
-              note: labelMapping.containsKey("note") ? entry[labelMapping["note"]] : "",
-              outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]] : "None",
-              called: labelMapping.containsKey("called") ? entry[labelMapping["called"]].toString().toLowerCase() == "true" : false,
-              additionalData: List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString()),
+              entry[labelMapping["name"]].trim(),
+              entry[labelMapping["phone"]].toString().trim(),
+              email: labelMapping.containsKey("email") ? entry[labelMapping["email"]].trim() : "",
+              note: labelMapping.containsKey("note") ? entry[labelMapping["note"]].trim() : "",
+              outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]].trim() : "None",
+              called: labelMapping.containsKey("called") ? entry[labelMapping["called"]].toString().toLowerCase().trim() == "true" : false,
+              additionalLabels: List.generate(additionalLabels.length, (int index) => labelMapping[additionalLabels[index]].toString().trim()),
+              additionalData: List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString().trim()),
             )
         );
       }

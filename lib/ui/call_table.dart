@@ -17,12 +17,11 @@ class InheritedProvider<T> extends InheritedWidget {
 }
 
 class CallTable extends StatefulWidget {
-//  FileManager fileManager;
   final ScrollController controller;
-  final FileManager Function() manager;
+  final FileManager manager;
 
-//  CallTable({Key key, @required this.fileManager, @required this.controller}) : super(key: key);
-  CallTable({Key key, this.manager, @required this.controller}) : super(key: key);
+  CallTable({Key key, @required this.manager, @required this.controller}) : super(key: key);
+//  CallTable({Key key, this.manager, @required this.controller}) : super(key: key);
 
   @override
   _CallTableState createState() => _CallTableState();
@@ -33,7 +32,7 @@ class _CallTableState extends State<CallTable> {
   FocusNode _focusNode;
 //  FileManager fileManager;
 //  ScrollController widget.controller;
-  FileManager get fileManager => widget.manager();
+  FileManager get fileManager => widget.manager;
 
   // Getter for file manager from widget parent
 //  FileManager get fileManager => widget.fileManager;
@@ -90,49 +89,58 @@ class _CallTableState extends State<CallTable> {
 
   @override
   Widget build(BuildContext context) {
-//    print("call table build method");
-//    print(["runtime type", InheritedProvider.of<FileManager>(context).runtimeType]);
-//    fileManager = InheritedProvider.of<FileManager>(context);
-//    print(["Filemanager", fileManager.phoneList.isNotEmpty()]);
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SingleChildScrollView(
-              controller: widget.controller,
-              scrollDirection: Axis.vertical,
-              child: DataTable(
-                horizontalMargin: 0.0,
-                columnSpacing: 10.0,
-                dataRowHeight: rowSize,
-                columns: [
-                      DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
-                      DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
-                      DataColumn(label: Text("Name", style: headerStyle(context)), numeric: false),
-                      DataColumn(label: Text("Phone", style: headerStyle(context)), numeric: false),
-                    ] +
-                    List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
-                      return DataColumn(
-                          label: Text(fileManager.phoneList.additionalLabels[idx], style: headerStyle(context)),
-                          numeric: false);
-                    }) +
-                    [
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      Expanded(
+          child: SingleChildScrollView(
+//            controller: _controller,
+            scrollDirection: Axis.vertical,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(children: <Widget>[
+                        DataTable(
+                          horizontalMargin: 0.0,
+                          columnSpacing: 10.0,
+                          dataRowHeight: rowSize,
+                          columns: [
+                            DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
+                            DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
+                            DataColumn(
+                                label: Text("Name", style: headerStyle(context)), numeric: false),
+                            DataColumn(
+                                label: Text("Phone", style: headerStyle(context)), numeric: false),
+                          ] +
+                              List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
+                                return DataColumn(
+                                    label: Text(fileManager.phoneList.additionalLabels[idx],
+                                        style: headerStyle(context)),
+                                    numeric: false);
+                              }) +
+                              [
 //            DataColumn(label: Text("Email", style: headerStyle(context)), numeric: false),
-                      DataColumn(label: Text("Note", style: headerStyle(context)), numeric: false),
-                      DataColumn(label: Text("Outcome", style: headerStyle(context)), numeric: false),
-                    ],
-                rows: fileManager.phoneList.people
-                    .asMap()
-                    .map((i, person) => MapEntry(i, rowBuilder(context, i)))
-                    .values
-                    .toList(),
-              ),
-            )
-          ]),
-    );
+                                DataColumn(
+                                    label: Text("Note", style: headerStyle(context)), numeric: false),
+                                DataColumn(
+                                    label: Text("Outcome", style: headerStyle(context)), numeric: false),
+                              ],
+                          rows: fileManager.phoneList.people
+                              .asMap()
+                              .map((i, person) => MapEntry(i, rowBuilder(context, i)))
+                              .values
+                              .toList(),
+                        ),
+                      ])),
+                  Container(
+                      height: rowSize,
+                      alignment: Alignment.center,
+                      child: Text("End of Phone List", textAlign: TextAlign.center)),
+                  Container(height: rowSize * 2.0)
+                ]),
+          )),
+    ]);
   }
 
   DataRow rowBuilder(BuildContext context, int i) {

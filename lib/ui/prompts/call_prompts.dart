@@ -1,38 +1,129 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/services/phone_list.dart';
 
-class AfterCallPrompt extends StatelessWidget {
+class AfterCallPrompt extends StatefulWidget {
   final Person person;
+  final int callIdx;
 
-  AfterCallPrompt({this.person});
+  AfterCallPrompt({
+    Key key,
+    @required this.person,
+    @required this.callIdx}) : super(key: key);
+
+  @override
+  AfterCallPromptState createState() => new AfterCallPromptState();
+}
+
+class AfterCallPromptState extends State<AfterCallPrompt> {
+  FocusNode _focusNode;
+
+  @override
+  void initState() {
+    _focusNode = new FocusNode();
+//    print(widget.textController.text);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _focusNode?.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-        title: new Text("Call Completed"),
-        content: new Column(children: [
-          Text("Record a comment about the call"),
-          TextFormField(
-            initialValue: person.note,
-            autofocus: false,
-            onChanged: (String text) {
-              person.note = text;
-            },
-            decoration: InputDecoration(
-//              hintStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
-//              labelStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
-                border: InputBorder.none,
-                hintText: '..........'),
-          ),
-        ]),
-        actions: <Widget>[
-          // usually buttons at the bottom of the dialog
-          new FlatButton(
-            child: new Text("OK"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+    return SimpleDialog(
+        titlePadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+        title: GestureDetector(
+            onTap: () => _focusNode.unfocus(),
+            child: Text("Call Completed (#${widget.callIdx + 1})", textAlign: TextAlign.center)),
+        children: [
+          Column(children: <Widget>[
+            GestureDetector(
+                onTap: () => _focusNode.unfocus(),
+                child: Column(
+                    children: <Widget>[
+                          Divider(),
+                          Row(
+                              children: [Text("Name: "), Text("${widget.person.name}")],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween),
+                          Row(
+                              children: [Text("Phone: "), Text("${widget.person.phone}")],
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween),
+                        ] +
+                        List.generate(widget.person.additionalData.length, (int idx) {
+                          return Row(children: [
+                            Text(widget.person.additionalLabels[idx]),
+                            Text(widget.person.additionalData[idx])
+                          ], mainAxisAlignment: MainAxisAlignment.spaceBetween);
+                        }))),
+            Divider(),
+            TextFormField(
+              focusNode: _focusNode,
+              initialValue: widget.person.note,
+              autofocus: false,
+              maxLines: 1,
+              onChanged: (String text) {
+                setState(() {
+                  widget.person.note = text;
+                });
+                print("call_prompts.dart: onChanged");
+              },
+              onTap: () {
+                _focusNode.requestFocus();
+
+                print("call_prompts.dart: onTap");
+              },
+              onEditingComplete: () {
+                _focusNode.unfocus();
+                print("call_prompts.dart: onEditingComplete");
+              },
+              onSaved: (String text) {
+                setState(() {
+                  widget.person.note = text;
+                });
+                print("call_prompts.dart: onSaved");
+                _focusNode.unfocus();
+              },
+              onFieldSubmitted: (String text) {
+                print("call_prompts.dart: onFieldSubmitted");
+                setState(() {
+                  widget.person.note = text;
+                });
+              },
+              decoration:
+                  InputDecoration(labelText: "Note:", border: OutlineInputBorder(), hintText: 'Take a note here'),
+            ),
+            Divider(),
+            GestureDetector(
+              onTap: () => _focusNode.unfocus(),
+              child: ListTile(
+                  title: Text("Call Outcome:"),
+                  trailing: DropdownButton<String>(
+                      hint: Text("Outcome"),
+                      value: widget.person.outcome,
+                      onChanged: (String value) {
+                        _focusNode.unfocus();
+                        setState(() {
+                          widget.person.outcome = value;
+                        });
+                      },
+                      elevation: 16,
+                      items: Person.possibleOutcomes.map<DropdownMenuItem<String>>(
+                        (String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        },
+                      ).toList())),
+            )
+          ]),
+          Align(
+            alignment: Alignment.centerRight,
+            child: RaisedButton(child: Text("Done"), onPressed: () => Navigator.of(context).pop()),
+          )
         ]);
   }
 }
