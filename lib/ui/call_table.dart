@@ -17,11 +17,16 @@ class InheritedProvider<T> extends InheritedWidget {
 }
 
 class CallTable extends StatefulWidget {
-  final ScrollController controller;
+  final ScrollController scrollController;
   final FileManager manager;
+  final List<TextEditingController> textControllers;
 
-  CallTable({Key key, @required this.manager, @required this.controller}) : super(key: key);
-//  CallTable({Key key, this.manager, @required this.controller}) : super(key: key);
+  CallTable({
+    Key key,
+    @required this.manager,
+    @required this.scrollController,
+    @required this.textControllers
+  }) : super(key: key);
 
   @override
   _CallTableState createState() => _CallTableState();
@@ -29,40 +34,30 @@ class CallTable extends StatefulWidget {
 
 class _CallTableState extends State<CallTable> {
   double rowSize = kMinInteractiveDimension;
-  FocusNode _focusNode;
-//  FileManager fileManager;
-//  ScrollController widget.controller;
-  FileManager get fileManager => widget.manager;
+  List<FocusNode> focusNodes = [];
 
-  // Getter for file manager from widget parent
-//  FileManager get fileManager => widget.fileManager;
+  // Getter for the FileManager
+  FileManager get fileManager => widget.manager;
 
   @override
   void initState() {
     super.initState();
-//    readFile();
-//    widget.controller = ScrollController(keepScrollOffset: true);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _focusNode?.dispose();
-//    widget.controller?.dispose();
+    focusNodes.forEach((focusNode) {focusNode?.dispose();});
   }
-
-//  void readFile() async {
-//    fileManager.readFile();
-//  }
 
   // Update the Scroll controller based on the given item offset
   void updateController(int iteratorOffset) {
-    print("initialoffset ${widget.controller.initialScrollOffset}, "
-        "current offset ${widget.controller.offset}, "
+    print("initialoffset ${widget.scrollController.initialScrollOffset}, "
+        "current offset ${widget.scrollController.offset}, "
         "offset update ${rowSize * iteratorOffset}");
 
-    widget.controller.animateTo(
-      widget.controller.offset + rowSize * iteratorOffset,
+    widget.scrollController.animateTo(
+      widget.scrollController.offset + rowSize * iteratorOffset,
       curve: Curves.easeIn,
       duration: Duration(milliseconds: 500),
     );
@@ -92,7 +87,7 @@ class _CallTableState extends State<CallTable> {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Expanded(
           child: SingleChildScrollView(
-//            controller: _controller,
+            controller: widget.scrollController,
             scrollDirection: Axis.vertical,
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -144,6 +139,14 @@ class _CallTableState extends State<CallTable> {
   }
 
   DataRow rowBuilder(BuildContext context, int i) {
+    if (widget.textControllers.length <= i) {
+      widget.textControllers.add(TextEditingController(text: fileManager.phoneList.people[i].note));
+    }
+
+    if (focusNodes.length <= i) {
+      focusNodes.add(FocusNode());
+    }
+
     return DataRow.byIndex(
         index: i,
         selected: i == fileManager.phoneList.iterator ? true : false,
@@ -194,24 +197,17 @@ class _CallTableState extends State<CallTable> {
 //                        }),
               DataCell(
                   TextFormField(
-                    initialValue: fileManager.phoneList.people[i].note,
+                    controller: widget.textControllers[i],
+                    focusNode: focusNodes[i],
+                    style: calledTextColor(context, fileManager.phoneList[i].called),
+//                    initialValue: fileManager.phoneList.people[i].note,
                     autofocus: false,
                     onChanged: (String text) {
                       fileManager.phoneList.people[i].note = text;
                     },
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(_focusNode);
-                    },
-                    onEditingComplete: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    onSaved: (String text) {
-                      fileManager.phoneList.people[i].note = text;
-                      FocusScope.of(context).unfocus();
-                    },
                     decoration: InputDecoration(
                         hintStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
-                        labelStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
+//                        labelStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
                         border: InputBorder.none,
                         hintText: '..........'),
                   ),
@@ -220,18 +216,17 @@ class _CallTableState extends State<CallTable> {
                   DropdownButton<String>(
                       value: fileManager.phoneList.people[i].outcome,
                       onChanged: (String outcome) {
+                        focusNodes[i].unfocus();
                         fileManager.phoneList.people[i].outcome = outcome;
                         setState(() {});
                       },
-//                                icon: Icon(Icons.arrow_downward),
-//                                iconSize: 24,
                       elevation: 16,
                       items: <String>['None', 'Voicemail', 'Answered', 'Success', 'Follow Up']
                           .map<DropdownMenuItem<String>>(
                         (String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(value, style: calledTextColor(context, fileManager.phoneList[i].called)),
                           );
                         },
                       ).toList()),

@@ -23,9 +23,9 @@ class CallSessionPage extends StatefulWidget {
 class CallSessionState extends State<CallSessionPage> {
   bool inCall = false;
   double rowSize = kMinInteractiveDimension;
-  FocusNode _focusNode;
   ScrollController _controller;
-//  TextEditingController textController;
+  List<TextEditingController> textControllers = [];
+  List<FocusNode> focusNodes = [];
 
   // Getter for file manager from widget parent
   FileManager get fileManager => widget.fileManager;
@@ -34,23 +34,15 @@ class CallSessionState extends State<CallSessionPage> {
   void initState() {
 //    tableSource = CallTableSource(fileManager);
     _controller = ScrollController(keepScrollOffset: true);
-//    textController = TextEditingController();
-    print("in initstate of CallSession");
-//
-//    textController.addListener((){
-////      print("textCOntroller ${textController.text}");
-//      textController.text = fileManager.phoneList.currentPerson().note;
-//    });
-
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _focusNode?.dispose();
     _controller?.dispose();
-//    textController?.dispose();
+    textControllers.forEach((_textController) {_textController?.dispose();});
+    focusNodes.forEach((focusNode) {focusNode?.dispose();});
   }
 
   Future<void> readFile() async {
@@ -74,13 +66,13 @@ class CallSessionState extends State<CallSessionPage> {
         builder: (BuildContext context) =>
             AfterCallPrompt(
                 person: fileManager.phoneList.currentPerson(),
-                callIdx: fileManager.phoneList.iterator
+                callIdx: fileManager.phoneList.iterator,
+                controller: textControllers[fileManager.phoneList.iterator],
             ));
 
     // Update the Widgets on this page
     setState(() {
       fileManager.phoneList.currentPerson().called = true;
-      print(fileManager.phoneList.currentPerson().encode());
     });
   }
 
@@ -143,59 +135,7 @@ class CallSessionState extends State<CallSessionPage> {
             return !snapshot.hasData
                 ? Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()))
                 : Stack(children: [
-//                    CallTable(manager: fileManager, controller: _controller),
-                    Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-                      Expanded(
-                          child: SingleChildScrollView(
-                        controller: _controller,
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(children: <Widget>[
-                                    DataTable(
-                                      horizontalMargin: 0.0,
-                                      columnSpacing: 10.0,
-                                      dataRowHeight: rowSize,
-                                      columns: [
-                                            DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
-                                            DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
-                                            DataColumn(
-                                                label: Text("Name", style: headerStyle(context)), numeric: false),
-                                            DataColumn(
-                                                label: Text("Phone", style: headerStyle(context)), numeric: false),
-                                          ] +
-                                          List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
-                                            return DataColumn(
-                                                label: Text(fileManager.phoneList.additionalLabels[idx],
-                                                    style: headerStyle(context)),
-                                                numeric: false);
-                                          }) +
-                                          [
-//            DataColumn(label: Text("Email", style: headerStyle(context)), numeric: false),
-                                            DataColumn(
-                                                label: Text("Note", style: headerStyle(context)), numeric: false),
-                                            DataColumn(
-                                                label: Text("Outcome", style: headerStyle(context)), numeric: false),
-                                          ],
-                                      rows: fileManager.phoneList.people
-                                          .asMap()
-                                          .map((i, person) => MapEntry(i, rowBuilder(context, i)))
-                                          .values
-                                          .toList(),
-                                    ),
-                                  ])),
-                              Container(
-                                  height: rowSize,
-                                  alignment: Alignment.center,
-                                  child: Text("End of Phone List", textAlign: TextAlign.center)),
-                              Container(height: rowSize * 2.0)
-                            ]),
-                      )),
-                    ]),
+                    CallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: fileManager.phoneList.isComplete()
@@ -214,6 +154,8 @@ class CallSessionState extends State<CallSessionPage> {
                                   label: Text('Calls Completed'),
                                   icon: Icon(Icons.check_circle),
                                   onPressed: () {
+//                                    focusNodes[fileManager.phoneList.iterator].unfocus();
+                                    FocusScope.of(context).unfocus();
                                     print("call_session.dart: COMPLETED");
                                   }))
                           : Container(
@@ -234,6 +176,8 @@ class CallSessionState extends State<CallSessionPage> {
                                     label: Text('Back'),
                                     icon: Icon(Icons.arrow_back),
                                     onPressed: () {
+//                                      focusNodes[fileManager.phoneList.iterator].unfocus();
+                                      FocusScope.of(context).unfocus();
                                       setState(() {
                                         int origIterator = fileManager.phoneList.iterator;
                                         fileManager.phoneList.reverseIterator();
@@ -246,9 +190,12 @@ class CallSessionState extends State<CallSessionPage> {
                                   ),
                                   FloatingActionButton(
                                     onPressed: () async {
+//                                      focusNodes[fileManager.phoneList.iterator].unfocus();
+                                      FocusScope.of(context).unfocus();
                                       await makeCall();
 
                                       setState(() {
+
                                         // Advance iterator and update the scroll controller
                                         int origIterator = fileManager.phoneList.iterator;
                                         fileManager.phoneList.advanceIterator();
@@ -265,6 +212,8 @@ class CallSessionState extends State<CallSessionPage> {
                                     label: Text('Next'),
                                     icon: Icon(Icons.arrow_forward),
                                     onPressed: () {
+//                                      focusNodes[fileManager.phoneList.iterator].unfocus();
+                                      FocusScope.of(context).unfocus();
                                       setState(() {
                                         int origIterator = fileManager.phoneList.iterator;
                                         fileManager.phoneList.advanceIterator();
@@ -285,110 +234,6 @@ class CallSessionState extends State<CallSessionPage> {
                   ]);
           }),
     );
-  }
-
-  DataRow rowBuilder(BuildContext context, int i) {
-    return DataRow.byIndex(
-        index: i,
-        selected: i == fileManager.phoneList.iterator ? true : false,
-        cells: [
-              DataCell(
-                  Container(
-                    width: 50.0,
-                    alignment: Alignment.center,
-                    child: i == fileManager.phoneList.iterator
-                        ? Icon(Icons.forward)
-                        : IconButton(
-                            icon: Icon(Icons.check_circle,
-                                color: fileManager.phoneList[i].called
-                                    ? Theme.of(context).accentColor
-                                    : Theme.of(context).disabledColor),
-                            onPressed: () {
-                              setState(() {
-                                fileManager.phoneList[i].called = !fileManager.phoneList[i].called;
-                              });
-                            }),
-                  ),
-                  placeholder: true,
-                  onTap: () => setStateIterator(i)),
-              DataCell(Text((i+1).toString(), style: calledTextColor(context, fileManager.phoneList[i].called)),
-                  placeholder: false, onTap: () => setStateIterator(i)),
-              DataCell(
-                  Text(fileManager.phoneList[i].name, style: calledTextColor(context, fileManager.phoneList[i].called)),
-                  onTap: () => setStateIterator(i)),
-              DataCell(
-                  Text(fileManager.phoneList[i].phone,
-                      style: calledTextColor(context, fileManager.phoneList[i].called)),
-                  onTap: () => setStateIterator(i)),
-            ] +
-            List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
-              return DataCell(
-                  Text(fileManager.phoneList[i].additionalData[idx],
-                      style: calledTextColor(context, fileManager.phoneList[i].called)),
-                  onTap: () => setStateIterator(i));
-            }) +
-            [
-//                        DataCell(
-//                            SelectableText(fileManager.phoneList[i].email,
-//                                style: calledTheme(fileManager.phoneList[i].called)), onTap: () {
-//                          setState(() {
-//                            fileManager.phoneList.iterator = i;
-//                          });
-//                        }),
-              DataCell(
-                  TextFormField(
-                    style: calledTextColor(context, fileManager.phoneList[i].called),
-                    initialValue: fileManager.phoneList[i].note,
-                    autofocus: false,
-                    onChanged: (String text) {
-                      setState(() {
-                        fileManager.phoneList[i].note = text;
-                      });
-                    },
-                    onTap: () {
-                      FocusScope.of(context).requestFocus(_focusNode);
-                    },
-                    onEditingComplete: () {
-                      FocusScope.of(context).unfocus();
-                      setState(() {});
-                    },
-                    onSaved: (String text) {
-                      FocusScope.of(context).unfocus();
-                      setState(() {
-                        fileManager.phoneList[i].note = text;
-                      });
-                    },
-                    onFieldSubmitted: (String text) {
-                      setState(() {
-                        fileManager.phoneList[i].note = text;
-                      });
-                    },
-                    decoration: InputDecoration(
-                        hintStyle: calledTextColor(context, fileManager.phoneList[i].called),
-                        border: InputBorder.none,
-                        hintText: '..........'),
-                  ),
-                  onTap: () => setStateIterator(i)),
-              DataCell(
-                  DropdownButton<String>(
-                      hint: Text("Outcome"),
-                      value: fileManager.phoneList[i].outcome,
-                      onChanged: (String outcome) {
-                        setState(() {
-                          fileManager.phoneList[i].outcome = outcome;
-                        });
-                      },
-                      elevation: 16,
-                      items: Person.possibleOutcomes.map<DropdownMenuItem<String>>(
-                        (String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value, style: calledTextColor(context, fileManager.phoneList[i].called)),
-                          );
-                        },
-                      ).toList()),
-                  onTap: () => setStateIterator(i)),
-            ]);
   }
 }
 

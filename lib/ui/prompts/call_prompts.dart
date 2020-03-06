@@ -4,11 +4,14 @@ import 'package:auto_call/services/phone_list.dart';
 class AfterCallPrompt extends StatefulWidget {
   final Person person;
   final int callIdx;
+  final TextEditingController controller;
 
   AfterCallPrompt({
     Key key,
     @required this.person,
-    @required this.callIdx}) : super(key: key);
+    @required this.callIdx,
+    this.controller
+  }) : super(key: key);
 
   @override
   AfterCallPromptState createState() => new AfterCallPromptState();
@@ -61,33 +64,11 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
             Divider(),
             TextFormField(
               focusNode: _focusNode,
-              initialValue: widget.person.note,
+//              initialValue: widget.person.note,
+              controller: widget.controller,
               autofocus: false,
               maxLines: 1,
               onChanged: (String text) {
-                setState(() {
-                  widget.person.note = text;
-                });
-                print("call_prompts.dart: onChanged");
-              },
-              onTap: () {
-                _focusNode.requestFocus();
-
-                print("call_prompts.dart: onTap");
-              },
-              onEditingComplete: () {
-                _focusNode.unfocus();
-                print("call_prompts.dart: onEditingComplete");
-              },
-              onSaved: (String text) {
-                setState(() {
-                  widget.person.note = text;
-                });
-                print("call_prompts.dart: onSaved");
-                _focusNode.unfocus();
-              },
-              onFieldSubmitted: (String text) {
-                print("call_prompts.dart: onFieldSubmitted");
                 setState(() {
                   widget.person.note = text;
                 });

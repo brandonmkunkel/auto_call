@@ -272,7 +272,7 @@ class PhoneList {
 
     // Check to see if the next call is the last
     if (isComplete()) {
-      nextIterator = -1;
+      nextIterator = people.length;
     } else if (nextIterator > lastUncalled) {
         nextIterator = firstUncalled;
     } else if (people[nextIterator].called) {
