@@ -23,7 +23,6 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
   @override
   void initState() {
     _focusNode = new FocusNode();
-//    print(widget.textController.text);
     super.initState();
   }
 
@@ -49,10 +48,10 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
                     children: <Widget>[
                           Divider(),
                           Row(
-                              children: [Text("Name: "), Text("${widget.person.name}")],
+                              children: [Text("Name:"), Text("${widget.person.name}")],
                               mainAxisAlignment: MainAxisAlignment.spaceBetween),
                           Row(
-                              children: [Text("Phone: "), Text("${widget.person.phone}")],
+                              children: [Text("Phone:"), Text("${widget.person.phone}")],
                               mainAxisAlignment: MainAxisAlignment.spaceBetween),
                         ] +
                         List.generate(widget.person.additionalData.length, (int idx) {
@@ -64,7 +63,6 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
             Divider(),
             TextFormField(
               focusNode: _focusNode,
-//              initialValue: widget.person.note,
               controller: widget.controller,
               autofocus: false,
               maxLines: 1,

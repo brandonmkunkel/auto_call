@@ -41,8 +41,12 @@ class CallSessionState extends State<CallSessionPage> {
   void dispose() {
     super.dispose();
     _controller?.dispose();
-    textControllers.forEach((_textController) {_textController?.dispose();});
-    focusNodes.forEach((focusNode) {focusNode?.dispose();});
+    textControllers.forEach((_textController) {
+      _textController?.dispose();
+    });
+    focusNodes.forEach((focusNode) {
+      focusNode?.dispose();
+    });
   }
 
   Future<void> readFile() async {
@@ -63,11 +67,10 @@ class CallSessionState extends State<CallSessionPage> {
     // Show after call dialog after the call is complete
     await showDialog(
         context: context,
-        builder: (BuildContext context) =>
-            AfterCallPrompt(
-                person: fileManager.phoneList.currentPerson(),
-                callIdx: fileManager.phoneList.iterator,
-                controller: textControllers[fileManager.phoneList.iterator],
+        builder: (BuildContext context) => AfterCallPrompt(
+              person: fileManager.phoneList.currentPerson(),
+              callIdx: fileManager.phoneList.iterator,
+              controller: textControllers[fileManager.phoneList.iterator],
             ));
 
     // Update the Widgets on this page
@@ -108,6 +111,7 @@ class CallSessionState extends State<CallSessionPage> {
     if (fileManager.phoneList == null) {
       await fileManager.readFile();
     }
+
     return fileManager.phoneList;
   }
 
@@ -120,13 +124,7 @@ class CallSessionState extends State<CallSessionPage> {
         automaticallyImplyLeading: true,
         actions: <Widget>[
           SaveButton(fileManager: fileManager),
-          IconButton(
-            icon: Icon(Icons.cancel, color: Theme.of(context).accentColor),
-            iconSize: 40.0,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
+          CloseButton(),
         ],
       ),
       body: FutureBuilder(
@@ -154,12 +152,10 @@ class CallSessionState extends State<CallSessionPage> {
                                   label: Text('Calls Completed'),
                                   icon: Icon(Icons.check_circle),
                                   onPressed: () {
-//                                    focusNodes[fileManager.phoneList.iterator].unfocus();
                                     FocusScope.of(context).unfocus();
                                     print("call_session.dart: COMPLETED");
                                   }))
                           : Container(
-//              padding: EdgeInsets.symmetric(vertical: 10.0),
                               padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
                               decoration: BoxDecoration(
                                   color: Theme.of(context).scaffoldBackgroundColor,
@@ -176,7 +172,6 @@ class CallSessionState extends State<CallSessionPage> {
                                     label: Text('Back'),
                                     icon: Icon(Icons.arrow_back),
                                     onPressed: () {
-//                                      focusNodes[fileManager.phoneList.iterator].unfocus();
                                       FocusScope.of(context).unfocus();
                                       setState(() {
                                         int origIterator = fileManager.phoneList.iterator;
@@ -190,12 +185,11 @@ class CallSessionState extends State<CallSessionPage> {
                                   ),
                                   FloatingActionButton(
                                     onPressed: () async {
-//                                      focusNodes[fileManager.phoneList.iterator].unfocus();
                                       FocusScope.of(context).unfocus();
+
                                       await makeCall();
 
                                       setState(() {
-
                                         // Advance iterator and update the scroll controller
                                         int origIterator = fileManager.phoneList.iterator;
                                         fileManager.phoneList.advanceIterator();
@@ -212,8 +206,8 @@ class CallSessionState extends State<CallSessionPage> {
                                     label: Text('Next'),
                                     icon: Icon(Icons.arrow_forward),
                                     onPressed: () {
-//                                      focusNodes[fileManager.phoneList.iterator].unfocus();
                                       FocusScope.of(context).unfocus();
+
                                       setState(() {
                                         int origIterator = fileManager.phoneList.iterator;
                                         fileManager.phoneList.advanceIterator();
@@ -247,29 +241,89 @@ class SaveButton extends StatelessWidget {
       icon: Icon(Icons.save, color: Theme.of(context).accentColor),
       iconSize: 40.0,
       onPressed: () async {
-        // Find the Scaffold in the widget tree and use
-        // it to show a SnackBar.
-        await fileManager.saveCallSession();
-        await fileManager.saveToOldCalls();
+        bool acceptSave = await showDialog(barrierDismissible: false, context: context, child: SaveAlert());
 
-        // Show the snack
-        SnackBar snackBar = SnackBar(
-          content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
-          backgroundColor: Colors.grey[600],
-          action: SnackBarAction(
-            label: 'Undo',
-            textColor: Colors.white,
-            onPressed: () async {
-              // SDelete the files that were just saved
-              await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
-              await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
-            },
-          ),
-        );
+        if (acceptSave) {
+          // Find the Scaffold in the widget tree and use
+          // it to show a SnackBar.
+          await fileManager.saveCallSession();
+          await fileManager.saveToOldCalls();
 
-        // Show the snackbar
-        Scaffold.of(context).showSnackBar(snackBar);
+          // Show the snack
+          SnackBar snackBar = SnackBar(
+            content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
+            backgroundColor: Colors.grey[600],
+            action: SnackBarAction(
+              label: 'Undo',
+              textColor: Colors.white,
+              onPressed: () async {
+                // SDelete the files that were just saved
+                await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
+                await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
+              },
+            ),
+          );
+
+          // Show the snackbar
+          Scaffold.of(context).showSnackBar(snackBar);
+        }
       },
+    );
+  }
+}
+
+class CloseButton extends StatelessWidget {
+  final FileManager fileManager;
+  CloseButton({this.fileManager});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.cancel, color: Theme.of(context).accentColor),
+      iconSize: 40.0,
+      onPressed: () async {
+        bool acceptClose = await showDialog(
+            barrierDismissible: false, context: context, builder: (BuildContext context) => CloseAlert());
+
+        if (acceptClose) {
+//          bool acceptSave = await showDialog(
+//              barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
+//
+//          if (acceptSave) {
+//            print("should be doing some saving");
+//          }
+
+          Navigator.of(context).pop();
+        }
+      },
+    );
+  }
+}
+
+class CloseAlert extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Call Session Close Alert"),
+      content: Text("Are you sure you want end your call session?"),
+      actions: <Widget>[
+        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
+        FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
+      ],
+    );
+  }
+}
+
+class SaveAlert extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Save Call Session"),
+      content: Text("Do you wish to save your call session?"),
+      actions: <Widget>[
+        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
+        FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
+      ],
     );
   }
 }
