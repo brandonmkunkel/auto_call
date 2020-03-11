@@ -70,14 +70,19 @@ class CallSessionState extends State<CallSessionPage> {
   Future<void> makeCall() async {
     bool inCall = await monitorCallState();
 
-    // Show after call dialog after the call is complete
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) => AfterCallPrompt(
-              person: fileManager.phoneList.currentPerson(),
-              callIdx: fileManager.phoneList.iterator,
-              controller: textControllers[fileManager.phoneList.iterator],
-            ));
+    bool postCallPrompt = globalSettingManager.getSetting("post_call_prompt");
+    print(postCallPrompt);
+
+    if (postCallPrompt) {
+      // Show after call dialog after the call is complete
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) => AfterCallPrompt(
+                person: fileManager.phoneList.currentPerson(),
+                callIdx: fileManager.phoneList.iterator,
+                controller: textControllers[fileManager.phoneList.iterator],
+              ));
+    }
 
     // Update the Widgets on this page
     setState(() {

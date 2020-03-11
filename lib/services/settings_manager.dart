@@ -62,12 +62,13 @@ class SettingManager {
     SettingPair(key: "splashed", text: "Has user opened app before", type: bool, premium: false),
     SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool, premium: false),
     SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
-    SettingPair(key: "comment_prompt", text: "Prompt on call completion", type: bool, premium: false),
+    SettingPair(key: "post_call_prompt", text: "Prompt on call completion", type: bool, premium: false),
     SettingPair(key: "one_touch_call", text: "One Touch Call", type: bool, premium: false),
     SettingPair(key: "is_premium", text: "Is the user a premium user", type: bool, premium: false),
 
     // Premium Settings
     SettingPair(key: "dark_mode", text: "Dark Mode", type: bool, premium: true),
+    SettingPair(key: "cloud_storage", text: "Cloud Storage", type: bool, premium: true),
     SettingPair(key: "statistics", text: "Enable User statistics", type: bool, premium: true),
   ];
 
