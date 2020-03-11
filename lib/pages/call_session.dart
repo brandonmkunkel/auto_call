@@ -54,15 +54,21 @@ class CallSessionState extends State<CallSessionPage> {
   }
 
   Future<bool> monitorCallState() async {
-    // Call the number
-    locator.get<CallsAndMessagesService>().call(fileManager.phoneList.currentPerson().phone);
+    // Collect whether the user wants to call immediately
+    bool oneTouch = globalSettingManager.getSetting("one_touch_call");
+
+    if (oneTouch) {
+      oneTouchCall(fileManager.phoneList.currentPerson().phone);
+    } else {
+      twoTouchCall(fileManager.phoneList.currentPerson().phone);
+    }
 
     // report that the call is over
     return false;
   }
 
   Future<void> makeCall() async {
-//    bool inCall = await monitorCallState();
+    bool inCall = await monitorCallState();
 
     // Show after call dialog after the call is complete
     await showDialog(

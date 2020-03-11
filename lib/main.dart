@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'services/calls_and_messages_service.dart';
+import 'services/settings_manager.dart';
 
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
@@ -18,7 +19,9 @@ import 'index.dart';
 ///
 /// Main for running the app
 ///
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await loadGlobalSettings();
   setupLocator();
   runApp(MyApp());
 }

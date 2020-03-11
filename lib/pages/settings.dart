@@ -12,24 +12,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-  SettingManager manager = SettingManager();
-
-  void loadManager() async {
-    await manager.create();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    loadManager();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final SettingManager manager = globalSettingManager;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +22,16 @@ class SettingsPageState extends State<SettingsPage> {
         ),
         drawer: AppDrawer(context),
         body: Stack(children: [
-          buildSettings(context),
+
+          ListView(
+            children: List<Widget>.generate(globalSettingManager.getSettingList(false).length, (int index) {
+                  return buildStandardSettingWidget(globalSettingManager.getSettingList(false), index);
+                }) +
+                [Divider(), premiumSettingsLabel(context)] +
+                List<Widget>.generate(globalSettingManager.getSettingList(true).length, (int index) {
+                  return buildPremiumSettingWidget(globalSettingManager.getSettingList(true), index);
+                }),
+          )
         ]));
   }
 
@@ -64,33 +56,34 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget buildSettings(BuildContext context) {
-    List<Setting> standardSettings = manager.getSettingList(false);
-    List<Setting> premiumSettings = manager.getSettingList(true);
-
-    if (standardSettings != null) {
-      // Check to see if the App Settings have loaded yet
-      return ListView(
-        children: List<Widget>.generate(standardSettings.length, (int index) {
-              return buildStandardSettingWidget(standardSettings, index);
-            }) +
-            [Divider(), premiumSettingsLabel(context)] +
-            List<Widget>.generate(premiumSettings.length, (int index) {
-              return buildPremiumSettingWidget(premiumSettings, index);
-            }),
-      );
-    } else {
-      // If not, leave blank
-      return Container(
-        child:
-            Text("Settings have not loaded correctly, server may be down", style: Theme.of(context).textTheme.headline),
-      );
-    }
-  }
+//  Widget buildSettings(BuildContext context) {
+//    List<Setting> standardSettings = manager.getSettingList(false);
+//    List<Setting> premiumSettings = manager.getSettingList(true);
+//
+//    if (standardSettings != null) {
+//      // Check to see if the App Settings have loaded yet
+//      return ListView(
+//        children: List<Widget>.generate(standardSettings.length, (int index) {
+//          return buildStandardSettingWidget(standardSettings, index);
+//        }) +
+//            [Divider(), premiumSettingsLabel(context)] +
+//            List<Widget>.generate(premiumSettings.length, (int index) {
+//              return buildPremiumSettingWidget(premiumSettings, index);
+//            }),
+//      );
+//    } else {
+//      // If not, leave blank
+//      return Container(
+//        child:
+//        Text("Settings have not loaded correctly, server may be down", style: Theme.of(context).textTheme.headline),
+//      );
+//    }
+//  }
 
   Widget buildStandardSettingWidget(List<Setting> settings, int idx) {
     switch (settings[idx].settingPair.type) {
-      case bool: {
+      case bool:
+        {
           return ListTile(
             title: Text(settings[idx].settingPair.text),
             trailing: Switch(
@@ -103,13 +96,14 @@ class SettingsPageState extends State<SettingsPage> {
               },
             ),
           );
-      }
-      break;
+        }
+        break;
 
-      case int: {
+      case int:
+        {
           return Container();
-      }
-      break;
+        }
+        break;
     }
   }
 
@@ -119,16 +113,17 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return ListTile(
             title: Text(settings[idx].settingPair.text,
-                style: TextStyle(
-                    color: !manager.isPremium() ? Colors.grey[500] : Theme.of(context).accentColor)),
+                style: TextStyle(color: !manager.isPremium() ? Colors.grey[500] : Theme.of(context).accentColor)),
             trailing: Switch(
               value: !manager.isPremium() ? false : settings[idx].value,
-              onChanged: !manager.isPremium() ? (bool){} : (bool value) {
-                setState(() {
-                  settings[idx].value = value;
-                  manager.prefs.setBool(settings[idx].settingPair.key, value);
-                });
-              },
+              onChanged: !manager.isPremium()
+                  ? (bool) {}
+                  : (bool value) {
+                      setState(() {
+                        settings[idx].value = value;
+                        manager.prefs.setBool(settings[idx].settingPair.key, value);
+                      });
+                    },
             ),
           );
         }
