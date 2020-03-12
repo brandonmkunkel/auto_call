@@ -9,9 +9,9 @@ SettingManager globalSettingManager = SettingManager();
 //  print("done loading global settings");
 //}
 
-enum UserType  {
+enum SettingType  {
+  hidden,
   free,
-  standard,
   premium,
   enterprise
 }

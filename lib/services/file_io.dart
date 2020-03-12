@@ -122,8 +122,7 @@ class FileManager {
   // Read the file from the stored path
   Future<void> readFile() async {
     if (checkValidExtension()) {
-      List<List> data = await registeredInterfaces[ext].read(path);
-      this.phoneList = PhoneList.fromData(data);
+      this.phoneList = PhoneList.fromData(await registeredInterfaces[ext].read(path));
     } else {
       print("Not a valid file type");
     }
@@ -131,8 +130,7 @@ class FileManager {
 
   // Save the file to the same location but under a new name
   Future<void> saveCallSession() async {
-    String updatedPath = updatedFilePath(path);
-    await _saveFile(updatedPath, this.phoneList.export());
+    await _saveFile(updatedFilePath(path), this.phoneList.export());
   }
 
   Future<void> saveToOldCalls() async {

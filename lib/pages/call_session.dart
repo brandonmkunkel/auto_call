@@ -7,6 +7,7 @@ import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_table.dart';
 import 'package:auto_call/ui/call_table_new.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
+import 'package:auto_call/ui/prompts/post_session_prompt.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
 class CallSessionPage extends StatefulWidget {
@@ -48,10 +49,6 @@ class CallSessionState extends State<CallSessionPage> {
     focusNodes.forEach((focusNode) {
       focusNode?.dispose();
     });
-  }
-
-  Future<void> readFile() async {
-    await fileManager.readFile();
   }
 
   Future<bool> monitorCallState() async {
@@ -139,12 +136,11 @@ class CallSessionState extends State<CallSessionPage> {
           CloseButton(),
         ],
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<PhoneList>(
           future: callTableFuture(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            return !snapshot.hasData
-                ? Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()))
-                : Stack(children: [
+          builder: (BuildContext context, AsyncSnapshot<PhoneList> snapshot) {
+            return snapshot.hasData
+                ? Stack(children: [
                     CallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
                     Align(
                       alignment: Alignment.bottomCenter,
@@ -163,8 +159,13 @@ class CallSessionState extends State<CallSessionPage> {
                               child: FloatingActionButton.extended(
                                   label: Text('Calls Completed'),
                                   icon: Icon(Icons.check_circle),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     FocusScope.of(context).unfocus();
+
+                                    // Store information from the user prompt
+                                    var result = await showDialog(
+                                        context: context, child: PostSessionPrompt(fileManager: fileManager));
+
                                     print("call_session.dart: COMPLETED");
                                   }))
                           : Container(
@@ -237,7 +238,22 @@ class CallSessionState extends State<CallSessionPage> {
                               // fill in required params
                               ),
                     )
-                  ]);
+                  ])
+                : snapshot.hasError
+                    ? Column(
+                        children: <Widget>[
+                          Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 50.0,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Text('Error: ${snapshot.error}'),
+                          )
+                        ],
+                      )
+                    : Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
           }),
     );
   }

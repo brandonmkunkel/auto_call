@@ -101,10 +101,6 @@ class PhoneList {
     return headers + List<List>.generate(people.length, (int idx) => people[idx].encode());
   }
 
-
-
-
-
   ///
   /// Methods for processing information from data that was read
   ///
