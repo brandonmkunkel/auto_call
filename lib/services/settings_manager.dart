@@ -4,10 +4,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Singleton setting manager for
 SettingManager globalSettingManager = SettingManager();
 
-Future<void> loadGlobalSettings() async {
-  await globalSettingManager.loadSingleton();
-  print("done loading global settings");
-}
+//Future<void> loadGlobalSettings() async {
+//  await globalSettingManager.loadSingleton();
+//  print("done loading global settings");
+//}
 
 enum UserType  {
   free,
@@ -88,16 +88,24 @@ class SettingManager {
   ///
   /// Start up functions
   ///
-  Future<void> loadSingleton() async {
-    startPreferencesInstance().then((SharedPreferences _prefs) async {
+  void loadSingleton() {
+    startPreferencesInstance().then((SharedPreferences _prefs) {
+      print("_prefs loaded");
       prefs = _prefs;
       standardSettings = loadSettings(premium: false);
       premiumSettings = loadSettings(premium: true);
+      loaded = true;
     });
+  }
+
+  void fromPrefs(SharedPreferences preferences) {
+    prefs = preferences;
+    standardSettings = loadSettings(premium: false);
+    premiumSettings = loadSettings(premium: true);
     loaded = true;
   }
 
-  static Future<SharedPreferences> startPreferencesInstance() async {
+  Future<SharedPreferences> startPreferencesInstance() async {
     // Pull the Settings from teh SharedPreferences file into the SettingsState
     return await SharedPreferences.getInstance();
   }
@@ -141,13 +149,23 @@ class SettingManager {
 
   bool isPremium() => prefs.getBool("is_premium") ?? false;
 
-  dynamic getSetting(String key) {
-    return keyLookup(key)[key].value;
-  }
-
   Map<String, Setting> keyLookup(String key) {
     // Look up the Key in both settings and return which setting set it comes in
     return premiumSettings.containsKey(key) ? premiumSettings : standardSettings;
+  }
+
+  dynamic getSetting(String key) {
+//    return keyLookup(key)[key].value;
+
+    Setting setting = keyLookup(key)[key];
+
+    if (setting.value.runtimeType == bool) {
+      return prefs.getBool(key);
+    } else if (setting.value.runtimeType == int) {
+      return prefs.getInt(key);
+    } else if (setting.value.runtimeType == String) {
+      return prefs.getString(key);
+    }
   }
 
   void setSetting(String key, dynamic value) async {

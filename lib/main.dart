@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'services/calls_and_messages_service.dart';
 import 'services/settings_manager.dart';
@@ -22,38 +24,62 @@ import 'index.dart';
 ///
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await loadGlobalSettings();
+
   setupLocator();
-  runApp(MyApp());
+
+  // Load up the shared preferences
+  SharedPreferences.getInstance().then((SharedPreferences prefs) {
+    globalSettingManager.fromPrefs(prefs);
+
+    runApp(MyApp());
+  });
 }
 
-class MyApp extends StatelessWidget {
+
+///
+/// App Stateful Widget
+///
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeProvider themeChangeProvider = new ThemeProvider(globalSettingManager.loaded ? globalSettingManager.getSetting("dark_mode") : false);
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: darkTheme,
-//        theme: appTheme,
-//        darkTheme: appDarkTheme,
-      home: HomePage(),
-      routes: {
-        HomePage.routeName: (context) => HomePage(),
-        FileSelectorPage.routeName: (context) => FileSelectorPage(),
-        CallPage.routeName: (context) => CallPage(),
-        OldCallsPage.routeName: (context) => OldCallsPage(),
-        ContactTrackerPage.routeName: (context) => ContactTrackerPage(),
-        SettingsPage.routeName: (context) => SettingsPage(),
-        LegalPage.routeName: (context) => LegalPage(),
-        AboutPage.routeName: (context) => AboutPage(),
-      },
-      onGenerateRoute: (settings) {
-        // If you push the PassArguments route
-        if (settings.name == CallSessionPage.routeName) {
-          return MaterialPageRoute(builder: (context) => CallSessionPage(fileManager: settings.arguments));
-        } else {
-          return null;
-        }
-      },
-    );
+    return ChangeNotifierProvider(create: (_) {
+      return themeChangeProvider;
+    }, child: Consumer<ThemeProvider>(builder: (BuildContext context, value, Widget child) {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        theme: Provider.of<ThemeProvider>(context).getTheme(),
+        home: HomePage(),
+        routes: {
+          HomePage.routeName: (context) => HomePage(),
+          FileSelectorPage.routeName: (context) => FileSelectorPage(),
+          CallPage.routeName: (context) => CallPage(),
+          OldCallsPage.routeName: (context) => OldCallsPage(),
+          ContactTrackerPage.routeName: (context) => ContactTrackerPage(),
+          SettingsPage.routeName: (context) => SettingsPage(),
+          LegalPage.routeName: (context) => LegalPage(),
+          AboutPage.routeName: (context) => AboutPage(),
+        },
+        onGenerateRoute: (settings) {
+          // If you push the PassArguments route
+          if (settings.name == CallSessionPage.routeName) {
+            return MaterialPageRoute(builder: (context) => CallSessionPage(fileManager: settings.arguments));
+          } else {
+            return null;
+          }
+        },
+      );
+    }));
   }
 }

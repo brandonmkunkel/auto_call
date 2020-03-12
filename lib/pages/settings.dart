@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/ui/theme.dart';
+import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = "/Settings";
@@ -122,6 +124,10 @@ class SettingsPageState extends State<SettingsPage> {
                       setState(() {
                         settings[idx].value = value;
                         manager.prefs.setBool(settings[idx].settingPair.key, value);
+
+                        if (settings[idx].settingPair.key == "dark_mode") {
+                          Provider.of<ThemeProvider>(context, listen: false).setTheme(value);
+                        }
                       });
                     },
             ),

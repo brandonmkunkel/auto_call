@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
 
-class ThemeNotifier with ChangeNotifier {
-  ThemeData _themeData;
+class ThemeProvider with ChangeNotifier {
+  bool _isDarkTheme;
 
-  ThemeNotifier(this._themeData);
+  ThemeProvider(this._isDarkTheme);
 
-  getTheme() => _themeData;
+  getTheme() => _isDarkTheme ? darkTheme : lightTheme;
 
-  setTheme(ThemeData themeData) async {
-    _themeData = themeData;
+  setTheme(bool isDarkTheme) async {
+    _isDarkTheme = isDarkTheme;
     notifyListeners();
   }
 }
