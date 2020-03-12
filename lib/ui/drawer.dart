@@ -10,8 +10,6 @@ import 'package:auto_call/pages/legal.dart';
 import 'package:auto_call/pages/call_page.dart';
 
 class AppDrawer extends StatelessWidget {
-  final double textScale = 1.5;
-
 //  final List menuItems = [
 //    [Icons.home, HomePage],
 //    [Icons.note_add, FileSelectorPage],
@@ -27,93 +25,93 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: new Container(
+        child: Container(
           decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
             child: Column(
-      mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        new DrawerHeader(
-          child: new Center(
-              child: new Text('Your Favorite Robot Assistant',
+        DrawerHeader(
+          child: Center(
+              child: Text('Your Favorite Robot Assistant',
                   textScaleFactor: 1.5, style: TextStyle(color: Colors.white))),
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         ),
-//          new ListTile(
-//            title: new Text('Splash', textScaleFactor: textScale),
+//          ListTile(
+//            title: Text('Splash', textScaleFactor: textScale),
 //            onTap: () {
 //              navigatorUpdate(context, Splash.routeName);
 //            },
 //          ),
-//          new ListTile(
-//            title: new Text('Welcome', textScaleFactor: textScale),
+//          ListTile(
+//            title: Text('Welcome', textScaleFactor: textScale),
 //            onTap: () {
 //              navigatorUpdate(context, WelcomePage.routeName);
 //            },
 //          ),
 
-        new ListTile(
-          leading: new Icon(Icons.home),
-          title: new Text('Home', style: Theme.of(context).textTheme.title),
+        ListTile(
+          leading: Icon(Icons.home),
+          title: Text('Home', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, HomePage.routeName);
           },
         ),
-        new ListTile(
-          leading: new Icon(Icons.note_add),
-          title: new Text('File Selector', style: Theme.of(context).textTheme.title),
-          onTap: () {
-            navigatorUpdate(context, FileSelectorPage.routeName);
-          },
-        ),
-        new ListTile(
-          leading: new Icon(Icons.cloud_upload),
-          title: new Text('Call Session', style: Theme.of(context).textTheme.title),
-          onTap: () {
-            navigatorUpdate(context, CallSessionPage.routeName);
-          },
-        ),
-        new ListTile(
-          leading: new Icon(Icons.history),
-          title: new Text('Call Page', style: Theme.of(context).textTheme.title),
-          onTap: () {
-            navigatorUpdate(context, CallPage.routeName);
-          },
-        ),
-        new ListTile(
-          leading: new Icon(Icons.history),
-          title: new Text('Old Calls', style: Theme.of(context).textTheme.title),
+//        ListTile(
+//          leading: Icon(Icons.note_add),
+//          title: Text('File Selector', style: Theme.of(context).textTheme.title),
+//          onTap: () {
+//            navigatorUpdate(context, FileSelectorPage.routeName);
+//          },
+//        ),
+//        ListTile(
+//          leading: Icon(Icons.cloud_upload),
+//          title: Text('Call Session', style: Theme.of(context).textTheme.title),
+//          onTap: () {
+//            navigatorUpdate(context, CallSessionPage.routeName);
+//          },
+//        ),
+//        ListTile(
+//          leading: Icon(Icons.history),
+//          title: Text('Call Page', style: Theme.of(context).textTheme.title),
+//          onTap: () {
+//            navigatorUpdate(context, CallPage.routeName);
+//          },
+//        ),
+        ListTile(
+          leading: Icon(Icons.history),
+          title: Text('Old Calls', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, OldCallsPage.routeName);
           },
         ),
-        new ListTile(
-          leading: new Icon(Icons.contacts),
-          title: new Text('Contact Tracker', style: Theme.of(context).textTheme.title),
+        ListTile(
+          leading: Icon(Icons.contacts),
+          title: Text('Contact Tracker', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, ContactTrackerPage.routeName);
           },
         ),
-        new ListTile(
-          leading: new Icon(Icons.settings),
-          title: new Text('Settings', style: Theme.of(context).textTheme.title),
+        ListTile(
+          leading: Icon(Icons.settings),
+          title: Text('Settings', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, SettingsPage.routeName);
           },
         ),
-        new ListTile(
-          leading: new Icon(Icons.info),
-          title: new Text('About', style: Theme.of(context).textTheme.title),
+        ListTile(
+          leading: Icon(Icons.info),
+          title: Text('About', style: Theme.of(context).textTheme.title),
           onTap: () {
             navigatorUpdate(context, AboutPage.routeName);
           },
         ),
-        new Divider(),
-        new Expanded(
+        Divider(),
+        Expanded(
           flex: 1,
-          child: new Align(
+          child: Align(
               alignment: Alignment.bottomCenter,
-              child: new ListTile(
-                title: new Text(
+              child: ListTile(
+                title: Text(
                   'Copyright 2020 | Brandon Kunkel',
                   textAlign: TextAlign.center,
                 ),

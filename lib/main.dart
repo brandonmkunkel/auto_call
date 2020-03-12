@@ -13,6 +13,7 @@ import 'pages/legal.dart';
 import 'pages/about.dart';
 import 'pages/settings.dart';
 import 'pages/call_page.dart';
+import 'ui/theme.dart';
 
 import 'index.dart';
 
@@ -26,38 +27,17 @@ void main() async {
   runApp(MyApp());
 }
 
-// This file will hold information describing the Theme for the App
-
-final ThemeData appTheme = ThemeData(
-    brightness: Brightness.light,
-    backgroundColor: Colors.grey[300],
-    primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.white : Colors.green,
-    disabledColor: Colors.grey[400],
-    fontFamily: "Raleway"
-);
-
-final ThemeData appDarkTheme = ThemeData(
-    brightness: Brightness.dark,
-    backgroundColor: Colors.grey[900],
-    scaffoldBackgroundColor: Colors.grey[900],
-    primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey[700] : Colors.green,
-    accentColor: Colors.green[600],
-    disabledColor: Colors.grey[700],
-    fontFamily: "Raleway"
-);
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: appDarkTheme,
+      theme: darkTheme,
 //        theme: appTheme,
 //        darkTheme: appDarkTheme,
       home: HomePage(),
       routes: {
         HomePage.routeName: (context) => HomePage(),
-//        CallSessionPage.routeName: (context) => CallSessionPage(),
         FileSelectorPage.routeName: (context) => FileSelectorPage(),
         CallPage.routeName: (context) => CallPage(),
         OldCallsPage.routeName: (context) => OldCallsPage(),
@@ -74,7 +54,6 @@ class MyApp extends StatelessWidget {
           return null;
         }
       },
-//      routes: AppIndex.buildRoutes(context),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_table.dart';
+import 'package:auto_call/ui/call_table_new.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
@@ -118,7 +119,7 @@ class CallSessionState extends State<CallSessionPage> {
     return TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color);
   }
 
-  Future callTableFuture() async {
+  Future<PhoneList> callTableFuture() async {
     if (fileManager.phoneList == null) {
       await fileManager.readFile();
     }

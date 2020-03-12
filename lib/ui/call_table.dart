@@ -1,32 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:auto_call/services/file_io.dart';
-
-class InheritedProvider<T> extends InheritedWidget {
-  final T data;
-  InheritedProvider({
-    Widget child,
-    this.data,
-  }) : super(child: child);
-
-  @override
-  bool updateShouldNotify(InheritedProvider oldWidget) => data != oldWidget.data;
-
-  static T of<T>(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType(aspect: T);
-  }
-}
+import 'package:flutter/rendering.dart';
 
 class CallTable extends StatefulWidget {
   final ScrollController scrollController;
   final FileManager manager;
   final List<TextEditingController> textControllers;
 
-  CallTable({
-    Key key,
-    @required this.manager,
-    @required this.scrollController,
-    @required this.textControllers
-  }) : super(key: key);
+  CallTable({Key key, @required this.manager, @required this.scrollController, @required this.textControllers})
+      : super(key: key);
 
   @override
   _CallTableState createState() => _CallTableState();
@@ -42,6 +24,14 @@ class _CallTableState extends State<CallTable> {
   @override
   void initState() {
     super.initState();
+
+    for (int idx=0; idx<fileManager.phoneList.people.length; idx++) {
+      // Text Editors for tracking text and passing between widgets
+      widget.textControllers.add(TextEditingController(text: fileManager.phoneList.people[idx].note));
+
+      // Focus Nodes for focusing on text editing
+      focusNodes.add(FocusNode());
+    }
   }
 
   @override
@@ -52,10 +42,6 @@ class _CallTableState extends State<CallTable> {
 
   // Update the Scroll controller based on the given item offset
   void updateController(int iteratorOffset) {
-    print("initialoffset ${widget.scrollController.initialScrollOffset}, "
-        "current offset ${widget.scrollController.offset}, "
-        "offset update ${rowSize * iteratorOffset}");
-
     widget.scrollController.animateTo(
       widget.scrollController.offset + rowSize * iteratorOffset,
       curve: Curves.easeIn,
@@ -139,13 +125,13 @@ class _CallTableState extends State<CallTable> {
   }
 
   DataRow rowBuilder(BuildContext context, int i) {
-    if (widget.textControllers.length <= i) {
-      widget.textControllers.add(TextEditingController(text: fileManager.phoneList.people[i].note));
-    }
-
-    if (focusNodes.length <= i) {
-      focusNodes.add(FocusNode());
-    }
+//    if (widget.textControllers.length <= i) {
+//      widget.textControllers.add(TextEditingController(text: fileManager.phoneList.people[i].note));
+//    }
+//
+//    if (focusNodes.length <= i) {
+//      focusNodes.add(FocusNode());
+//    }
 
     return DataRow.byIndex(
         index: i,
@@ -170,7 +156,7 @@ class _CallTableState extends State<CallTable> {
                   ),
                   placeholder: true,
                   onTap: () => setStateIterator(i)),
-              DataCell(Text(i.toString(), style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+              DataCell(Text((i+1).toString(), style: calledTextColor(context, fileManager.phoneList.people[i].called)),
                   placeholder: false, onTap: () => setStateIterator(i)),
               DataCell(
                   Text(fileManager.phoneList.people[i].name,
