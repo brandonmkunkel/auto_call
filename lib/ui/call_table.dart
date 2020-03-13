@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:auto_call/services/file_io.dart';
 import 'package:flutter/rendering.dart';
+import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/settings_manager.dart';
 
 class CallTable extends StatefulWidget {
   final ScrollController scrollController;
@@ -25,7 +26,7 @@ class _CallTableState extends State<CallTable> {
   void initState() {
     super.initState();
 
-    for (int idx=0; idx<fileManager.phoneList.people.length; idx++) {
+    for (int idx = 0; idx < fileManager.phoneList.people.length; idx++) {
       // Text Editors for tracking text and passing between widgets
       widget.textControllers.add(TextEditingController(text: fileManager.phoneList.people[idx].note));
 
@@ -37,7 +38,9 @@ class _CallTableState extends State<CallTable> {
   @override
   void dispose() {
     super.dispose();
-    focusNodes.forEach((focusNode) {focusNode?.dispose();});
+    focusNodes.forEach((focusNode) {
+      focusNode?.dispose();
+    });
   }
 
   // Update the Scroll controller based on the given item offset
@@ -60,161 +63,167 @@ class _CallTableState extends State<CallTable> {
     });
   }
 
-  TextStyle calledTextColor(BuildContext context, bool called) {
-    return TextStyle(color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color);
-  }
-
-  TextStyle headerStyle(BuildContext context) {
-    return TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Expanded(
           child: SingleChildScrollView(
-            controller: widget.scrollController,
-            scrollDirection: Axis.vertical,
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(children: <Widget>[
-                        DataTable(
-                          horizontalMargin: 0.0,
-                          columnSpacing: 10.0,
-                          dataRowHeight: rowSize,
-                          columns: [
-                            DataColumn(label: Text("", style: headerStyle(context)), numeric: false),
-                            DataColumn(label: Text("#", style: headerStyle(context)), numeric: false),
-                            DataColumn(
-                                label: Text("Name", style: headerStyle(context)), numeric: false),
-                            DataColumn(
-                                label: Text("Phone", style: headerStyle(context)), numeric: false),
+        controller: widget.scrollController,
+        scrollDirection: Axis.vertical,
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: <Widget>[
+                    DataTable(
+                      horizontalMargin: 0.0,
+                      columnSpacing: 10.0,
+                      dataRowHeight: rowSize,
+                      columns: [
+                            DataColumn(label: HeaderText("#"), numeric: true),
+                            DataColumn(label: HeaderText("Name"), numeric: false),
+                            DataColumn(label: HeaderText("Phone"), numeric: false),
                           ] +
-                              List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
-                                return DataColumn(
-                                    label: Text(fileManager.phoneList.additionalLabels[idx],
-                                        style: headerStyle(context)),
-                                    numeric: false);
-                              }) +
-                              [
-//            DataColumn(label: Text("Email", style: headerStyle(context)), numeric: false),
-                                DataColumn(
-                                    label: Text("Note", style: headerStyle(context)), numeric: false),
-                                DataColumn(
-                                    label: Text("Outcome", style: headerStyle(context)), numeric: false),
-                              ],
-                          rows: fileManager.phoneList.people
-                              .asMap()
-                              .map((i, person) => MapEntry(i, rowBuilder(context, i)))
-                              .values
-                              .toList(),
-                        ),
-                      ])),
-                  Container(
-                      height: rowSize,
-                      alignment: Alignment.center,
-                      child: Text("End of Phone List", textAlign: TextAlign.center)),
-                  Container(height: rowSize * 2.0)
-                ]),
-          )),
+                          List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
+                            return DataColumn(
+                                label: HeaderText(fileManager.phoneList.additionalLabels[idx]), numeric: false);
+                          }) +
+                          [
+                            DataColumn(label: HeaderText("Note"), numeric: false),
+                            DataColumn(label: HeaderText("Outcome"), numeric: false),
+                          ],
+                      rows: List<DataRow>.generate(fileManager.phoneList.people.length, (i) => rowBuilder(context, i)),
+                    ),
+                  ])),
+              Container(
+                  height: rowSize,
+                  alignment: Alignment.center,
+                  child: Text("End of Phone List", textAlign: TextAlign.center)),
+              Container(height: rowSize * 2.0)
+            ]),
+      )),
     ]);
   }
 
   DataRow rowBuilder(BuildContext context, int i) {
-//    if (widget.textControllers.length <= i) {
-//      widget.textControllers.add(TextEditingController(text: fileManager.phoneList.people[i].note));
-//    }
-//
-//    if (focusNodes.length <= i) {
-//      focusNodes.add(FocusNode());
-//    }
-
     return DataRow.byIndex(
         index: i,
         selected: i == fileManager.phoneList.iterator ? true : false,
         cells: [
               DataCell(
-                  Container(
-                    width: 50.0,
-                    alignment: Alignment.center,
-                    child: i == fileManager.phoneList.iterator
-                        ? Icon(Icons.forward)
-                        : IconButton(
-                            icon: Icon(Icons.check_circle,
-                                color: fileManager.phoneList.people[i].called
-                                    ? Theme.of(context).accentColor
-                                    : Theme.of(context).disabledColor),
-                            onPressed: () {
-                              setState(() {
-                                fileManager.phoneList.people[i].called = !fileManager.phoneList.people[i].called;
-                              });
-                            }),
-                  ),
-                  placeholder: true,
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                    i == fileManager.phoneList.iterator
+                        ? SizedBox(
+                            width: 36.0,
+                            child: IconButton(
+                                padding: const EdgeInsets.all(0.0),
+                                icon: Icon(
+                                  Icons.forward,
+                                  color: Theme.of(context).iconTheme.color,
+                                )))
+                        : SizedBox(
+                            width: 36.0,
+                            child: IconButton(
+                                padding: const EdgeInsets.all(0.0),
+                                icon: Icon(Icons.check_circle,
+                                    color: fileManager.phoneList.people[i].called
+                                        ? Theme.of(context).accentColor
+                                        : Theme.of(context).disabledColor),
+                                onPressed: () {
+                                  setState(() {
+                                    fileManager.phoneList.people[i].called = !fileManager.phoneList.people[i].called;
+                                  });
+                                })),
+                    CalledText(text: (i + 1).toString(), called: fileManager.phoneList.people[i].called)
+                  ]),
                   onTap: () => setStateIterator(i)),
-              DataCell(Text((i+1).toString(), style: calledTextColor(context, fileManager.phoneList.people[i].called)),
-                  placeholder: false, onTap: () => setStateIterator(i)),
               DataCell(
-                  Text(fileManager.phoneList.people[i].name,
-                      style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                  CalledText(
+                      text: fileManager.phoneList.people[i].name, called: fileManager.phoneList.people[i].called),
                   onTap: () => setStateIterator(i)),
               DataCell(
-                  Text(fileManager.phoneList.people[i].phone,
-                      style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                  CalledText(
+                      text: fileManager.phoneList.people[i].phone, called: fileManager.phoneList.people[i].called),
                   onTap: () => setStateIterator(i)),
             ] +
             List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
               return DataCell(
-                  Text(fileManager.phoneList.people[i].additionalData[idx],
-                      style: calledTextColor(context, fileManager.phoneList.people[i].called)),
+                  CalledText(
+                      text: fileManager.phoneList.people[i].additionalData[idx],
+                      called: fileManager.phoneList.people[i].called),
                   onTap: () => setStateIterator(i));
             }) +
             [
-//                        DataCell(
-//                            SelectableText(fileManager.phoneList.people[i].email,
-//                                style: calledTheme(fileManager.phoneList.people[i].called)), onTap: () {
-//                          setState(() {
-//                            fileManager.phoneList.iterator = i;
-//                          });
-//                        }),
               DataCell(
                   TextFormField(
                     controller: widget.textControllers[i],
                     focusNode: focusNodes[i],
-                    style: calledTextColor(context, fileManager.phoneList[i].called),
+                    style: TextStyle(
+                        color: fileManager.phoneList.people[i].called
+                            ? Theme.of(context).disabledColor
+                            : Theme.of(context).textTheme.body1.color),
                     autofocus: false,
                     onChanged: (String text) {
                       fileManager.phoneList.people[i].note = text;
                     },
-                    decoration: InputDecoration(
-                        hintStyle: calledTextColor(context, fileManager.phoneList.people[i].called),
-                        border: InputBorder.none,
-                        hintText: '..........'),
+                    onFieldSubmitted: (String text) {
+                      fileManager.phoneList.people[i].note = text;
+                      focusNodes[i].unfocus();
+                    },
+                    decoration: InputDecoration(border: InputBorder.none, hintText: '..........'),
                   ),
                   onTap: () => setStateIterator(i)),
               DataCell(
                   DropdownButton<String>(
                       value: fileManager.phoneList.people[i].outcome,
                       onChanged: (String outcome) {
-                        focusNodes[i].unfocus();
-                        fileManager.phoneList.people[i].outcome = outcome;
-                        setState(() {});
+                        setState(() {
+                          focusNodes[i].unfocus();
+                          fileManager.phoneList.people[i].outcome = outcome;
+                        });
                       },
                       elevation: 16,
+                      isDense: true,
                       items: <String>['None', 'Voicemail', 'Answered', 'Success', 'Follow Up']
                           .map<DropdownMenuItem<String>>(
                         (String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value, style: calledTextColor(context, fileManager.phoneList[i].called)),
+                            child: CalledText(text: value, called: fileManager.phoneList.people[i].called),
                           );
                         },
                       ).toList()),
                   onTap: () => setStateIterator(i)),
             ]);
+  }
+}
+
+class HeaderText extends StatelessWidget {
+  final String text;
+  HeaderText(this.text);
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        style: TextStyle(
+          color: Theme.of(context).textTheme.body1.color,
+          fontSize: Theme.of(context).textTheme.body2.fontSize * 1.2,
+          fontWeight: FontWeight.bold,
+        ));
+  }
+}
+
+class CalledText extends StatelessWidget {
+  final String text;
+  final bool called;
+  CalledText({this.text, this.called});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text,
+        style: TextStyle(
+            color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color,
+            fontSize: Theme.of(context).textTheme.body1.fontSize));
   }
 }

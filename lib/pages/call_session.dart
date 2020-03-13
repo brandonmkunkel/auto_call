@@ -108,14 +108,6 @@ class CallSessionState extends State<CallSessionPage> {
     });
   }
 
-  TextStyle calledTextColor(BuildContext context, bool called) {
-    return TextStyle(color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color);
-  }
-
-  TextStyle headerStyle(BuildContext context) {
-    return TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color);
-  }
-
   Future<PhoneList> callTableFuture() async {
     if (fileManager.phoneList == null) {
       await fileManager.readFile();
@@ -141,6 +133,7 @@ class CallSessionState extends State<CallSessionPage> {
           builder: (BuildContext context, AsyncSnapshot<PhoneList> snapshot) {
             return snapshot.hasData
                 ? Stack(children: [
+//                    NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
                     CallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
                     Align(
                       alignment: Alignment.bottomCenter,

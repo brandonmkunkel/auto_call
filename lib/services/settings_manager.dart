@@ -20,11 +20,12 @@ enum SettingType  {
 class SettingPair {
   final String key;
   final String text;
+  final String description;
   final Type type;
   final bool premium;
   Function(BuildContext) fcn;
 
-  SettingPair({this.key, this.text, this.type, this.premium});
+  SettingPair({this.key, this.text, this.description, this.type, this.premium});
 
   String toString() {
     return "SettingPair(key: $key, text: $text, type: $type, premium: $premium)";
@@ -71,6 +72,8 @@ class SettingManager {
     SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool, premium: false),
     SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
 //    SettingPair(key: "table_load_prompt", text: "Edit Table after loading", type: bool, premium: false),
+
+    SettingPair(key: "bare_minimum", text: "Bare Minimum Table", type: bool, premium: false),
     SettingPair(key: "post_call_prompt", text: "Prompt on call completion", type: bool, premium: false),
     SettingPair(key: "one_touch_call", text: "One Touch Call", type: bool, premium: false),
     SettingPair(key: "is_premium", text: "Is the user a premium user", type: bool, premium: false),
@@ -78,6 +81,7 @@ class SettingManager {
 
     // Premium Settings
     SettingPair(key: "dark_mode", text: "Dark Mode", type: bool, premium: true),
+    SettingPair(key: "additional_columns", text: "Additional Columns", type: bool, premium: false),
 //    SettingPair(key: "auto_call", text: "Automatically Call Next Person", type: bool, premium: true),
 //    SettingPair(key: "cloud_storage", text: "Cloud Storage", type: bool, premium: true),
 //    SettingPair(key: "client_tracking", text: "Client Tracking", type: bool, premium: true),
