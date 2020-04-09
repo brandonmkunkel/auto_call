@@ -1,3 +1,4 @@
+import 'package:auto_call/services/settings_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:auto_call/services/phone_list.dart';
@@ -30,6 +31,9 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
 
   @override
   Widget build(BuildContext context) {
+    bool premium = globalSettingManager.getSetting("is_premium");
+    bool autoCall = globalSettingManager.getSetting("auto_call");
+
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).backgroundColor.withOpacity(0.9)),
       child: SimpleDialog(
@@ -104,7 +108,23 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
             ]),
             Align(
               alignment: Alignment.centerRight,
-              child: RaisedButton(child: Text("Done"), onPressed: () => Navigator.of(context).pop()),
+              child: Row(
+                  mainAxisAlignment: premium ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
+                  children: [
+                premium
+                    ? RaisedButton(
+                        child: autoCall ? Text("Pause Auto Call") : Text("Restart Auto Call"),
+                        onPressed: () {
+                           setState((){
+                             globalSettingManager.setSetting("auto_call", !autoCall);
+                             print("Set auto call preference temporarily to ${globalSettingManager.getSetting("auto_call")}");
+                           });
+                        },
+                        color: Colors.red,
+                      )
+                    : Container(),
+                RaisedButton(child: Text("Done"), onPressed: () => Navigator.of(context).pop())
+              ]),
             )
           ]),
     );

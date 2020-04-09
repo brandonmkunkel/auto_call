@@ -68,12 +68,12 @@ class SettingManager {
 
   static final List<SettingPair> settingPairs = [
     // Standard Settings
-    SettingPair(key: "splashed", text: "Has user opened app before", type: bool, premium: false),
-    SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool, premium: false),
-    SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
+//    SettingPair(key: "splashed", text: "Has user opened app before", type: bool, premium: false),
+//    SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool, premium: false),
+//    SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
 //    SettingPair(key: "table_load_prompt", text: "Edit Table after loading", type: bool, premium: false),
 
-    SettingPair(key: "bare_minimum", text: "Bare Minimum Table", type: bool, premium: false),
+    SettingPair(key: "show_notes", text: "Show Call Note and Outcome Columns", type: bool, premium: false),
     SettingPair(key: "post_call_prompt", text: "Prompt on call completion", type: bool, premium: false),
     SettingPair(key: "one_touch_call", text: "One Touch Call", type: bool, premium: false),
     SettingPair(key: "is_premium", text: "Is the user a premium user", type: bool, premium: false),
@@ -81,12 +81,11 @@ class SettingManager {
 
     // Premium Settings
     SettingPair(key: "dark_mode", text: "Dark Mode", type: bool, premium: true),
-    SettingPair(key: "additional_columns", text: "Additional Columns", type: bool, premium: false),
-//    SettingPair(key: "auto_call", text: "Automatically Call Next Person", type: bool, premium: true),
+    SettingPair(key: "additional_columns", text: "Additional Table Columns", type: bool, premium: true),
+    SettingPair(key: "edit_columns", text: "Edit Additional Table Columns", type: bool, premium: true),
+    SettingPair(key: "auto_call", text: "Automatically Call Next Person", type: bool, premium: true),
 //    SettingPair(key: "cloud_storage", text: "Cloud Storage", type: bool, premium: true),
 //    SettingPair(key: "client_tracking", text: "Client Tracking", type: bool, premium: true),
-    SettingPair(key: "statistics", text: "Enable User statistics", type: bool, premium: true),
-
   ];
 
   ///

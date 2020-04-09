@@ -43,7 +43,15 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
                     Text("Some stuff will go here eventually\n"),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: RaisedButton(child: Text("Done"), onPressed: () => Navigator.of(context).pop()),
+                      child: RaisedButton(child: Text("Done"), onPressed: () {
+//                        widget.fileManager.phoneList.iterator = 0;
+//                        widget.fileManager.phoneList.people.forEach((person) {
+//                          person.called = false;
+//                        });
+
+                        // Pop the Dialog off of the screen
+                        Navigator.of(context).pop();
+                      }),
                     )
                   ]),
                 )

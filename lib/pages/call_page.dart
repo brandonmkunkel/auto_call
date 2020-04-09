@@ -181,7 +181,8 @@ class _CallPageState extends State<CallPage> {
   _initiateCall() {
     if (_phoneNumber?.isNotEmpty == true) {
       setState(() {
-        FlutterPhoneState.startPhoneCall(_phoneNumber);
+//        FlutterPhoneState.startPhoneCall(_phoneNumber);
+        FlutterPhoneDirectCaller.callNumber(_phoneNumber);
       });
     }
   }

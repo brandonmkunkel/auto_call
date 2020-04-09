@@ -68,21 +68,28 @@ class _NewCallTableState extends State<NewCallTable> {
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Expanded(
           child: SingleChildScrollView(
+//        controller: widget.scrollController,
         child: Column(
           children: <Widget>[
-            ListView.builder(
+            Row(
+              children: [
+                Flexible(
+                  child: ListView.builder(
 //          physics: NeverScrollableScrollPhysics(),
-              controller: widget.scrollController,
-              shrinkWrap: true,
-              itemCount: fileManager.phoneList.people.length,
-              itemBuilder: (context, idx) {
-                return CallTableEntry(
-                  manager: fileManager,
-                  idx: idx,
-                  focusNode: focusNodes[idx],
-                  textController: widget.textControllers[idx],
-                );
-              },
+                    controller: widget.scrollController,
+                    shrinkWrap: true,
+                    itemCount: fileManager.phoneList.people.length,
+                    itemBuilder: (context, idx) {
+                      return CallTableEntry(
+                        manager: fileManager,
+                        idx: idx,
+                        focusNode: focusNodes[idx],
+                        textController: widget.textControllers[idx],
+                      );
+                    },
+                  ),
+                )
+              ],
             ),
             Container(
                 height: rowSize,
@@ -176,29 +183,35 @@ class _CallTableEntryState extends State<CallTableEntry> {
     int i = widget.idx;
 
     return Row(
-//        index: i,
-//        selected: i == fileManager.phoneList.iterator ? true : false,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
             Expanded(
-              flex: 0,
-              child: Container(
-                  width: 40.0,
-                  alignment: Alignment.center,
-                  child: i == fileManager.phoneList.iterator
-                      ? Icon(Icons.forward)
-                      : IconButton(
-                          icon: Icon(Icons.check_circle,
-                              color: fileManager.phoneList.people[i].called
-                                  ? Theme.of(context).accentColor
-                                  : Theme.of(context).disabledColor),
-                          onPressed: () {
-                            setState(() {
-                              fileManager.phoneList.people[i].called = !fileManager.phoneList.people[i].called;
-                            });
-                          },
-                        )),
-            ),
-            Expanded(flex: 1, child: CalledText(text: "${i + 1}", called: fileManager.phoneList.people[i].called)),
+                flex: 1,
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                  i == fileManager.phoneList.iterator
+                      ? SizedBox(
+                          width: 24.0,
+                          child: IconButton(
+                              padding: const EdgeInsets.all(0.0),
+                              icon: Icon(
+                                Icons.forward,
+                                color: Theme.of(context).iconTheme.color,
+                              )))
+                      : SizedBox(
+                          width: 24.0,
+                          child: IconButton(
+                              padding: const EdgeInsets.all(0.0),
+                              icon: Icon(Icons.check_circle,
+                                  color: fileManager.phoneList.people[i].called
+                                      ? Theme.of(context).accentColor
+                                      : Theme.of(context).disabledColor),
+                              onPressed: () {
+                                setState(() {
+                                  fileManager.phoneList.people[i].called = !fileManager.phoneList.people[i].called;
+                                });
+                              })),
+                  CalledText(text: (i + 1).toString(), called: fileManager.phoneList.people[i].called)
+                ])),
             Expanded(
               flex: 2,
               child: CalledText(
@@ -212,20 +225,15 @@ class _CallTableEntryState extends State<CallTableEntry> {
           ] +
           List.generate(fileManager.phoneList.additionalLabels.length, (int idx) {
             return Expanded(
-              flex: 2,
+              flex: 1,
               child: CalledText(
                   text: fileManager.phoneList.people[i].additionalData[idx],
                   called: fileManager.phoneList.people[i].called),
             );
           }) +
           [
-//                        DataCell(
-//                            SelectableText(fileManager.phoneList.people[i].email,
-//                                style: calledTheme(fileManager.phoneList.people[i].called)),
-//                                onTap: () => setStateIterator(i));
-//                        ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: TextFormField(
                 controller: widget.textController,
                 focusNode: widget.focusNode,
@@ -245,9 +253,10 @@ class _CallTableEntryState extends State<CallTableEntry> {
               child: DropdownButton<String>(
                   value: fileManager.phoneList.people[i].outcome,
                   onChanged: (String outcome) {
-                    widget.focusNode.unfocus();
-                    fileManager.phoneList.people[i].outcome = outcome;
-                    setState(() {});
+                    setState(() {
+                      widget.focusNode.unfocus();
+                      fileManager.phoneList.people[i].outcome = outcome;
+                    });
                   },
                   elevation: 16,
                   items:
@@ -264,6 +273,7 @@ class _CallTableEntryState extends State<CallTableEntry> {
     );
   }
 }
+
 
 class HeaderText extends StatelessWidget {
   final String text;
@@ -282,7 +292,11 @@ class CalledText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,
-        style: TextStyle(color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color));
+    return Text(
+      text,
+      style: TextStyle(
+          color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color,
+          fontSize: Theme.of(context).textTheme.body1.fontSize),
+    );
   }
 }

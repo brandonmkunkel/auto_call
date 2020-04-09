@@ -23,6 +23,7 @@ class CallSessionPage extends StatefulWidget {
 }
 
 class CallSessionState extends State<CallSessionPage> {
+  bool autoCall = false;
   bool inCall = false;
   double rowSize = kMinInteractiveDimension;
   ScrollController _controller;
@@ -35,13 +36,22 @@ class CallSessionState extends State<CallSessionPage> {
   @override
   void initState() {
 //    tableSource = CallTableSource(fileManager);
+
+    // Start up the Scroll Controller
     _controller = ScrollController(keepScrollOffset: true);
+
+    // Get settings for this page from the SettingsManager
+    autoCall = globalSettingManager.isPremium()
+        ? globalSettingManager.getSetting("auto_call") : false;
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+
+    globalSettingManager.setSetting("auto_call", autoCall);
+
     _controller?.dispose();
     textControllers.forEach((_textController) {
       _textController?.dispose();
@@ -52,49 +62,86 @@ class CallSessionState extends State<CallSessionPage> {
   }
 
   Future<bool> monitorCallState() async {
+    bool callState = false;
+
     // Collect whether the user wants to call immediately
     bool oneTouch = globalSettingManager.getSetting("one_touch_call");
 
+    print("in monitorCall State before call");
+
     if (oneTouch) {
-      oneTouchCall(fileManager.phoneList.currentPerson().phone);
+      oneTouchCall(fileManager.phoneList.currentPerson().phone).then((state)=> callState=state);
     } else {
       twoTouchCall(fileManager.phoneList.currentPerson().phone);
     }
 
+    print("in monitorCall State after the call");
+
+//    await waitForCallCompletion(fileManager.phoneList.currentPerson().phone);
+
     // report that the call is over
-    return false;
+    return callState;
   }
 
   Future<void> makeCall() async {
-    bool inCall = await monitorCallState();
+//    if (inCall) {
+      monitorCallState().then((callState) => inCall=callState);
 
-    bool postCallPrompt = globalSettingManager.getSetting("post_call_prompt");
-    print(postCallPrompt);
+      print("make call - inCall $inCall");
 
-    if (postCallPrompt) {
-      // Show after call dialog after the call is complete
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) => AfterCallPrompt(
-                person: fileManager.phoneList.currentPerson(),
-                callIdx: fileManager.phoneList.iterator,
-                controller: textControllers[fileManager.phoneList.iterator],
-              ));
-    }
+      bool postCallPrompt = globalSettingManager.getSetting("post_call_prompt");
+      bool _autoCall = globalSettingManager.getSetting("auto_call");
 
-    // Update the Widgets on this page
-    setState(() {
-      fileManager.phoneList.currentPerson().called = true;
-    });
+      if (postCallPrompt) {
+        // Show after call dialog after the call is complete
+        await showDialog(
+            context: context,
+            builder: (BuildContext context) => AfterCallPrompt(
+              person: fileManager.phoneList.currentPerson(),
+              callIdx: fileManager.phoneList.iterator,
+              controller: textControllers[fileManager.phoneList.iterator],
+            ));
+      }
+
+      // Update the Widgets on this page
+      setState(() {
+        fileManager.phoneList.currentPerson().called = true;
+        advanceController(forward: true);
+      });
+//    }
+
+  }
+
+  Future<void> makeAutoCall() async {
+      while (!fileManager.phoneList.isComplete() && globalSettingManager.getSetting("auto_call")) {
+        print("Inside while loop for makeAutoCall");
+        await makeCall();
+      }
   }
 
   // Update the Scroll controller based on the given item offset
   void updateController(int iteratorOffset) {
-    _controller.animateTo(
-      _controller.offset + rowSize * iteratorOffset,
-      curve: Curves.easeIn,
-      duration: Duration(milliseconds: 500),
-    );
+    setState(() {
+      _controller.animateTo(
+        _controller.offset + rowSize * iteratorOffset,
+        curve: Curves.easeInOut,
+        duration: Duration(milliseconds: 400),
+      );
+    });
+  }
+
+
+  void advanceController({bool forward=true}) {
+    int origIterator = fileManager.phoneList.iterator;
+
+    if (forward) {
+      fileManager.phoneList.advanceIterator();
+    } else {
+      fileManager.phoneList.reverseIterator();
+    }
+
+    int offset = fileManager.phoneList.iterator - origIterator;
+    updateController(offset);
   }
 
   void setStateIterator(int i) {
@@ -131,10 +178,24 @@ class CallSessionState extends State<CallSessionPage> {
       body: FutureBuilder<PhoneList>(
           future: callTableFuture(),
           builder: (BuildContext context, AsyncSnapshot<PhoneList> snapshot) {
+//            editColumns = globalSettingManager.isPremium() ?
+//            globalSettingManager.getSetting("edit_columns") : false;
+//
+//            if (editColumns) {
+//              showDialog(context: context, barrierDismissible: true, child: PreSessionPrompt(fileManager: fileManager)).then(
+//                      (dynamic columns) {
+//                    acceptedColumns = columns;
+//                  }
+//              );
+//            }
+
             return snapshot.hasData
                 ? Stack(children: [
 //                    NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
-                    CallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
+                    CallTable(
+                        manager: fileManager,
+                        scrollController: _controller,
+                        textControllers: textControllers),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: fileManager.phoneList.isComplete()
@@ -155,10 +216,16 @@ class CallSessionState extends State<CallSessionPage> {
                                   onPressed: () async {
                                     FocusScope.of(context).unfocus();
 
-                                    // Store information from the user prompt
-                                    var result = await showDialog(
-                                        context: context, child: PostSessionPrompt(fileManager: fileManager));
+                                    widget.fileManager.phoneList.iterator = 0;
+                                    widget.fileManager.phoneList.people.forEach((person) {
+                                      person.called = false;
+                                    });
 
+//                                    // Store information from the user prompt
+//                                    var result = await showDialog(
+//                                        context: context, child: PostSessionPrompt(fileManager: fileManager));
+
+                                    setState((){});
                                     print("call_session.dart: COMPLETED");
                                   }))
                           : Container(
@@ -179,12 +246,7 @@ class CallSessionState extends State<CallSessionPage> {
                                     icon: Icon(Icons.arrow_back),
                                     onPressed: () {
                                       FocusScope.of(context).unfocus();
-                                      setState(() {
-                                        int origIterator = fileManager.phoneList.iterator;
-                                        fileManager.phoneList.reverseIterator();
-                                        int offset = fileManager.phoneList.iterator - origIterator;
-                                        updateController(offset);
-                                      });
+                                      advanceController(forward: false);
                                     },
                                     heroTag: "btn_back",
                                     tooltip: "Back",
@@ -193,15 +255,11 @@ class CallSessionState extends State<CallSessionPage> {
                                     onPressed: () async {
                                       FocusScope.of(context).unfocus();
 
-                                      await makeCall();
-
-                                      setState(() {
-                                        // Advance iterator and update the scroll controller
-                                        int origIterator = fileManager.phoneList.iterator;
-                                        fileManager.phoneList.advanceIterator();
-                                        int offset = fileManager.phoneList.iterator - origIterator;
-                                        updateController(offset);
-                                      });
+                                      if (globalSettingManager.getSetting("auto_call")) {
+                                        await makeAutoCall();
+                                      } else {
+                                        await makeCall();
+                                      }
                                     },
                                     heroTag: "btn_call",
                                     tooltip: "Call",
@@ -213,13 +271,7 @@ class CallSessionState extends State<CallSessionPage> {
                                     icon: Icon(Icons.arrow_forward),
                                     onPressed: () {
                                       FocusScope.of(context).unfocus();
-
-                                      setState(() {
-                                        int origIterator = fileManager.phoneList.iterator;
-                                        fileManager.phoneList.advanceIterator();
-                                        int offset = fileManager.phoneList.iterator - origIterator;
-                                        updateController(offset);
-                                      });
+                                      advanceController(forward: true);
                                     },
                                     heroTag: "btn_next",
                                     tooltip: "Call",

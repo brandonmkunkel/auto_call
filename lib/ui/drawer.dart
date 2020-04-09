@@ -70,13 +70,13 @@ class AppDrawer extends StatelessWidget {
 //            navigatorUpdate(context, CallSessionPage.routeName);
 //          },
 //        ),
-//        ListTile(
-//          leading: Icon(Icons.history),
-//          title: Text('Call Page', style: Theme.of(context).textTheme.title),
-//          onTap: () {
-//            navigatorUpdate(context, CallPage.routeName);
-//          },
-//        ),
+        ListTile(
+          leading: Icon(Icons.history),
+          title: Text('Call Page', style: Theme.of(context).textTheme.title),
+          onTap: () {
+            navigatorUpdate(context, CallPage.routeName);
+          },
+        ),
         ListTile(
           leading: Icon(Icons.history),
           title: Text('Old Calls', style: Theme.of(context).textTheme.title),
