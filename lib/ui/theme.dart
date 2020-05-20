@@ -6,6 +6,8 @@ class ThemeProvider with ChangeNotifier {
 
   ThemeProvider(this._isDarkTheme);
 
+  isDark() => _isDarkTheme;
+
   getTheme() => _isDarkTheme ? darkTheme : lightTheme;
 
   setTheme(bool isDarkTheme) async {

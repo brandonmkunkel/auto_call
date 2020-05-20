@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 
 import 'package:auto_call/services/phone_list.dart';
 
@@ -48,7 +47,7 @@ void main() {
     String number = "8007766437";
     String email = "pineapple@binikin_bottom.com";
     String note = "oh yeah this is the stuff";
-    String outcome = "voicemail";
+    String result = "voicemail";
     bool called = false;
     List additionalData = ["12341234", "USA"];
 
@@ -56,7 +55,7 @@ void main() {
       number,
       email: email,
       note: note,
-      outcome: outcome,
+      result: result,
       called: called,
       additionalData: additionalData
     );
@@ -66,7 +65,7 @@ void main() {
     expect(person.phone, number);
     expect(person.email, email);
     expect(person.note, note);
-    expect(person.outcome, outcome);
+    expect(person.result, result);
     expect(person.called, called);
     expect(person.additionalData, additionalData);
   });

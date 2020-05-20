@@ -3,21 +3,15 @@ import 'package:string_similarity/string_similarity.dart';
 import 'package:auto_call/services/regex.dart';
 import 'package:auto_call/services/file_io.dart';
 
-enum Outcome {
-  None,
+enum Result {
+  Empty,
+  BadNumber,
   Voicemail,
   Answered,
-  Success,
+  NotInterested,
   FollowUp,
+  Success,
 }
-
-Map<String, Outcome> outcomes = {
-  "None": Outcome.None,
-  "Voicemail": Outcome.Voicemail,
-  "Answered": Outcome.Answered,
-  "Success": Outcome.Success,
-  "Follow Up": Outcome.FollowUp,
-};
 
 class Person {
   bool called = false;
@@ -25,22 +19,37 @@ class Person {
   String phone = "";
   String email = "";
   String note = "";
-  String outcome = "None";
+  String result = "";
   List<String> additionalData = [];
   List<String> additionalLabels = [];
 
-  static final List<String> labels = ["name", "phone", "email", "outcome", "note", "called"];
+  static final List<String> labels = ["name", "phone", "email", "result", "note", "called"];
   static final List<String> requiredLabels = ["name", "phone"];
-  static final List<String> possibleOutcomes = ['None', 'Voicemail', 'Answered', 'Follow Up', 'Success'];
 
-  Person(String name, String phone, {String email="", String outcome="None", String note="", bool called=false, List<dynamic> additionalLabels, List<dynamic> additionalData}) {
-    this.name=name;
-    this.phone=phone;
-    this.email=email;
+  static final Map<String, Result> resultMap = {
+    "": Result.Empty,
+    "Bad Number": Result.BadNumber,
+    "Voicemail": Result.Voicemail,
+    "Answered": Result.Answered,
+    "Not Interested": Result.NotInterested,
+    "Follow Up": Result.FollowUp,
+    "Success": Result.Success,
+  };
 
-    this.called=called;
-    this.outcome=outcome;
-    this.note=note;
+  Person(String name, String phone,
+      {String email = "",
+      String result = "",
+      String note = "",
+      bool called = false,
+      List<dynamic> additionalLabels,
+      List<dynamic> additionalData}) {
+    this.name = name;
+    this.phone = phone;
+    this.email = email;
+
+    this.called = called;
+    this.result = result;
+    this.note = note;
     this.additionalData = additionalData != null ? additionalData.cast<String>() : [];
     this.additionalLabels = additionalLabels != null ? additionalData.cast<String>() : [];
   }
@@ -50,11 +59,14 @@ class Person {
   }
 
   static List<List<String>> orderedLabels() {
-    return [["name", "phone", "email"], ["outcome", "note", "called"]];
+    return [
+      ["name", "phone", "email"],
+      ["result", "note", "called"]
+    ];
   }
 
   List<String> encode() {
-    return [name, phone, email] + additionalData + [outcome, note, called.toString()];
+    return [name, phone, email] + additionalData + [result, note, called.toString()];
   }
 }
 
@@ -90,7 +102,7 @@ class PhoneList {
   ///
   /// Methods for interacting with the final class
   ///
-  Person operator[](int idx) => people[idx];
+  Person operator [](int idx) => people[idx];
 
   bool isNotEmpty() {
     return people.isNotEmpty;
@@ -122,7 +134,7 @@ class PhoneList {
     BestMatch match;
 
     // First look to see if there really is a header row
-    for (int idx=0; idx<header.length; idx++) {
+    for (int idx = 0; idx < header.length; idx++) {
       String label = header[idx].toString().toLowerCase().trim();
       match = StringSimilarity.findBestMatch(label, Person.labels);
 
@@ -154,19 +166,22 @@ class PhoneList {
 
     for (List<dynamic> entry in rows) {
 //      print(entry);
-      if (MagicRegex.isName(entry[labelMapping["name"]].toString()) && MagicRegex.isNumber(entry[labelMapping["phone"]].toString())) {
-        people.add(
-            Person(
-              entry[labelMapping["name"]].trim(),
-              entry[labelMapping["phone"]].toString().trim(),
-              email: labelMapping.containsKey("email") ? entry[labelMapping["email"]].trim() : "",
-              note: labelMapping.containsKey("note") ? entry[labelMapping["note"]].trim() : "",
-              outcome: labelMapping.containsKey("outcome") ? entry[labelMapping["outcome"]].trim() : "None",
-              called: labelMapping.containsKey("called") ? entry[labelMapping["called"]].toString().toLowerCase().trim() == "true" : false,
-              additionalLabels: List.generate(additionalLabels.length, (int index) => labelMapping[additionalLabels[index]].toString().trim()),
-              additionalData: List.generate(additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString().trim()),
-            )
-        );
+      if (MagicRegex.isName(entry[labelMapping["name"]].toString()) &&
+          MagicRegex.isNumber(entry[labelMapping["phone"]].toString())) {
+        people.add(Person(
+          entry[labelMapping["name"]].trim(),
+          entry[labelMapping["phone"]].toString().trim(),
+          email: labelMapping.containsKey("email") ? entry[labelMapping["email"]].trim() : "",
+          note: labelMapping.containsKey("note") ? entry[labelMapping["note"]].trim() : "",
+          result: labelMapping.containsKey("result") ? entry[labelMapping["result"]].trim() : "",
+          called: labelMapping.containsKey("called")
+              ? entry[labelMapping["called"]].toString().toLowerCase().trim() == "true"
+              : false,
+          additionalLabels: List.generate(
+              additionalLabels.length, (int index) => labelMapping[additionalLabels[index]].toString().trim()),
+          additionalData: List.generate(
+              additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString().trim()),
+        ));
       }
     }
   }
@@ -176,7 +191,7 @@ class PhoneList {
   ///
   void resolveLabels(List<dynamic> row) {
     // Try to ascertain the correct minimally required labels to be able to loop through calls
-    int index=0;
+    int index = 0;
     bool matched;
     bool nameFound = false;
     bool phoneFound = false;
@@ -270,7 +285,7 @@ class PhoneList {
     if (isComplete()) {
       nextIterator = people.length;
     } else if (nextIterator > lastUncalled) {
-        nextIterator = firstUncalled;
+      nextIterator = firstUncalled;
     } else if (people[nextIterator].called) {
       // If the Next entry has been called already, skip
       if (nextIterator > lastUncalled) {

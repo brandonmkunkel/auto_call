@@ -31,7 +31,6 @@ dependencies:
   provider:
 
   # Phone calls
-  get_it:
   url_launcher:
   flutter_phone_state: ^0.5.9
   flutter_phone_direct_caller : ^1.0.1

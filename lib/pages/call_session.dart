@@ -8,6 +8,7 @@ import 'package:auto_call/ui/call_table.dart';
 import 'package:auto_call/ui/call_table_new.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
+import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
 class CallSessionPage extends StatefulWidget {
@@ -29,6 +30,7 @@ class CallSessionState extends State<CallSessionPage> {
   ScrollController _controller;
   List<TextEditingController> textControllers = [];
   List<FocusNode> focusNodes = [];
+  List<bool> acceptedColumns = [];
 
   // Getter for file manager from widget parent
   FileManager get fileManager => widget.fileManager;
@@ -178,10 +180,10 @@ class CallSessionState extends State<CallSessionPage> {
       body: FutureBuilder<PhoneList>(
           future: callTableFuture(),
           builder: (BuildContext context, AsyncSnapshot<PhoneList> snapshot) {
-//            editColumns = globalSettingManager.isPremium() ?
-//            globalSettingManager.getSetting("edit_columns") : false;
+//            bool editColumns = globalSettingManager.isPremium() ?
+//              globalSettingManager.getSetting("edit_columns") : false;
 //
-//            if (editColumns) {
+//            if (snapshot.hasData && editColumns && acceptedColumns.isEmpty) {
 //              showDialog(context: context, barrierDismissible: true, child: PreSessionPrompt(fileManager: fileManager)).then(
 //                      (dynamic columns) {
 //                    acceptedColumns = columns;
@@ -195,7 +197,9 @@ class CallSessionState extends State<CallSessionPage> {
                     CallTable(
                         manager: fileManager,
                         scrollController: _controller,
-                        textControllers: textControllers),
+                        textControllers: textControllers,
+//                      acceptedColumns: acceptedColumns,
+                    ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: fileManager.phoneList.isComplete()

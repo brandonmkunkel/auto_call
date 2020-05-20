@@ -9,7 +9,6 @@ import 'package:auto_call/pages/call_session.dart';
 
 import 'package:auto_call/ui/prompts/file_warning.dart';
 
-
 class FileSelectorPage extends StatefulWidget {
   static const String routeName = "/file_selector";
   static String title = "File Selector";
@@ -20,14 +19,14 @@ class FileSelectorPage extends StatefulWidget {
 }
 
 class FileSelectorState extends State<FileSelectorPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _fileName;
   String _path;
   Map<String, String> _paths;
-  String _extension;
+  String _extension = "txt,csv,xls,xlsx";
   bool _loadingPath = false;
   bool _multiPick = false;
-  bool _hasValidMime = false;
-  FileType _pickingType;
+  FileType _pickingType = FileType.custom;
   TextEditingController _controller = new TextEditingController();
 
   @override
@@ -38,25 +37,38 @@ class FileSelectorState extends State<FileSelectorPage> {
   }
 
   void _openFileExplorer() async {
-    if (_pickingType != FileType.CUSTOM || _hasValidMime) {
-      setState(() => _loadingPath = true);
-      try {
-        if (_multiPick) {
-          _path = null;
-          _paths = await FilePicker.getMultiFilePath(type: _pickingType, fileExtension: _extension);
-        } else {
-          _paths = null;
-          _path = await FilePicker.getFilePath(type: _pickingType, fileExtension: _extension);
-        }
-      } on PlatformException catch (e) {
-        print("Unsupported operation" + e.toString());
+    setState(() => _loadingPath = true);
+    try {
+      if (_multiPick) {
+        _path = null;
+        _paths = await FilePicker.getMultiFilePath(
+            type: _pickingType,
+            allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null);
+      } else {
+        _paths = null;
+        _path = await FilePicker.getFilePath(
+            type: _pickingType,
+            allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null);
       }
-      if (!mounted) return;
-      setState(() {
-        _loadingPath = false;
-        _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
-      });
+    } on PlatformException catch (e) {
+      print("Unsupported operation" + e.toString());
     }
+    if (!mounted) return;
+    setState(() {
+      _loadingPath = false;
+      _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
+    });
+  }
+
+  void _clearCachedFiles() {
+    FilePicker.clearTemporaryFiles().then((result) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          backgroundColor: result ? Colors.green : Colors.red,
+          content: Text((result ? 'Temporary files removed with success.' : 'Failed to clean temporary files')),
+        ),
+      );
+    });
   }
 
   @override

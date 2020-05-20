@@ -42,7 +42,7 @@ class OldCallsState extends State<OldCallsPage> {
                 padding: EdgeInsets.all(20.0),
                 child: Center(
                     child: Text("Old Call Sessions",
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline))),
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5))),
             Expanded(
                 child: FutureBuilder(
               future: showOldCalls(context),
@@ -69,7 +69,7 @@ class OldCallsState extends State<OldCallsPage> {
               trailing: _popUpFile(context, index),
             );
           }))
-        : Container(child: Text("No old call sessions found.", style: Theme.of(context).textTheme.subhead));
+        : Container(child: Text("No old call sessions found.", style: Theme.of(context).textTheme.subtitle1));
   }
 
   void showMenuSelection(oldCallEnum value) {

@@ -49,7 +49,7 @@ class SettingsPageState extends State<SettingsPage> {
           textAlign: TextAlign.center,
           style: TextStyle(
               color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500],
-              fontSize: Theme.of(context).primaryTextTheme.subhead.fontSize),
+              fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
         ),
         Spacer(),
         Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
@@ -77,7 +77,7 @@ class SettingsPageState extends State<SettingsPage> {
 //      // If not, leave blank
 //      return Container(
 //        child:
-//        Text("Settings have not loaded correctly, server may be down", style: Theme.of(context).textTheme.headline),
+//        Text("Settings have not loaded correctly, server may be down", style: Theme.of(context).textTheme.headline5),
 //      );
 //    }
 //  }

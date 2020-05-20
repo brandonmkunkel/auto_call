@@ -1,6 +1,7 @@
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
@@ -10,7 +11,12 @@ class CallTable extends StatefulWidget {
   final List<TextEditingController> textControllers;
   final List<bool> acceptedColumns;
 
-  CallTable({Key key, @required this.manager, @required this.scrollController, @required this.textControllers, @required this.acceptedColumns})
+  CallTable(
+      {Key key,
+      @required this.manager,
+      @required this.scrollController,
+      @required this.textControllers,
+      this.acceptedColumns})
       : super(key: key);
 
   @override
@@ -72,7 +78,8 @@ class _CallTableState extends State<CallTable> {
   Widget build(BuildContext context) {
     // Get Additional Settings for the call table from the SettingsManager
     showCallNotes = globalSettingManager.getSetting("show_notes");
-    additionalColumns = globalSettingManager.isPremium() ? globalSettingManager.getSetting("auto_call") : false;
+    additionalColumns =
+        globalSettingManager.isPremium() ? globalSettingManager.getSetting("additional_columns") : false;
 
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Expanded(
@@ -104,11 +111,11 @@ class _CallTableState extends State<CallTable> {
                                       label: HeaderText(fileManager.phoneList.additionalLabels[idx]), numeric: false))
                               : []) +
 
-                          // Use bareMinimum to hide the call Note and Outcome
+                          // Use bareMinimum to hide the call Note and Result
                           (showCallNotes
                               ? [
                                   DataColumn(label: HeaderText("Note"), numeric: false),
-                                  DataColumn(label: HeaderText("Outcome"), numeric: false),
+                                  DataColumn(label: HeaderText("Result"), numeric: false),
                                 ]
                               : []),
                       rows: List<DataRow>.generate(fileManager.phoneList.people.length, (i) => rowBuilder(context, i)),
@@ -134,12 +141,10 @@ class _CallTableState extends State<CallTable> {
                     i == fileManager.phoneList.iterator
                         ? SizedBox(
                             width: 36.0,
-                            child: IconButton(
-                                padding: const EdgeInsets.all(0.0),
-                                icon: Icon(
-                                  Icons.forward,
-                                  color: Theme.of(context).iconTheme.color,
-                                )))
+                            child: Icon(
+                              Icons.forward,
+                              color: Theme.of(context).iconTheme.color,
+                            ))
                         : SizedBox(
                             width: 36.0,
                             child: IconButton(
@@ -185,7 +190,7 @@ class _CallTableState extends State<CallTable> {
                           style: TextStyle(
                               color: fileManager.phoneList.people[i].called
                                   ? Theme.of(context).disabledColor
-                                  : Theme.of(context).textTheme.body1.color),
+                                  : Theme.of(context).textTheme.bodyText1.color),
                           autofocus: false,
                           onChanged: (String text) {
                             fileManager.phoneList.people[i].note = text;
@@ -198,25 +203,37 @@ class _CallTableState extends State<CallTable> {
                         ),
                         onTap: () => setStateIterator(i)),
                     DataCell(
+//                        ButtonTheme(
+//                        alignedDropdown: true,
+//                            child: DropdownButton<String>(
                         DropdownButton<String>(
-                            value: fileManager.phoneList.people[i].outcome,
+                            value: fileManager.phoneList.people[i].result.isEmpty
+                                ? null
+                                : fileManager.phoneList.people[i].result,
                             onChanged: (String outcome) {
                               setState(() {
                                 focusNodes[i].unfocus();
-                                fileManager.phoneList.people[i].outcome = outcome;
+                                fileManager.phoneList.people[i].result = outcome;
                               });
                             },
-                            elevation: 16,
+                            hint: Text("Result"),
                             isDense: true,
-                            items: <String>['None', 'Voicemail', 'Answered', 'Success', 'Follow Up']
+                            isExpanded: false,
+                            items: Person.resultMap.keys
+                                .where((String outcome) => outcome.isNotEmpty)
+                                .toList()
                                 .map<DropdownMenuItem<String>>(
-                              (String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: CalledText(text: value, called: fileManager.phoneList.people[i].called),
-                                );
-                              },
-                            ).toList()),
+                                  (String value) => DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Align(
+                                        child: CalledText(text: value, called: fileManager.phoneList.people[i].called),
+                                        alignment: Alignment.centerRight),
+//                                        child: CalledText(text: value, called: fileManager.phoneList.people[i].called),
+                                  ),
+                                )
+                                .toList()
+//    )
+                            ),
                         onTap: () => setStateIterator(i)),
                   ]
                 : []));
@@ -230,8 +247,8 @@ class HeaderText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(text,
         style: TextStyle(
-          color: Theme.of(context).textTheme.body1.color,
-          fontSize: Theme.of(context).textTheme.body2.fontSize * 1.2,
+          color: Theme.of(context).textTheme.bodyText1.color,
+          fontSize: Theme.of(context).textTheme.bodyText2.fontSize * 1.2,
           fontWeight: FontWeight.bold,
         ));
   }
@@ -240,13 +257,16 @@ class HeaderText extends StatelessWidget {
 class CalledText extends StatelessWidget {
   final String text;
   final bool called;
-  CalledText({this.text, this.called});
+  TextAlign align = TextAlign.left;
+
+  CalledText({this.text, this.called, this.align});
 
   @override
   Widget build(BuildContext context) {
     return Text(text,
+        textAlign: align,
         style: TextStyle(
-            color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color,
-            fontSize: Theme.of(context).textTheme.body1.fontSize));
+            color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.bodyText1.color,
+            fontSize: Theme.of(context).textTheme.bodyText1.fontSize));
   }
 }

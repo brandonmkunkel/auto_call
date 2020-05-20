@@ -27,7 +27,7 @@ class ContactTrackerState extends State<ContactTrackerPage> {
                 padding: EdgeInsets.all(20.0),
                 child: Center(
                     child: Text("Track your contacts here",
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline))),
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5))),
           ],
         ));
   }

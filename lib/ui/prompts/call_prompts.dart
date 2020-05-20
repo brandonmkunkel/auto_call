@@ -85,42 +85,43 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
               GestureDetector(
                 onTap: () => _focusNode.unfocus(),
                 child: ListTile(
-                    title: Text("Call Outcome:"),
+                    title: Text("Call Result:"),
                     trailing: DropdownButton<String>(
-                        hint: Text("Outcome"),
-                        value: widget.person.outcome,
+                        hint: Text("Result"),
+                        value: widget.person.result.isEmpty
+                            ? null
+                            : widget.person.result,
                         onChanged: (String value) {
                           _focusNode.unfocus();
                           setState(() {
-                            widget.person.outcome = value;
+                            widget.person.result = value;
                           });
                         },
                         elevation: 16,
-                        items: Person.possibleOutcomes.map<DropdownMenuItem<String>>(
-                          (String value) {
-                            return DropdownMenuItem<String>(
+                        items: Person.resultMap.keys
+                            .where((String outcome) => outcome.isNotEmpty)
+                            .toList()
+                            .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
-                            );
-                          },
+                            )
                         ).toList())),
               )
             ]),
             Align(
               alignment: Alignment.centerRight,
-              child: Row(
-                  mainAxisAlignment: premium ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end,
-                  children: [
+              child:
+                  Row(mainAxisAlignment: premium ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end, children: [
                 premium
                     ? RaisedButton(
                         child: autoCall ? Text("Pause Auto Call") : Text("Restart Auto Call"),
                         onPressed: () {
-                           setState((){
-                             globalSettingManager.setSetting("auto_call", !autoCall);
-                             print("Set auto call preference temporarily to ${globalSettingManager.getSetting("auto_call")}");
-                           });
+                          setState(() {
+                            globalSettingManager.setSetting("auto_call", !autoCall);
+                          });
                         },
-                        color: Colors.red,
+                        color: autoCall ? Colors.red : Colors.green,
                       )
                     : Container(),
                 RaisedButton(child: Text("Done"), onPressed: () => Navigator.of(context).pop())

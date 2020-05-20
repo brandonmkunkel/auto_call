@@ -51,56 +51,56 @@ class AppDrawer extends StatelessWidget {
 
         ListTile(
           leading: Icon(Icons.home),
-          title: Text('Home', style: Theme.of(context).textTheme.title),
+          title: Text('Home', style: Theme.of(context).textTheme.subtitle1),
           onTap: () {
             navigatorUpdate(context, HomePage.routeName);
           },
         ),
 //        ListTile(
 //          leading: Icon(Icons.note_add),
-//          title: Text('File Selector', style: Theme.of(context).textTheme.title),
+//          title: Text('File Selector', style: Theme.of(context).textTheme.subtitle1),
 //          onTap: () {
 //            navigatorUpdate(context, FileSelectorPage.routeName);
 //          },
 //        ),
 //        ListTile(
 //          leading: Icon(Icons.cloud_upload),
-//          title: Text('Call Session', style: Theme.of(context).textTheme.title),
+//          title: Text('Call Session', style: Theme.of(context).textTheme.subtitle1),
 //          onTap: () {
 //            navigatorUpdate(context, CallSessionPage.routeName);
 //          },
 //        ),
+//        ListTile(
+//          leading: Icon(Icons.history),
+//          title: Text('Call Page', style: Theme.of(context).textTheme.subtitle1),
+//          onTap: () {
+//            navigatorUpdate(context, CallPage.routeName);
+//          },
+//        ),
         ListTile(
           leading: Icon(Icons.history),
-          title: Text('Call Page', style: Theme.of(context).textTheme.title),
-          onTap: () {
-            navigatorUpdate(context, CallPage.routeName);
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.history),
-          title: Text('Old Calls', style: Theme.of(context).textTheme.title),
+          title: Text('Old Calls', style: Theme.of(context).textTheme.subtitle1),
           onTap: () {
             navigatorUpdate(context, OldCallsPage.routeName);
           },
         ),
         ListTile(
           leading: Icon(Icons.contacts),
-          title: Text('Contact Tracker', style: Theme.of(context).textTheme.title),
+          title: Text('Contact Tracker', style: Theme.of(context).textTheme.subtitle1),
           onTap: () {
             navigatorUpdate(context, ContactTrackerPage.routeName);
           },
         ),
         ListTile(
           leading: Icon(Icons.settings),
-          title: Text('Settings', style: Theme.of(context).textTheme.title),
+          title: Text('Settings', style: Theme.of(context).textTheme.subtitle1),
           onTap: () {
             navigatorUpdate(context, SettingsPage.routeName);
           },
         ),
         ListTile(
           leading: Icon(Icons.info),
-          title: Text('About', style: Theme.of(context).textTheme.title),
+          title: Text('About', style: Theme.of(context).textTheme.subtitle1),
           onTap: () {
             navigatorUpdate(context, AboutPage.routeName);
           },

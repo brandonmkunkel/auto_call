@@ -36,15 +36,15 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Welcome Back!\n", style: Theme.of(context).textTheme.headline),
+                Text("Welcome Back!\n", style: Theme.of(context).textTheme.headline5),
                 Text(
                     "This app will help you get through a list of phone calls as fast as possible\n\n"
                         "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
                         "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.\n",
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText2,
                     textAlign: TextAlign.center),
                 Divider(),
-                Text("\nCall Stats", style: Theme.of(context).textTheme.headline),
+                Text("\nCall Stats", style: Theme.of(context).textTheme.headline5),
                 Row(
                   children: [
                     Container(

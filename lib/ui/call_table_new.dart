@@ -191,12 +191,10 @@ class _CallTableEntryState extends State<CallTableEntry> {
                   i == fileManager.phoneList.iterator
                       ? SizedBox(
                           width: 24.0,
-                          child: IconButton(
-                              padding: const EdgeInsets.all(0.0),
-                              icon: Icon(
+                          child: Icon(
                                 Icons.forward,
                                 color: Theme.of(context).iconTheme.color,
-                              )))
+                              ))
                       : SizedBox(
                           width: 24.0,
                           child: IconButton(
@@ -240,7 +238,7 @@ class _CallTableEntryState extends State<CallTableEntry> {
                 style: TextStyle(
                     color: fileManager.phoneList.people[i].called
                         ? Theme.of(context).disabledColor
-                        : Theme.of(context).textTheme.body1.color),
+                        : Theme.of(context).textTheme.bodyText1.color),
                 autofocus: false,
                 onChanged: (String text) {
                   fileManager.phoneList.people[i].note = text;
@@ -251,11 +249,11 @@ class _CallTableEntryState extends State<CallTableEntry> {
             Expanded(
               flex: 0,
               child: DropdownButton<String>(
-                  value: fileManager.phoneList.people[i].outcome,
+                  value: fileManager.phoneList.people[i].result,
                   onChanged: (String outcome) {
                     setState(() {
                       widget.focusNode.unfocus();
-                      fileManager.phoneList.people[i].outcome = outcome;
+                      fileManager.phoneList.people[i].result = outcome;
                     });
                   },
                   elevation: 16,
@@ -281,7 +279,7 @@ class HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(text,
-        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.body1.color));
+        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyText1.color));
   }
 }
 
@@ -295,8 +293,8 @@ class CalledText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-          color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.body1.color,
-          fontSize: Theme.of(context).textTheme.body1.fontSize),
+          color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.bodyText1.color,
+          fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
     );
   }
 }

@@ -73,7 +73,7 @@ class SettingManager {
 //    SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
 //    SettingPair(key: "table_load_prompt", text: "Edit Table after loading", type: bool, premium: false),
 
-    SettingPair(key: "show_notes", text: "Show Call Note and Outcome Columns", type: bool, premium: false),
+    SettingPair(key: "show_notes", text: "Show Call Note and Result Columns", type: bool, premium: false),
     SettingPair(key: "post_call_prompt", text: "Prompt on call completion", type: bool, premium: false),
     SettingPair(key: "one_touch_call", text: "One Touch Call", type: bool, premium: false),
     SettingPair(key: "is_premium", text: "Is the user a premium user", type: bool, premium: false),
@@ -93,11 +93,11 @@ class SettingManager {
   ///
   void loadSingleton() {
     startPreferencesInstance().then((SharedPreferences _prefs) {
-      print("_prefs loaded");
       prefs = _prefs;
       standardSettings = loadSettings(premium: false);
       premiumSettings = loadSettings(premium: true);
       loaded = true;
+      print("_prefs loaded");
     });
   }
 
@@ -159,15 +159,14 @@ class SettingManager {
 
   dynamic getSetting(String key) {
 //    return keyLookup(key)[key].value;
-
     Setting setting = keyLookup(key)[key];
 
     if (setting.value.runtimeType == bool) {
-      return prefs.getBool(key);
+      return prefs.getBool(key) ?? false;
     } else if (setting.value.runtimeType == int) {
-      return prefs.getInt(key);
+      return prefs.getInt(key) ?? 0;
     } else if (setting.value.runtimeType == String) {
-      return prefs.getString(key);
+      return prefs.getString(key) ?? "";
     }
   }
 
@@ -186,3 +185,4 @@ class SettingManager {
     }
   }
 }
+

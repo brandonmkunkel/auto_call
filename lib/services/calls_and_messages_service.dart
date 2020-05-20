@@ -1,25 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
-import 'package:get_it/get_it.dart';
 import 'package:flutter_phone_state/flutter_phone_state.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
-GetIt locator = GetIt.instance;
-
-class CallsAndMessagesService {
-  void call(String number) => launch("tel://$number");
-
-  void sendSms(String number) => launch("sms:$number");
-
-  void sendEmail(String email) => launch("mailto:$email");
-}
-
-void setupLocator() {
-  locator.registerSingleton(CallsAndMessagesService());
-}
-
-void originalCall(String phoneNumber) {
-  locator.call(phoneNumber);
-}
 
 Future<bool> oneTouchCall(String phoneNumber) async {
   print("one touch call start");

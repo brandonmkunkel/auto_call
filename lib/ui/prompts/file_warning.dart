@@ -8,7 +8,8 @@ void showNoFileError(BuildContext context) {
       // return object of type Dialog
       return AlertDialog(
         title: new Text("File Load Error"),
-        content: new Text("No file was selected to be loaded. Please select a valid .csv file."),
+        content: new Text("No file was selected to be loaded. Please select a valid file with one "
+            "of the following extensions: \n\n .csv, .txt, .xls, .xlsx"),
         actions: <Widget>[
           // usually buttons at the bottom of the dialog
           new FlatButton(
