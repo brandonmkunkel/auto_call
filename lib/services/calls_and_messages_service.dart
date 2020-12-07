@@ -6,7 +6,7 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 Future<bool> oneTouchCall(String phoneNumber) async {
   print("one touch call start");
   bool res = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
-  print("one touch call done with resuult: $res");
+  print("one touch call done with result: $res");
   return res;
 }
 

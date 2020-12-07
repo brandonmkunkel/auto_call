@@ -43,8 +43,7 @@ class CallSessionState extends State<CallSessionPage> {
     _controller = ScrollController(keepScrollOffset: true);
 
     // Get settings for this page from the SettingsManager
-    autoCall = globalSettingManager.isPremium()
-        ? globalSettingManager.getSetting("auto_call") : false;
+    autoCall = globalSettingManager.isPremium() ? globalSettingManager.getSetting("auto_call") : false;
     super.initState();
   }
 
@@ -72,7 +71,7 @@ class CallSessionState extends State<CallSessionPage> {
     print("in monitorCall State before call");
 
     if (oneTouch) {
-      oneTouchCall(fileManager.phoneList.currentPerson().phone).then((state)=> callState=state);
+      oneTouchCall(fileManager.phoneList.currentPerson().phone).then((state) => callState = state);
     } else {
       twoTouchCall(fileManager.phoneList.currentPerson().phone);
     }
@@ -87,38 +86,37 @@ class CallSessionState extends State<CallSessionPage> {
 
   Future<void> makeCall() async {
 //    if (inCall) {
-      monitorCallState().then((callState) => inCall=callState);
+    monitorCallState().then((callState) => inCall = callState);
 
-      print("make call - inCall $inCall");
+    print("make call - inCall $inCall");
 
-      bool postCallPrompt = globalSettingManager.getSetting("post_call_prompt");
-      bool _autoCall = globalSettingManager.getSetting("auto_call");
+    bool postCallPrompt = globalSettingManager.getSetting("post_call_prompt");
+    bool _autoCall = globalSettingManager.getSetting("auto_call");
 
-      if (postCallPrompt) {
-        // Show after call dialog after the call is complete
-        await showDialog(
-            context: context,
-            builder: (BuildContext context) => AfterCallPrompt(
-              person: fileManager.phoneList.currentPerson(),
-              callIdx: fileManager.phoneList.iterator,
-              controller: textControllers[fileManager.phoneList.iterator],
-            ));
-      }
+    if (postCallPrompt) {
+      // Show after call dialog after the call is complete
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) => AfterCallPrompt(
+                person: fileManager.phoneList.currentPerson(),
+                callIdx: fileManager.phoneList.iterator,
+                controller: textControllers[fileManager.phoneList.iterator],
+              ));
+    }
 
-      // Update the Widgets on this page
-      setState(() {
-        fileManager.phoneList.currentPerson().called = true;
-        advanceController(forward: true);
-      });
+    // Update the Widgets on this page
+    setState(() {
+      fileManager.phoneList.currentPerson().called = true;
+      advanceController(forward: true);
+    });
 //    }
-
   }
 
   Future<void> makeAutoCall() async {
-      while (!fileManager.phoneList.isComplete() && globalSettingManager.getSetting("auto_call")) {
-        print("Inside while loop for makeAutoCall");
-        await makeCall();
-      }
+    while (!fileManager.phoneList.isComplete() && globalSettingManager.getSetting("auto_call")) {
+      print("Inside while loop for makeAutoCall");
+      await makeCall();
+    }
   }
 
   // Update the Scroll controller based on the given item offset
@@ -132,8 +130,7 @@ class CallSessionState extends State<CallSessionPage> {
     });
   }
 
-
-  void advanceController({bool forward=true}) {
+  void advanceController({bool forward = true}) {
     int origIterator = fileManager.phoneList.iterator;
 
     if (forward) {
@@ -177,6 +174,8 @@ class CallSessionState extends State<CallSessionPage> {
           CloseButton(),
         ],
       ),
+
+      // Body of Call Session Page
       body: FutureBuilder<PhoneList>(
           future: callTableFuture(),
           builder: (BuildContext context, AsyncSnapshot<PhoneList> snapshot) {
@@ -193,13 +192,13 @@ class CallSessionState extends State<CallSessionPage> {
 
             return snapshot.hasData
                 ? Stack(children: [
-//                    NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
-                    CallTable(
-                        manager: fileManager,
-                        scrollController: _controller,
-                        textControllers: textControllers,
-//                      acceptedColumns: acceptedColumns,
-                    ),
+                   // NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
+//                     CallTable(
+//                       manager: fileManager,
+//                       scrollController: _controller,
+//                       textControllers: textControllers,
+// //                      acceptedColumns: acceptedColumns,
+//                     ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: fileManager.phoneList.isComplete()
@@ -207,13 +206,14 @@ class CallSessionState extends State<CallSessionPage> {
                               padding: EdgeInsets.symmetric(vertical: 10.0),
                               decoration: BoxDecoration(
                                   color: Theme.of(context).scaffoldBackgroundColor,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                      colors: [
-                                        Theme.of(context).backgroundColor.withOpacity(1.0),
-                                        Theme.of(context).backgroundColor.withOpacity(0.0)
-                                      ])),
+                                  // gradient: LinearGradient(
+                                  //     begin: Alignment.bottomCenter,
+                                  //     end: Alignment.topCenter,
+                                  //     colors: [
+                                  //       Theme.of(context).backgroundColor.withOpacity(1.0),
+                                  //       Theme.of(context).backgroundColor.withOpacity(0.0)
+                                  //     ]),
+                              ),
                               child: FloatingActionButton.extended(
                                   label: Text('Calls Completed'),
                                   icon: Icon(Icons.check_circle),
@@ -229,7 +229,7 @@ class CallSessionState extends State<CallSessionPage> {
 //                                    var result = await showDialog(
 //                                        context: context, child: PostSessionPrompt(fileManager: fileManager));
 
-                                    setState((){});
+                                    setState(() {});
                                     print("call_session.dart: COMPLETED");
                                   }))
                           : Container(
@@ -242,7 +242,8 @@ class CallSessionState extends State<CallSessionPage> {
                                       colors: [
                                         Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
                                         Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
-                                      ])),
+                                      ]),
+                              ),
                               child: Row(
                                 children: <Widget>[
                                   FloatingActionButton.extended(

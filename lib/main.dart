@@ -14,7 +14,6 @@ import 'pages/old_calls.dart';
 import 'pages/legal.dart';
 import 'pages/about.dart';
 import 'pages/settings.dart';
-import 'pages/call_page.dart';
 import 'ui/theme.dart';
 
 import 'index.dart';
@@ -29,19 +28,19 @@ void main() async {
   SharedPreferences.getInstance().then((SharedPreferences prefs) {
     globalSettingManager.fromPrefs(prefs);
 
-    runApp(MyApp());
+    runApp(App());
   });
 }
 
 ///
 /// App Stateful Widget
 ///
-class MyApp extends StatefulWidget {
+class App extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _AppState createState() => _AppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _AppState extends State<App> {
   ThemeProvider themeChangeProvider =
       new ThemeProvider(globalSettingManager.loaded ? globalSettingManager.getSetting("dark_mode") : false);
 

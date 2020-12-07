@@ -7,7 +7,6 @@ import 'package:auto_call/pages/contact_tracker.dart';
 import 'package:auto_call/pages/settings.dart';
 import 'package:auto_call/pages/about.dart';
 import 'package:auto_call/pages/legal.dart';
-import 'package:auto_call/pages/call_page.dart';
 
 class AppDrawer extends StatelessWidget {
 //  final List menuItems = [

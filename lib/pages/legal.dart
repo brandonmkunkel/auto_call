@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/terms.dart';
 
@@ -14,7 +13,6 @@ class LegalPage extends StatefulWidget {
 }
 
 class LegalPageState extends State<LegalPage> {
-//  final Widget background = buildFlagBackground();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +23,7 @@ class LegalPageState extends State<LegalPage> {
       drawer: AppDrawer(context),
       body: new Stack(children: <Widget>[
         Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(10.0),
           child: buildScrollableTerms(context),
         )
       ]),

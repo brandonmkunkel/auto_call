@@ -33,6 +33,14 @@ void main() {
     expect(extension, "xlsx");
   });
 
+  test('FileManager Get extension xls', () async {
+    String path = 'assets/test/data/sample_numbers.xls';
+    String extension = FileManager.getExtension(path);
+
+    // Verify that our counter has incremented.
+    expect(extension, "xls");
+  });
+
   test('FileManager Get extension with . in the middle', () async {
     String path = 'randomplace.com/data/sample_numbers.extension';
     String extension = FileManager.getExtension(path);

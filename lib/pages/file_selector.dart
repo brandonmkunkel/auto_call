@@ -153,7 +153,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                             color: Theme.of(context).accentColor,
                             onPressed: () async {
                               if (_path != null) {
-                                Navigator.pushNamed(
+                                Navigator.popAndPushNamed(
                                   context,
                                   CallSessionPage.routeName,
                                   arguments: FileManager(_path),

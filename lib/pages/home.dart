@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'file_selector.dart';
 import 'package:auto_call/ui/drawer.dart';
-import 'package:auto_call/ui/charts/call_breakdown.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -23,50 +22,60 @@ class _HomePageState extends State<HomePage> {
     //80% of screen width
     double cWidth = MediaQuery.of(context).size.width * 0.9;
     double cHeight = MediaQuery.of(context).size.width * 0.9;
-    double smallestDim =  cWidth < cHeight ? cWidth : cHeight;
+    double smallestDim = cWidth < cHeight ? cWidth : cHeight;
 
     return Scaffold(
-        drawer: AppDrawer(context),
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Container(
-          padding: EdgeInsets.all(10.0),
-          child:SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text("Welcome Back!\n", style: Theme.of(context).textTheme.headline5),
-                Text(
-                    "This app will help you get through a list of phone calls as fast as possible\n\n"
-                        "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
-                        "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.\n",
-                    style: Theme.of(context).textTheme.bodyText2,
-                    textAlign: TextAlign.center),
-                Divider(),
-                Text("\nCall Stats", style: Theme.of(context).textTheme.headline5),
-                Row(
-                  children: [
-                    Container(
-                        width: smallestDim * 0.60,
-                        height: smallestDim * 0.60,
-                        child: DonutPieChart.withSampleData()
-                    )
-                  ]
+      drawer: AppDrawer(context),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text("Welcome Back!\n", style: Theme.of(context).textTheme.headline5),
+              Text(
+                  "This app will help you get through a list of phone calls as fast as possible\n\n"
+                  "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
+                  "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.\n",
+                  style: Theme.of(context).textTheme.bodyText2,
+                  textAlign: TextAlign.center),
+              Divider(),
+              Column(children: [
+                RaisedButton(
+                    child: Text("Original Call Page"),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
+                    },
+                    ),
+                RaisedButton(
+                  child: Text("New Call Page"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
+                  },
                 ),
-//                Spacer()
-              ],
-            ),
+                RaisedButton(
+                  child: Text("Continue Call"),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
+                  },
+                ),
+                // IconButton(icon: Icon(Icons.refresh), onPressed: () {}, )
+              ], mainAxisAlignment: MainAxisAlignment.center)
+            ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          label: Text("New Call Session"),
-          icon: Icon(Icons.add_call),
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
-          },
-          tooltip: 'Start new call session',
-        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("New Call Session"),
+        icon: Icon(Icons.add_call),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
+        },
+        tooltip: 'Start new call session',
+      ),
 //        floatingActionButtonLocation: FloatingActionButtonLocation.startTop
     );
   }

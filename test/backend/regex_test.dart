@@ -13,7 +13,7 @@ void main() {
     expect(MagicRegex.isName("Brandon"), true);
     expect(MagicRegex.isName("brandon"), true);
     expect(MagicRegex.isName("Brandon Kunkel"), true);
-    expect(MagicRegex.isName("Brandon Michael-Kunkel"), true);
+    expect(MagicRegex.isName("Brandon Michael Kunkel"), true);
     expect(MagicRegex.isName("Brandon Michael-Kunkel Jr."), true);
 
     // Look for edge cases
@@ -67,11 +67,5 @@ void main() {
     expect(MagicRegex.isEmail(" a@b.com "), true);
     expect(MagicRegex.isEmail(" stuff.stuff@yeah.com "), true);
     expect(MagicRegex.isEmail(" brandon+food@yum.com "), true);
-  });
-
-  test('MagicRegex isemail()', () {
-    // Incorrect Tests
-    expect(MagicRegex.isEmail("4406675647"), false);
-    expect(MagicRegex.isEmail("brandon"), false);
   });
 }
