@@ -104,6 +104,7 @@ class PhoneList {
   ///
   Person operator [](int idx) => people[idx];
 
+  /// Check if the phone List is empty
   bool isNotEmpty() => people.isNotEmpty;
 
   List<List> export() {
