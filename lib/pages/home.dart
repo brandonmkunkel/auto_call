@@ -7,7 +7,7 @@ class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
   static const String routeName = "/home";
-  final String title = "Auto Call Home Page";
+  final String title = "Home";
   final String label = "Home";
 
   @override
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
               Text(
                   "This app will help you get through a list of phone calls as fast as possible\n\n"
                   "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
-                  "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.\n",
+                  "This app is free to use for a minimum set of productivity features. Premium/Enterprise features will be added in.\n",
                   style: Theme.of(context).textTheme.bodyText2,
                   textAlign: TextAlign.center),
             ],
@@ -54,7 +54,6 @@ class _HomePageState extends State<HomePage> {
         },
         tooltip: 'Start new call session',
       ),
-//        floatingActionButtonLocation: FloatingActionButtonLocation.startTop
     );
   }
 }

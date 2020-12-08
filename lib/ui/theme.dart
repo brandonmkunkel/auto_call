@@ -4,12 +4,16 @@ import 'package:flutter/foundation.dart';
 class ThemeProvider with ChangeNotifier {
   bool _isDarkTheme;
 
+  /// Instantiate the ThemeProvider class with a dark theme setting
   ThemeProvider(this._isDarkTheme);
 
+  /// Check if it is dark theme
   isDark() => _isDarkTheme;
 
+  /// Get the theme
   getTheme() => _isDarkTheme ? darkTheme : lightTheme;
 
+  /// Set the Dark Theme and notify listeners
   setTheme(bool isDarkTheme) async {
     _isDarkTheme = isDarkTheme;
     notifyListeners();

@@ -3,7 +3,6 @@ import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/pages/call_session.dart';
 import 'package:auto_call/pages/old_calls.dart';
-import 'package:auto_call/pages/contact_tracker.dart';
 import 'package:auto_call/pages/settings.dart';
 import 'package:auto_call/pages/about.dart';
 import 'package:auto_call/pages/legal.dart';
@@ -31,78 +30,53 @@ class AppDrawer extends StatelessWidget {
       children: <Widget>[
         DrawerHeader(
           child: Center(
-              child: Text('Your Favorite Robot Assistant',
+              child: Text('AutoCall',
                   textScaleFactor: 1.5, style: TextStyle(color: Colors.white))),
           decoration: BoxDecoration(color: Theme.of(context).primaryColor),
         ),
 //          ListTile(
 //            title: Text('Splash', textScaleFactor: textScale),
-//            onTap: () {
-//              navigatorUpdate(context, Splash.routeName);
-//            },
+//            onTap: () => navigatorUpdate(context, Splash.routeName),
 //          ),
 //          ListTile(
 //            title: Text('Welcome', textScaleFactor: textScale),
-//            onTap: () {
-//              navigatorUpdate(context, WelcomePage.routeName);
-//            },
+//            onTap: () => navigatorUpdate(context, WelcomePage.routeName),
 //          ),
 
         ListTile(
           leading: Icon(Icons.home),
           title: Text('Home', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () {
-            navigatorUpdate(context, HomePage.routeName);
-          },
+          onTap: () => navigatorUpdate(context, HomePage.routeName),
         ),
 //        ListTile(
 //          leading: Icon(Icons.note_add),
 //          title: Text('File Selector', style: Theme.of(context).textTheme.subtitle1),
-//          onTap: () {
-//            navigatorUpdate(context, FileSelectorPage.routeName);
-//          },
+//          onTap: () => navigatorUpdate(context, FileSelectorPage.routeName),
 //        ),
 //        ListTile(
 //          leading: Icon(Icons.cloud_upload),
 //          title: Text('Call Session', style: Theme.of(context).textTheme.subtitle1),
-//          onTap: () {
-//            navigatorUpdate(context, CallSessionPage.routeName);
-//          },
+//          onTap: () => navigatorUpdate(context, CallSessionPage.routeName),
 //        ),
 //        ListTile(
 //          leading: Icon(Icons.history),
 //          title: Text('Call Page', style: Theme.of(context).textTheme.subtitle1),
-//          onTap: () {
-//            navigatorUpdate(context, CallPage.routeName);
-//          },
+//          onTap: () => navigatorUpdate(context, CallPage.routeName),
 //        ),
         ListTile(
           leading: Icon(Icons.history),
           title: Text('Old Calls', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () {
-            navigatorUpdate(context, OldCallsPage.routeName);
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.contacts),
-          title: Text('Contact Tracker', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () {
-            navigatorUpdate(context, ContactTrackerPage.routeName);
-          },
+          onTap: () => navigatorUpdate(context, OldCallsPage.routeName),
         ),
         ListTile(
           leading: Icon(Icons.settings),
           title: Text('Settings', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () {
-            navigatorUpdate(context, SettingsPage.routeName);
-          },
+          onTap: () => navigatorUpdate(context, SettingsPage.routeName),
         ),
         ListTile(
           leading: Icon(Icons.info),
           title: Text('About', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () {
-            navigatorUpdate(context, AboutPage.routeName);
-          },
+          onTap: () => navigatorUpdate(context, AboutPage.routeName),
         ),
         Divider(),
         Expanded(

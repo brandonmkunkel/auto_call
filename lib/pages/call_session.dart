@@ -37,8 +37,6 @@ class CallSessionState extends State<CallSessionPage> {
 
   @override
   void initState() {
-//    tableSource = CallTableSource(fileManager);
-
     // Start up the Scroll Controller
     _controller = ScrollController(keepScrollOffset: true);
 
@@ -51,15 +49,10 @@ class CallSessionState extends State<CallSessionPage> {
   void dispose() {
     super.dispose();
 
-    globalSettingManager.setSetting("auto_call", autoCall);
-
+    // Dispose of text/scroll controllers
     _controller?.dispose();
-    textControllers.forEach((_textController) {
-      _textController?.dispose();
-    });
-    focusNodes.forEach((focusNode) {
-      focusNode?.dispose();
-    });
+    textControllers.forEach((_textController) => _textController?.dispose());
+    focusNodes.forEach((focusNode) => focusNode?.dispose());
   }
 
   Future<bool> monitorCallState() async {
@@ -70,11 +63,7 @@ class CallSessionState extends State<CallSessionPage> {
 
     print("in monitorCall State before call");
 
-    if (oneTouch) {
-      oneTouchCall(fileManager.phoneList.currentPerson().phone).then((state) => callState = state);
-    } else {
-      twoTouchCall(fileManager.phoneList.currentPerson().phone);
-    }
+    PhoneManager.call(fileManager.phoneList.currentPerson().phone, oneTouch);
 
     print("in monitorCall State after the call");
 

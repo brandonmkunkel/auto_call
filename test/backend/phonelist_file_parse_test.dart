@@ -42,16 +42,16 @@ void main() {
     expect(phoneList.labelMapping["phone"], 1);
   });
 
-//  test('PhoneList Build from Excel', () async {
-//    String data = await rootBundle.loadString('assets/test/data/sample_numbers.xlsx');
-//    PhoneList phoneList = PhoneList.fromString(data);
-//
-//    // Verify that our counter has incremented.
-//    expect(phoneList.headerPresent, true);
-//    expect(phoneList.isNotEmpty(), true);
-//    expect(phoneList.labelMapping["name"], 0);
-//    expect(phoneList.labelMapping["phone"], 1);
-//  });
+ test('PhoneList Build from Excel', () async {
+   // String data = await rootBundle.loadString('assets/test/data/sample_numbers.xlsx');
+   PhoneList phoneList = PhoneList.fromFile('assets/test/data/sample_numbers.xlsx');
+
+   // Verify that our counter has incremented.
+   expect(phoneList.headerPresent, true);
+   expect(phoneList.isNotEmpty(), true);
+   expect(phoneList.labelMapping["name"], 0);
+   expect(phoneList.labelMapping["phone"], 1);
+ });
 
 //   test('PhoneList Build from CSV with extra rows at the bottom to ignore', () async {
 // //    ByteData bytes = await rootBundle.load('assets/test/data/book23.csv');

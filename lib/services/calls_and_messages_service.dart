@@ -2,22 +2,33 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_phone_state/flutter_phone_state.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
+class PhoneManager {
+  /// One touch call requires no interaction from the user to work correctly
+  static Future<bool> oneTouchCall(String phoneNumber) async {
+    print("one touch call start");
+    bool res = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
+    print("one touch call done with result: $res");
+    return res;
+  }
 
-Future<bool> oneTouchCall(String phoneNumber) async {
-  print("one touch call start");
-  bool res = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
-  print("one touch call done with result: $res");
-  return res;
-}
+  /// Two touch call requires the user to complete the call
+  static void twoTouchCall(String phoneNumber) async {
+    FlutterPhoneState.startPhoneCall(phoneNumber);
+  }
 
-void twoTouchCall(String phoneNumber) async {
-  FlutterPhoneState.startPhoneCall(phoneNumber);
-}
+  /// Call interface which checks for oneTouch call option
+  static void call(String phoneNumber, bool oneTouch) async {
+    bool callState = false;
 
+    // Call the correct calling interface
+    if (oneTouch) {
+      oneTouchCall(phoneNumber).then((state) => callState = state);
+    } else {
+      twoTouchCall(phoneNumber);
+    }
+  }
 
-
-Future<void> waitForCallCompletion(String phoneNumber) async {
-
+  Future<void> waitForCallCompletion(String phoneNumber) async {
 //  Future.wait(
 //      Future.value(phoneCall.done)
 //  );
@@ -28,10 +39,7 @@ Future<void> waitForCallCompletion(String phoneNumber) async {
 //
 //  print(events);
 
-  for (final call in FlutterPhoneState.activeCalls) {
-
-  }
-
+    for (final call in FlutterPhoneState.activeCalls) {}
 
 //  FutureBuilder<PhoneCall>(
 //    builder: (context, snap) {
@@ -43,16 +51,13 @@ Future<void> waitForCallCompletion(String phoneNumber) async {
 //    },
 //    future: ,
 //  ));
+  }
+
+  List<R> _accumulate<R>(Stream<R> input) {
+    final items = <R>[];
+    input.forEach((item) {
+      if (item != null) items.add(item);
+    });
+    return items;
+  }
 }
-
-List<R> _accumulate<R>(Stream<R> input) {
-  final items = <R>[];
-  input.forEach((item) {
-    if (item != null) {
-        items.add(item);
-    }
-  });
-  return items;
-}
-
-

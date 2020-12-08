@@ -8,7 +8,6 @@ import 'services/settings_manager.dart';
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
 import 'pages/call_session.dart';
-import 'pages/contact_tracker.dart';
 import 'pages/old_calls.dart';
 import 'pages/legal.dart';
 import 'pages/about.dart';
@@ -62,7 +61,6 @@ class _AppState extends State<App> {
               FileSelectorPage.routeName: (context) => FileSelectorPage(),
 //              CallPage.routeName: (context) => CallPage(),
               OldCallsPage.routeName: (context) => OldCallsPage(),
-              ContactTrackerPage.routeName: (context) => ContactTrackerPage(),
               SettingsPage.routeName: (context) => SettingsPage(),
               LegalPage.routeName: (context) => LegalPage(),
               AboutPage.routeName: (context) => AboutPage(),

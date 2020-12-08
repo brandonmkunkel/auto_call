@@ -9,12 +9,7 @@ SettingManager globalSettingManager = SettingManager();
 //  print("done loading global settings");
 //}
 
-enum SettingType  {
-  hidden,
-  free,
-  premium,
-  enterprise
-}
+enum SettingType { hidden, free, premium, enterprise }
 
 // Setting Classes used in the Setting Manager
 class SettingPair {
@@ -50,16 +45,19 @@ class SettingManager {
   // Treat the Setting Manager as a singleton, only one should exist
   static final SettingManager _instance = SettingManager.singleInstance();
 
+  /// Factory default constructor returns static instance
   factory SettingManager() => _instance;
+
+  /// Factor method creates the single instance
   SettingManager.singleInstance() {
-   loadSingleton();
+    loadSingleton();
   }
 
   // Class attributes
   SharedPreferences prefs;
   Map<String, Setting> standardSettings;
   Map<String, Setting> premiumSettings;
-  bool loaded=false;
+  bool loaded = false;
 
   static final List<SettingPair> settingPairs = [
     // Standard Settings
@@ -110,14 +108,13 @@ class SettingManager {
 
   Map<String, Setting> loadSettings({bool premium = false}) {
     var _settings = Map<String, Setting>.fromIterable(settingPairs,
-      key: (settingPair) => settingPair.key.toString() ,
-      value: (settingPair) => settingPair.premium == premium
-          ? Setting(settingPair: settingPair, value: prefs.getBool(settingPair.key) ?? false)
-          : null
-    );
+        key: (settingPair) => settingPair.key.toString(),
+        value: (settingPair) => settingPair.premium == premium
+            ? Setting(settingPair: settingPair, value: prefs.getBool(settingPair.key) ?? false)
+            : null);
 
     // Remove null entries
-    _settings.removeWhere((key, value) => value==null);
+    _settings.removeWhere((key, value) => value == null);
 
     return _settings;
   }
@@ -127,14 +124,10 @@ class SettingManager {
   ///
   void printSettings() {
     print("Normal Settings");
-    standardSettings.forEach((String key, Setting value) {
-      print(value.toString());
-    });
+    standardSettings.forEach((String key, Setting value) => print(value.toString()));
 
     print("Premium Settings");
-    premiumSettings.forEach((String key, Setting value) {
-      print(value.toString());
-    });
+    premiumSettings.forEach((String key, Setting value) => print(value.toString()));
   }
 
   Map<String, Setting> getSettingMap(bool premium) {
@@ -145,6 +138,7 @@ class SettingManager {
     return getSettingMap(premium).entries.map((e) => e.value).toList();
   }
 
+  // Check to see if the user is premium
   bool isPremium() => prefs.getBool("is_premium") ?? false;
 
   Map<String, Setting> keyLookup(String key) {
@@ -180,4 +174,3 @@ class SettingManager {
     }
   }
 }
-

@@ -104,9 +104,7 @@ class PhoneList {
   ///
   Person operator [](int idx) => people[idx];
 
-  bool isNotEmpty() {
-    return people.isNotEmpty;
-  }
+  bool isNotEmpty() => people.isNotEmpty;
 
   List<List> export() {
     List<List> headers = [Person.orderedLabels()[0] + additionalLabels + Person.orderedLabels()[1]];
@@ -166,7 +164,6 @@ class PhoneList {
     // within each `row`
 
     for (List<dynamic> entry in rows) {
-//      print(entry);
       if (MagicRegex.isName(entry[labelMapping["name"]].toString()) &&
           MagicRegex.isNumber(entry[labelMapping["phone"]].toString())) {
         people.add(Person(
@@ -203,58 +200,37 @@ class PhoneList {
 
       // Check to see if we found a name already, and check if we haven't found one
       if (!nameFound) {
-        nameFound = checkName(text.toString(), index);
-        matched = nameFound ? true : false;
+        nameFound = checkName(text.toString());
+        if (nameFound) labelMapping["name"] = index;
+        matched = nameFound;
       }
 
       // Check to see if we found a phone number already, and check if we haven't found one
       if (!phoneFound && !matched) {
-        phoneFound = checkPhoneNumber(text.toString(), index);
-        matched = phoneFound ? true : false;
+        phoneFound = checkPhoneNumber(text.toString());
+        if (phoneFound) labelMapping["phone"] = index;
+        matched = phoneFound;
       }
 
       // Check to see if we found as email already, and check if we haven't found one
       if (!emailFound && !matched) {
-        emailFound = checkEmail(text.toString(), index);
-        matched = emailFound ? true : false;
+        emailFound = checkEmail(text.toString());
+        if (emailFound) labelMapping["email"] = index;
+        matched = emailFound;
       }
 
-      index++; // Increase iterator by one so we can keep track of the current row index
+      index++; // Increase iterator by one so we can keep track of the current column index
     }
   }
 
   ///
   /// Checking functions that use Regex for resolving headers from data
   ///
-  bool checkName(String text, int index) {
-    bool matched = MagicRegex.isName(text);
+  bool checkName(String text) => MagicRegex.isName(text);
 
-    // If there is a match with the regular expression, then store this text's index entry into the LabelMap
-    if (matched) {
-      labelMapping["name"] = index;
-    }
-    return matched;
-  }
+  bool checkPhoneNumber(String text) => MagicRegex.isNumber(text);
 
-  bool checkPhoneNumber(String text, int index) {
-    bool matched = MagicRegex.isNumber(text);
-
-    // If there is a match with the regular expression, then store this text's index entry into the LabelMap
-    if (matched) {
-      labelMapping["phone"] = index;
-    }
-    return matched;
-  }
-
-  bool checkEmail(String text, int index) {
-    bool matched = MagicRegex.isEmail(text);
-
-    // If there is a match with the regular expression, then store this text's index entry into the LabelMap
-    if (matched) {
-      labelMapping["email"] = index;
-    }
-    return matched;
-  }
+  bool checkEmail(String text) => MagicRegex.isEmail(text);
 
   List getAdditionalColumns() {
     return List.generate(people.length, (int i) {
@@ -264,14 +240,11 @@ class PhoneList {
     });
   }
 
-  // Return the person at the current iterator
-  Person currentPerson() {
-    return people[iterator];
-  }
+  /// Return the person at the current iterator
+  Person currentPerson() => people[iterator];
 
-  bool isComplete() {
-    return people?.every((Person person) => person.called == true) ?? false;
-  }
+  /// Check if the call list is complete, which requires all persons to be called
+  bool isComplete() => people?.every((Person person) => person.called == true) ?? false;
 
   void checkRemainingCallRange() {
     firstUncalled = people.indexWhere((Person p) => !p.called);
@@ -279,11 +252,8 @@ class PhoneList {
   }
 
   void advance({bool forward = true}) {
-    if (forward) {
-      advanceIterator();
-    } else {
-      reverseIterator();
-    }
+    if (forward) advanceIterator();
+    else reverseIterator();
   }
 
   void advanceIterator() {

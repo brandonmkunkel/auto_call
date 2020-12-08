@@ -115,9 +115,8 @@ class FileManager {
     this.formattedTime = getFormattedTime();
   }
 
-  bool checkValidExtension() {
-    return registeredInterfaces.containsKey(ext);
-  }
+  // Check to see if the given file is one of the approved file types
+  bool checkValidExtension() => registeredInterfaces.containsKey(ext);
 
   // Read the file from the stored path
   Future<PhoneList> readFile() async {
@@ -163,17 +162,11 @@ class FileManager {
     }
   }
 
-  // Use the Share interface for sending the file over email?s
-  Future<void> emailFile() async {
-
-  }
-
   ///
   /// All class methods accessible outside of any instance
   ///
   static String getFileName(String path) {
-    List pathComponents = path.split("/");
-    return pathComponents.last;
+    return path.split("/").last;
   }
 
   static String getDirectory(String path) {
@@ -183,8 +176,7 @@ class FileManager {
   }
 
   static String getExtension(String path) {
-    List pathComponents = path.split(".");
-    return pathComponents.last;
+    return path.split(".").last;
   }
 
   static String updatedFilePath(String path) {
