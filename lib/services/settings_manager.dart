@@ -47,18 +47,13 @@ class Setting {
 /// Setting Manager takes care of most of the work around saving/loading settings
 ///
 class SettingManager {
-//  // Treat the Setting Manager as a singleton, only one should exist
-//  static final SettingManager _singleton = SettingManager.singleInstance();
-//  factory SettingManager() => _singleton;
-//  SettingManager.singleInstance() {
-//    loadSingleton();
-//    print("done loadSingleton");
-//
-//  }
+  // Treat the Setting Manager as a singleton, only one should exist
+  static final SettingManager _instance = SettingManager.singleInstance();
 
-//  SettingManager.load() {
-//    loadSingleton();
-//  }
+  factory SettingManager() => _instance;
+  SettingManager.singleInstance() {
+   loadSingleton();
+  }
 
   // Class attributes
   SharedPreferences prefs;

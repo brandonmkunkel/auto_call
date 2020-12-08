@@ -1,12 +1,10 @@
-import 'package:auto_call/services/file_io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 
-import 'package:auto_call/ui/drawer.dart';
-import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/pages/call_session.dart';
-
+import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/prompts/file_warning.dart';
 
 class FileSelectorPage extends StatefulWidget {
@@ -21,8 +19,9 @@ class FileSelectorPage extends StatefulWidget {
 class FileSelectorState extends State<FileSelectorPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _fileName;
-  String _path;
-  Map<String, String> _paths;
+  String _directoryPath;
+  FilePickerResult _result;
+  List<PlatformFile> _paths;
   String _extension = "txt,csv,xls,xlsx";
   bool _loadingPath = false;
   bool _multiPick = false;
@@ -39,29 +38,34 @@ class FileSelectorState extends State<FileSelectorPage> {
   void _openFileExplorer() async {
     setState(() => _loadingPath = true);
     try {
-      if (_multiPick) {
-        _path = null;
-        _paths = await FilePicker.getMultiFilePath(
-            type: _pickingType,
-            allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null);
-      } else {
-        _paths = null;
-        _path = await FilePicker.getFilePath(
-            type: _pickingType,
-            allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null);
-      }
+      _directoryPath = null;
+      _result = await FilePicker.platform.pickFiles(
+        type: _pickingType,
+        allowMultiple: _multiPick,
+        allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null,
+      );
+      _paths = _result?.files;
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());
+    } catch (ex) {
+      print(ex);
     }
+
     if (!mounted) return;
     setState(() {
       _loadingPath = false;
-      _fileName = _path != null ? _path.split('/').last : _paths != null ? _paths.keys.toString() : '...';
+      _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
+    });
+  }
+
+  void _selectFolder() {
+    FilePicker.platform.getDirectoryPath().then((value) {
+      setState(() => _directoryPath = value);
     });
   }
 
   void _clearCachedFiles() {
-    FilePicker.clearTemporaryFiles().then((result) {
+    FilePicker.platform.clearTemporaryFiles().then((result) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           backgroundColor: result ? Colors.green : Colors.red,
@@ -84,39 +88,34 @@ class FileSelectorState extends State<FileSelectorPage> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                "Selected Files:",
-                style: TextStyle(fontSize: 24),
-              ),
+              Text("Selected Files:", style: TextStyle(fontSize: 24)),
               Divider(),
               Expanded(
                 child: new Builder(
                   builder: (BuildContext context) => _loadingPath
-                      ? Center(child: SizedBox(height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
-                      : _path != null || _paths != null
-                          ? new Container(
-                              padding: const EdgeInsets.only(bottom: 10.0),
+                      ? Center(child: SizedBox(height: 100.0, width: 100.0, child: const CircularProgressIndicator()))
+                      : _paths != null
+                          ? Container(
+                              padding: const EdgeInsets.only(bottom: 30.0),
                               height: MediaQuery.of(context).size.height * 0.50,
-                              child: new Scrollbar(
-                                  child: new ListView.separated(
+                              child: Scrollbar(
+                                  child: ListView.separated(
                                 itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
                                 itemBuilder: (BuildContext context, int index) {
                                   final bool isMultiPath = _paths != null && _paths.isNotEmpty;
                                   final String name = 'File $index: ' +
-                                      (isMultiPath ? _paths.keys.toList()[index] : _fileName ?? '...');
-                                  final path = isMultiPath ? _paths.values.toList()[index].toString() : _path;
+                                      (isMultiPath ? _paths.map((e) => e.name).toList()[index] : _fileName ?? '...');
+                                  final path = _paths.map((e) => e.path).toList()[index].toString();
 
-                                  return new ListTile(
-                                    title: new Text(
-                                      name,
-                                    ),
-                                    subtitle: new Text(path),
+                                  return ListTile(
+                                    title: Text(name),
+                                    subtitle: Text(path),
                                   );
                                 },
-                                separatorBuilder: (BuildContext context, int index) => new Divider(),
+                                separatorBuilder: (BuildContext context, int index) => const Divider(),
                               )),
                             )
-                          : new Container(),
+                          : Container(),
                 ),
               ),
               Divider(),
@@ -152,11 +151,11 @@ class FileSelectorState extends State<FileSelectorPage> {
                           child: RaisedButton(
                             color: Theme.of(context).accentColor,
                             onPressed: () async {
-                              if (_path != null) {
+                              if (_paths != null) {
                                 Navigator.popAndPushNamed(
                                   context,
                                   CallSessionPage.routeName,
-                                  arguments: FileManager(_path),
+                                  arguments: FileManager(_paths[0].path),
                                 );
                               } else {
                                 showNoFileError(context);

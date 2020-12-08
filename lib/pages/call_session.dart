@@ -133,11 +133,7 @@ class CallSessionState extends State<CallSessionPage> {
   void advanceController({bool forward = true}) {
     int origIterator = fileManager.phoneList.iterator;
 
-    if (forward) {
-      fileManager.phoneList.advanceIterator();
-    } else {
-      fileManager.phoneList.reverseIterator();
-    }
+    fileManager.phoneList.advance(forward: forward);
 
     int offset = fileManager.phoneList.iterator - origIterator;
     updateController(offset);
@@ -155,11 +151,7 @@ class CallSessionState extends State<CallSessionPage> {
   }
 
   Future<PhoneList> callTableFuture() async {
-    if (fileManager.phoneList == null) {
-      await fileManager.readFile();
-    }
-
-    return fileManager.phoneList;
+    return fileManager.readFile();
   }
 
   @override
@@ -193,12 +185,12 @@ class CallSessionState extends State<CallSessionPage> {
             return snapshot.hasData
                 ? Stack(children: [
                    // NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
-//                     CallTable(
-//                       manager: fileManager,
-//                       scrollController: _controller,
-//                       textControllers: textControllers,
-// //                      acceptedColumns: acceptedColumns,
-//                     ),
+                    CallTable(
+                      manager: fileManager,
+                      scrollController: _controller,
+                      textControllers: textControllers,
+//                      acceptedColumns: acceptedColumns,
+                    ),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: fileManager.phoneList.isComplete()
@@ -206,13 +198,13 @@ class CallSessionState extends State<CallSessionPage> {
                               padding: EdgeInsets.symmetric(vertical: 10.0),
                               decoration: BoxDecoration(
                                   color: Theme.of(context).scaffoldBackgroundColor,
-                                  // gradient: LinearGradient(
-                                  //     begin: Alignment.bottomCenter,
-                                  //     end: Alignment.topCenter,
-                                  //     colors: [
-                                  //       Theme.of(context).backgroundColor.withOpacity(1.0),
-                                  //       Theme.of(context).backgroundColor.withOpacity(0.0)
-                                  //     ]),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Theme.of(context).backgroundColor.withOpacity(1.0),
+                                        Theme.of(context).backgroundColor.withOpacity(0.0)
+                                      ]),
                               ),
                               child: FloatingActionButton.extended(
                                   label: Text('Calls Completed'),

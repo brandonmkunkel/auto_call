@@ -120,12 +120,17 @@ class FileManager {
   }
 
   // Read the file from the stored path
-  Future<void> readFile() async {
-    if (checkValidExtension()) {
-      this.phoneList = PhoneList.fromData(await registeredInterfaces[ext].read(path));
-    } else {
+  Future<PhoneList> readFile() async {
+    if (!checkValidExtension()) {
       print("Not a valid file type");
     }
+
+    if (this.phoneList == null) {
+      // Use async loading of the file
+      this.phoneList = PhoneList.fromData(await registeredInterfaces[ext].read(path));
+    }
+
+    return this.phoneList;
   }
 
   // Save the file to the same location but under a new name

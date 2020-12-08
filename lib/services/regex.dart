@@ -7,9 +7,9 @@ class MagicRegex {
   static final String numberStr = r"(?:(?:\+?([1-9]|[0-9][0-9]|[0-9][0-9][0-9])\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([0-9][1-9]|[0-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?";
 
   // Create static RegExp objects
-  static RegExp nameReg = RegExp(nameStr);
-  static RegExp emailReg = RegExp(emailStr);
-  static RegExp numberReg = RegExp(numberStr);
+  static final RegExp nameReg = RegExp(nameStr);
+  static final RegExp emailReg = RegExp(emailStr);
+  static final RegExp numberReg = RegExp(numberStr);
 
   // Functions for using RegExp objects to check the text to see if they match the RegExp patter
   static bool isName(String text) => nameReg.hasMatch(text);

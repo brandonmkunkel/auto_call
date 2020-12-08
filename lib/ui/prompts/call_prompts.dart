@@ -88,9 +88,7 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
                     title: Text("Call Result:"),
                     trailing: DropdownButton<String>(
                         hint: Text("Result"),
-                        value: widget.person.result.isEmpty
-                            ? null
-                            : widget.person.result,
+                        value: widget.person.result.isEmpty ? null : widget.person.result,
                         onChanged: (String value) {
                           _focusNode.unfocus();
                           setState(() {
@@ -101,12 +99,11 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
                         items: Person.resultMap.keys
                             .where((String outcome) => outcome.isNotEmpty)
                             .toList()
-                            .map<DropdownMenuItem<String>>(
-                          (String value) => DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            )
-                        ).toList())),
+                            .map<DropdownMenuItem<String>>((String value) => DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                ))
+                            .toList())),
               )
             ]),
             Align(

@@ -35,35 +35,13 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Welcome Back!\n", style: Theme.of(context).textTheme.headline5),
+              Text("Hello!\n", style: Theme.of(context).textTheme.headline5),
               Text(
                   "This app will help you get through a list of phone calls as fast as possible\n\n"
                   "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
                   "This app is free to use for a minimum set of productivity features. A premium subscription will eventually be added in.\n",
                   style: Theme.of(context).textTheme.bodyText2,
                   textAlign: TextAlign.center),
-              Divider(),
-              Column(children: [
-                RaisedButton(
-                    child: Text("Original Call Page"),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
-                    },
-                    ),
-                RaisedButton(
-                  child: Text("New Call Page"),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
-                  },
-                ),
-                RaisedButton(
-                  child: Text("Continue Call"),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
-                  },
-                ),
-                // IconButton(icon: Icon(Icons.refresh), onPressed: () {}, )
-              ], mainAxisAlignment: MainAxisAlignment.center)
             ],
           ),
         ),

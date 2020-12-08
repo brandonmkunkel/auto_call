@@ -132,6 +132,7 @@ class PhoneList {
   void findHeaders() {
     List<dynamic> header = data[0];
     BestMatch match;
+    String label;
 
     // First look to see if there really is a header row
     for (int idx = 0; idx < header.length; idx++) {
@@ -275,6 +276,14 @@ class PhoneList {
   void checkRemainingCallRange() {
     firstUncalled = people.indexWhere((Person p) => !p.called);
     lastUncalled = people.lastIndexWhere((Person p) => !p.called);
+  }
+
+  void advance({bool forward = true}) {
+    if (forward) {
+      advanceIterator();
+    } else {
+      reverseIterator();
+    }
   }
 
   void advanceIterator() {

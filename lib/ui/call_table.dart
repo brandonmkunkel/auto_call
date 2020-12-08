@@ -1,9 +1,10 @@
-import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 
 class CallTable extends StatefulWidget {
   final ScrollController scrollController;
