@@ -152,7 +152,7 @@ class FileManager {
   Future<void> _saveFile(String path, List<List> data) async {
     if (checkValidExtension()) {
       // Request permissions for the storage to save back into the original folder
-      if (await Permission.storage.status == PermissionStatus.denied ) {
+      if (await Permission.storage.status == PermissionStatus.denied) {
         await Permission.storage.request();
       }
 

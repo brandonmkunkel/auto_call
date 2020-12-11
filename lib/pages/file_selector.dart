@@ -78,7 +78,7 @@ class FileSelectorState extends State<FileSelectorPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: AppDrawer(context),
+      drawer: AppDrawer(),
       appBar: new AppBar(
         title: const Text('File Selection'),
       ),

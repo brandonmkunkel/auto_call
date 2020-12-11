@@ -18,22 +18,20 @@ class AppDrawer extends StatelessWidget {
 //    [Icons.info, AboutPage],
 //  ];
 
-  const AppDrawer(BuildContext context);
+  // const AppDrawer(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
         child: Container(
-          decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+            decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
             child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        DrawerHeader(
-          child: Center(
-              child: Text('AutoCall',
-                  textScaleFactor: 1.5, style: TextStyle(color: Colors.white))),
-          decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-        ),
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Center(child: Text('AutoCall', textScaleFactor: 1.5, style: TextStyle(color: Colors.white))),
+                  decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                ),
 //          ListTile(
 //            title: Text('Splash', textScaleFactor: textScale),
 //            onTap: () => navigatorUpdate(context, Splash.routeName),
@@ -43,11 +41,11 @@ class AppDrawer extends StatelessWidget {
 //            onTap: () => navigatorUpdate(context, WelcomePage.routeName),
 //          ),
 
-        ListTile(
-          leading: Icon(Icons.home),
-          title: Text('Home', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () => navigatorUpdate(context, HomePage.routeName),
-        ),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Text('Home', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () => navigatorUpdate(context, HomePage.routeName),
+                ),
 //        ListTile(
 //          leading: Icon(Icons.note_add),
 //          title: Text('File Selector', style: Theme.of(context).textTheme.subtitle1),
@@ -63,47 +61,48 @@ class AppDrawer extends StatelessWidget {
 //          title: Text('Call Page', style: Theme.of(context).textTheme.subtitle1),
 //          onTap: () => navigatorUpdate(context, CallPage.routeName),
 //        ),
-        ListTile(
-          leading: Icon(Icons.history),
-          title: Text('Old Calls', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () => navigatorUpdate(context, OldCallsPage.routeName),
-        ),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Settings', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () => navigatorUpdate(context, SettingsPage.routeName),
-        ),
-        ListTile(
-          leading: Icon(Icons.info),
-          title: Text('About', style: Theme.of(context).textTheme.subtitle1),
-          onTap: () => navigatorUpdate(context, AboutPage.routeName),
-        ),
-        Divider(),
-        Expanded(
-          flex: 1,
-          child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ListTile(
-                title: Text(
-                  'Copyright 2020 | Brandon Kunkel',
-                  textAlign: TextAlign.center,
+                ListTile(
+                  leading: Icon(Icons.history),
+                  title: Text('Old Calls', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () => navigatorUpdate(context, OldCallsPage.routeName),
                 ),
-                onTap: () {
-                  navigatorUpdate(context, LegalPage.routeName);
-                },
-              )),
-        ),
-      ],
-    )));
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () => navigatorUpdate(context, SettingsPage.routeName),
+                ),
+                ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('About', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () => navigatorUpdate(context, AboutPage.routeName),
+                ),
+                Divider(),
+                Expanded(
+                  flex: 1,
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ListTile(
+                        title: Text('Copyright 2020 | Brandon Kunkel', textAlign: TextAlign.center),
+                        onTap: () => navigatorUpdate(context, LegalPage.routeName),
+                      )),
+                ),
+              ],
+            )));
   }
 
   void navigatorUpdate(BuildContext context, String desiredRoute) {
+
     if (Navigator.canPop(context)) {
       Navigator.of(context).pop();
     }
 
     // Push the selected route if it is not the current path
     Navigator.of(context).pushNamedAndRemoveUntil(
-        desiredRoute, (route) => route.isCurrent && route.settings.name == desiredRoute ? false : true);
+        desiredRoute, (route) {
+      print("selected route: $desiredRoute, route.isCurrent ${route.isCurrent} : route name: ${route.settings.name}");
+      print("condition ${route.isCurrent && route.settings.name == desiredRoute ? false : true}");
+      return route.isCurrent && route.settings.name == desiredRoute ? false : true;
+    }
+    );
   }
 }

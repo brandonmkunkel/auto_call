@@ -22,7 +22,7 @@ class SettingsPageState extends State<SettingsPage> {
         appBar: new AppBar(
           title: new Text(widget.title),
         ),
-        drawer: AppDrawer(context),
+        drawer: AppDrawer(),
         body: Stack(children: [
 
           ListView(

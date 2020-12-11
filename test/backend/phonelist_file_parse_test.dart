@@ -10,8 +10,30 @@ import 'package:auto_call/services/phone_list.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  // test('PhoneList Build from TXT', () async {
-  //   String data = await rootBundle.loadString('assets/test/data/sample_numbers.txt');
+  test('PhoneList Build from TXT via root bundle', () async {
+    String data = await rootBundle.loadString('test/assets/sample_numbers.txt');
+    PhoneList phoneList = PhoneList.fromString(data);
+
+    // Verify that our counter has incremented.
+    expect(phoneList.headerPresent, true);
+    expect(phoneList.isNotEmpty(), true);
+    expect(phoneList.labelMapping["name"], 0);
+    expect(phoneList.labelMapping["phone"], 1);
+  });
+
+  test('PhoneList Build from CSV via root bundle', () async {
+    String data = await rootBundle.loadString('test/assets/sample_numbers.csv');
+    PhoneList phoneList = PhoneList.fromString(data);
+
+    // Verify that our counter has incremented.
+    expect(phoneList.headerPresent, true);
+    expect(phoneList.isNotEmpty(), true);
+    expect(phoneList.labelMapping["name"], 0);
+    expect(phoneList.labelMapping["phone"], 1);
+  });
+
+  // test('PhoneList Build from Excel via root bundle', () async {
+  //   ByteData data = await rootBundle.load('test/assets/sample_numbers.xlsx');
   //   PhoneList phoneList = PhoneList.fromString(data);
   //
   //   // Verify that our counter has incremented.
@@ -22,7 +44,8 @@ void main() {
   // });
 
   // test('PhoneList Build from TXT not through rootBundle', () async {
-  //   PhoneList phoneList = PhoneList.fromFile('assets/test/data/sample_numbers.txt');
+  //   PhoneList phoneList = PhoneList.fromFile('test/assets/sample_numbers.txt');
+  //   print(phoneList.data);
   //
   //   // Verify that our counter has incremented.
   //   expect(phoneList.headerPresent, true);
@@ -31,20 +54,9 @@ void main() {
   //   expect(phoneList.labelMapping["phone"], 1);
   // });
 
- //  test('PhoneList Build from CSV', () async {
- //    String data = await rootBundle.loadString('assets/test/data/sample_numbers.csv');
- //    PhoneList phoneList = PhoneList.fromString(data);
- //
- //    // Verify that our counter has incremented.
- //    expect(phoneList.headerPresent, true);
- //    expect(phoneList.isNotEmpty(), true);
- //    expect(phoneList.labelMapping["name"], 0);
- //    expect(phoneList.labelMapping["phone"], 1);
- //  });
- //
  // test('PhoneList Build from Excel', () async {
- //   // String data = await rootBundle.loadString('assets/test/data/sample_numbers.xlsx');
- //   PhoneList phoneList = PhoneList.fromFile('assets/test/data/sample_numbers.xlsx');
+ //   // String data = await rootBundle.loadString('test/assets/sample_numbers.xlsx');
+ //   PhoneList phoneList = PhoneList.fromFile('test/assets/sample_numbers.xlsx');
  //
  //   // Verify that our counter has incremented.
  //   expect(phoneList.headerPresent, true);
@@ -54,10 +66,10 @@ void main() {
  // });
 
 //   test('PhoneList Build from CSV with extra rows at the bottom to ignore', () async {
-// //    ByteData bytes = await rootBundle.load('assets/test/data/book23.csv');
+// //    ByteData bytes = await rootBundle.load('test/assets/book23.csv');
 // //    bytes.Uint8.buffer.asUint16List
 //
-//     String data = await rootBundle.loadString('assets/test/data/book23_backup.txt');
+//     String data = await rootBundle.loadString('test/assets/book23_backup.txt');
 //     PhoneList phoneList = PhoneList.fromString(data);
 //
 //     print(phoneList.additionalLabels);

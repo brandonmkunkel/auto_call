@@ -85,12 +85,7 @@ class SettingManager {
   /// Start up functions
   ///
   void loadSingleton() {
-    startPreferencesInstance().then((SharedPreferences _prefs) {
-      prefs = _prefs;
-      standardSettings = loadSettings(premium: false);
-      premiumSettings = loadSettings(premium: true);
-      loaded = true;
-    });
+    SharedPreferences.getInstance().then((SharedPreferences _prefs) => fromPrefs(_prefs));
   }
 
   void fromPrefs(SharedPreferences preferences) {
@@ -98,11 +93,6 @@ class SettingManager {
     standardSettings = loadSettings(premium: false);
     premiumSettings = loadSettings(premium: true);
     loaded = true;
-  }
-
-  Future<SharedPreferences> startPreferencesInstance() async {
-    // Pull the Settings from teh SharedPreferences file into the SettingsState
-    return await SharedPreferences.getInstance();
   }
 
   Map<String, Setting> loadSettings({bool premium = false}) {

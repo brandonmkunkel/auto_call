@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
     double smallestDim = cWidth < cHeight ? cWidth : cHeight;
 
     return Scaffold(
-      drawer: AppDrawer(context),
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text(widget.title),
       ),

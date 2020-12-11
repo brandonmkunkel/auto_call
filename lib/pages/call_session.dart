@@ -146,7 +146,7 @@ class CallSessionState extends State<CallSessionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(context),
+      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text(widget.title),
         automaticallyImplyLeading: true,

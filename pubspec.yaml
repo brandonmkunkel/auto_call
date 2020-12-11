@@ -38,7 +38,7 @@ dependencies:
   #  Files
   permission_handler:
   csv:
-  file_picker:
+  file_picker: ^2.1.0
   path_provider:
   spreadsheet_decoder:
 
@@ -46,13 +46,21 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons:
+  flutter_native_splash: ^0.1.9
+  flutter_launcher_icons: ^0.8.1
   test:
 
+# Create splash screens by running the following command:
+# flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "4caf50"
+
+# Deploys the App icons to Android/IOS locations. Use the following command
+# flutter pub run flutter_launcher_icons:main
 flutter_icons:
+  image_path: "assets/images/logo.png"
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/logo/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -69,7 +77,7 @@ flutter:
   assets:
     - assets/images/
     - assets/text/
-    - assets/test/data/
+    - test/assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

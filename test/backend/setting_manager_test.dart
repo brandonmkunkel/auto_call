@@ -8,20 +8,20 @@ import 'package:auto_call/services/settings_manager.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('SettingManager singleton instance', () async {
-    SettingManager settingManager1 = SettingManager();
-    SettingManager settingManager2 = SettingManager();
+  // test('SettingManager singleton instance', () async {
+  //   SettingManager settingManager1 = SettingManager();
+  //   SettingManager settingManager2 = SettingManager();
+  //
+  //   expect(settingManager1, settingManager2);
+  // });
 
-    expect(settingManager1, settingManager2);
-  });
+  // test('global SettingManager is singleton', () async {
+  //   SettingManager settingManager = SettingManager();
+  //
+  //   expect(globalSettingManager, settingManager);
+  // });
 
-  test('global SettingManager is singleton', () async {
-    SettingManager settingManager = SettingManager();
-
-    expect(globalSettingManager, settingManager);
-  });
-
-  test('SettingManager check getSettingList() is List', () async {
+  // test('SettingManager check getSettingList() is List', () async {
     // Correct Tests
 //    SettingManager settingManager = SettingManager();
 
@@ -31,7 +31,7 @@ void main() {
 
 //    expect(settingManager.getSettingList(true).runtimeType, List<Setting>().runtimeType);
 //    expect(settingManager.getSettingList(false).runtimeType, List<Setting>().runtimeType);
-  });
+//   });
 
 //  test('SettingManager check getSettingList() is List', () async {
 //    // Correct Tests

@@ -32,7 +32,7 @@ class OldCallsState extends State<OldCallsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: AppDrawer(context),
+        drawer: AppDrawer(),
         appBar: AppBar(
           title: Text(widget.title),
         ),
@@ -90,7 +90,7 @@ class OldCallsState extends State<OldCallsPage> {
 //              arguments: await readFileAsync(files[index].toString()),
               arguments: FileManager(files[index].toString()),
             );
-          } else if (_enum == oldCallEnum.email){
+          } else if (_enum == oldCallEnum.email) {
             print("trying to email");
           } else if (_enum == oldCallEnum.delete) {
             await FileManager.deleteFile(files[index].toString());

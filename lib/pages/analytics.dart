@@ -15,7 +15,7 @@ class AnalyticsState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: AppDrawer(context),
+        drawer: AppDrawer(),
         appBar: AppBar(
           title: Text(widget.title),
         ),

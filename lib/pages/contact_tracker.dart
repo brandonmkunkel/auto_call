@@ -17,7 +17,7 @@ class ContactTrackerState extends State<ContactTrackerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: AppDrawer(context),
+        drawer: AppDrawer(),
         appBar: AppBar(
           title: Text(widget.title),
         ),

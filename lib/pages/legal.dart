@@ -20,7 +20,7 @@ class LegalPageState extends State<LegalPage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      drawer: AppDrawer(context),
+      drawer: AppDrawer(),
       body: new Stack(children: <Widget>[
         Container(
           padding: EdgeInsets.all(10.0),
