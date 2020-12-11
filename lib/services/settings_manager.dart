@@ -90,7 +90,6 @@ class SettingManager {
       standardSettings = loadSettings(premium: false);
       premiumSettings = loadSettings(premium: true);
       loaded = true;
-      print("_prefs loaded");
     });
   }
 
