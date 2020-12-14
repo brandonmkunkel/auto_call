@@ -10,27 +10,27 @@ import 'package:auto_call/services/phone_list.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('PhoneList Build from TXT via root bundle', () async {
-    String data = await rootBundle.loadString('test/assets/sample_numbers.txt');
-    PhoneList phoneList = PhoneList.fromString(data);
-
-    // Verify that our counter has incremented.
-    expect(phoneList.headerPresent, true);
-    expect(phoneList.isNotEmpty(), true);
-    expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["phone"], 1);
-  });
-
-  test('PhoneList Build from CSV via root bundle', () async {
-    String data = await rootBundle.loadString('test/assets/sample_numbers.csv');
-    PhoneList phoneList = PhoneList.fromString(data);
-
-    // Verify that our counter has incremented.
-    expect(phoneList.headerPresent, true);
-    expect(phoneList.isNotEmpty(), true);
-    expect(phoneList.labelMapping["name"], 0);
-    expect(phoneList.labelMapping["phone"], 1);
-  });
+  // test('PhoneList Build from TXT via root bundle', () async {
+  //   String data = await rootBundle.loadString('test/assets/sample_numbers.txt');
+  //   PhoneList phoneList = PhoneList.fromString(data);
+  //
+  //   // Verify that our counter has incremented.
+  //   expect(phoneList.headerPresent, true);
+  //   expect(phoneList.isNotEmpty(), true);
+  //   expect(phoneList.labelMapping["name"], 0);
+  //   expect(phoneList.labelMapping["phone"], 1);
+  // });
+  //
+  // test('PhoneList Build from CSV via root bundle', () async {
+  //   String data = await rootBundle.loadString('test/assets/sample_numbers.csv');
+  //   PhoneList phoneList = PhoneList.fromString(data);
+  //
+  //   // Verify that our counter has incremented.
+  //   expect(phoneList.headerPresent, true);
+  //   expect(phoneList.isNotEmpty(), true);
+  //   expect(phoneList.labelMapping["name"], 0);
+  //   expect(phoneList.labelMapping["phone"], 1);
+  // });
 
   // test('PhoneList Build from Excel via root bundle', () async {
   //   ByteData data = await rootBundle.load('test/assets/sample_numbers.xlsx');
