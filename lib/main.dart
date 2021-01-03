@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'services/calls_and_messages_service.dart';
+// Import the firebase_core plugin
+import 'package:firebase_core/firebase_core.dart';
+
 import 'services/settings_manager.dart';
 
-import 'pages/home.dart';
-import 'pages/file_selector.dart';
-import 'pages/call_session.dart';
-import 'pages/old_calls.dart';
-import 'pages/legal.dart';
-import 'pages/about.dart';
-import 'pages/settings.dart';
-import 'ui/theme.dart';
-
-import 'index.dart';
+import 'app.dart';
 
 ///
 /// Main for running the app
@@ -33,47 +25,30 @@ void main() async {
 ///
 /// App Stateful Widget
 ///
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  ThemeProvider themeChangeProvider =
-      new ThemeProvider(globalSettingManager.loaded ? globalSettingManager.getSetting("dark_mode") : false);
-
-  @override
-  void initState() {
-    super.initState();
-  }
+class App extends StatelessWidget {
+  // Create the initialization Future outside of `build`:
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => themeChangeProvider,
-        child: Consumer<ThemeProvider>(builder: (BuildContext context, value, Widget child) {
-          return MaterialApp(
-            title: 'Flutter Demo',
-            theme: Provider.of<ThemeProvider>(context).getTheme(),
-            home: HomePage(),
-            routes: {
-              HomePage.routeName: (context) => HomePage(),
-              FileSelectorPage.routeName: (context) => FileSelectorPage(),
-//              CallPage.routeName: (context) => CallPage(),
-              OldCallsPage.routeName: (context) => OldCallsPage(),
-              SettingsPage.routeName: (context) => SettingsPage(),
-              LegalPage.routeName: (context) => LegalPage(),
-              AboutPage.routeName: (context) => AboutPage(),
-            },
-            onGenerateRoute: (settings) {
-              // If you push the PassArguments route
-              if (settings.name == CallSessionPage.routeName) {
-                return MaterialPageRoute(builder: (context) => CallSessionPage(fileManager: settings.arguments));
-              } else {
-                return null;
-              }
-            },
-          );
-        }));
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: _initialization,
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          print("Something wrong");
+          // return Pop
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return AutoCall();
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return CircularProgressIndicator();
+      },
+    );
   }
 }
