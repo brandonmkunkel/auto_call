@@ -8,13 +8,11 @@ import Firebase
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    FirebaseApp.configure()
+    GeneratedPluginRegistrant.register(with: self)
+    
     var flutter_native_splash = 1
     UIApplication.shared.isStatusBarHidden = false
-
-    // Use Firebase library to configure APIs
-    FirebaseApp.configure()
-
-    GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
