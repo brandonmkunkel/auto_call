@@ -11,6 +11,7 @@ import Firebase
     var flutter_native_splash = 1
     UIApplication.shared.isStatusBarHidden = false
 
+    // Use Firebase library to configure APIs
     FirebaseApp.configure()
 
     GeneratedPluginRegistrant.register(with: self)
