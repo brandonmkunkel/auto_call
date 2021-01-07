@@ -15,11 +15,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Load up the shared preferences
-  SharedPreferences.getInstance().then((SharedPreferences prefs) {
-    globalSettingManager.fromPrefs(prefs);
+  await globalSettingManager.init();
 
-    runApp(App());
-  });
+  runApp(App());
 }
 
 ///

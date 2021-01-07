@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,6 +7,7 @@ import 'package:firebase_analytics/observer.dart';
 
 import 'services/settings_manager.dart';
 
+import 'pages/onboarding.dart';
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
 import 'pages/call_session.dart';
@@ -23,7 +25,7 @@ class AutoCall extends StatefulWidget {
 class _AutoCall extends State<AutoCall> {
   // Dynamic Theme
   ThemeProvider themeChangeProvider =
-      new ThemeProvider(globalSettingManager.loaded ? globalSettingManager.getSetting("dark_mode") : false);
+      new ThemeProvider(globalSettingManager.loaded ? globalSettingManager.getSetting("darkMode") : false);
 
   // Firebase Analytics observers
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -37,7 +39,11 @@ class _AutoCall extends State<AutoCall> {
         return MaterialApp(
           title: 'Flutter Demo',
           theme: Provider.of<ThemeProvider>(context).getTheme(),
-          home: HomePage(),
+
+          // Set apps first page by checking whether or not the user has been onboarded
+          home: globalSettingManager.getSetting("userOnboarded") ? HomePage() : OnBoardingPage() ,
+
+          // Routes
           routes: {
             HomePage.routeName: (context) => HomePage(),
             FileSelectorPage.routeName: (context) => FileSelectorPage(),

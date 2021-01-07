@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:auto_call/ui/theme.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/ui/theme.dart';
-import 'package:provider/provider.dart';
+import 'package:auto_call/ui/widgets/settings_widgets.dart';
 
 class SettingsPage extends StatefulWidget {
   static const String routeName = "/Settings";
@@ -15,117 +17,94 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   final SettingManager manager = globalSettingManager;
+  bool isPremium = false;
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text(widget.title),
-        ),
-        drawer: AppDrawer(),
-        body: Stack(children: [
+      appBar: new AppBar(
+        title: new Text(widget.title),
+      ),
+      drawer: AppDrawer(),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          // Standard settings
+          Column(
+              children: globalSettingManager.standardSettings().entries.map((entry) {
+            return buildStandardSettingWidget(entry.key, entry.value);
+          }).toList()),
 
-          ListView(
-            children: List<Widget>.generate(globalSettingManager.getSettingList(false).length, (int index) {
-                  return buildStandardSettingWidget(globalSettingManager.getSettingList(false), index);
-                }) +
-                [Divider(), premiumSettingsLabel(context)] +
-                List<Widget>.generate(globalSettingManager.getSettingList(true).length, (int index) {
-                  return buildPremiumSettingWidget(globalSettingManager.getSettingList(true), index);
-                }),
+          // Setting Divider
+          Divider(),
+
+          // Premium Settings Label (changes if the premium user changes)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
+              Text(
+                manager.isPremium() ? "Premium Settings" : "Available Only for Premium Accounts",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500],
+                    fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
+              ),
+              Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
+            ],
+          ),
+
+          // Premium Settings
+          Column(
+            children: globalSettingManager.premiumSettings().entries.map((entry) {
+              return buildPremiumSettingWidget(entry.key, entry.value);
+            }).toList(),
           )
-        ]));
-  }
-
-  Widget premiumSettingsLabel(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Spacer(),
-        Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
-        Spacer(),
-        Text(
-          manager.isPremium() ? "Premium Settings" : "Available Only for Premium Accounts",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500],
-              fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
-        ),
-        Spacer(),
-        Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
-        Spacer(),
-      ],
+        ],
+      )),
     );
   }
 
-//  Widget buildSettings(BuildContext context) {
-//    List<Setting> standardSettings = manager.getSettingList(false);
-//    List<Setting> premiumSettings = manager.getSettingList(true);
-//
-//    if (standardSettings != null) {
-//      // Check to see if the App Settings have loaded yet
-//      return ListView(
-//        children: List<Widget>.generate(standardSettings.length, (int index) {
-//          return buildStandardSettingWidget(standardSettings, index);
-//        }) +
-//            [Divider(), premiumSettingsLabel(context)] +
-//            List<Widget>.generate(premiumSettings.length, (int index) {
-//              return buildPremiumSettingWidget(premiumSettings, index);
-//            }),
-//      );
-//    } else {
-//      // If not, leave blank
-//      return Container(
-//        child:
-//        Text("Settings have not loaded correctly, server may be down", style: Theme.of(context).textTheme.headline5),
-//      );
-//    }
-//  }
-
-  Widget buildStandardSettingWidget(List<Setting> settings, int idx) {
-    switch (settings[idx].settingPair.type) {
+  Widget buildStandardSettingWidget(String key, Setting setting) {
+    switch (setting.type) {
       case bool:
         {
           return ListTile(
-            title: Text(settings[idx].settingPair.text),
+            title: Text(setting.text),
             trailing: Switch(
-              value: settings[idx].value,
+              value: setting.value,
               onChanged: (bool value) {
                 setState(() {
-                  settings[idx].value = value;
-                  manager.prefs.setBool(settings[idx].settingPair.key, value);
+                  manager.setSetting(key, value);
                 });
               },
             ),
           );
         }
-        break;
 
       case int:
         {
           return Container();
         }
-        break;
     }
   }
 
-  Widget buildPremiumSettingWidget(List<Setting> settings, int idx) {
-    switch (settings[idx].settingPair.type) {
+  Widget buildPremiumSettingWidget(String key, Setting settings) {
+    switch (settings.type) {
       case bool:
         {
           return ListTile(
-            title: Text(settings[idx].settingPair.text,
+            title: Text(settings.text,
                 style: TextStyle(color: !manager.isPremium() ? Colors.grey[500] : Theme.of(context).accentColor)),
             trailing: Switch(
-              value: !manager.isPremium() ? false : settings[idx].value,
+              value: !manager.isPremium() ? false : settings.value,
               onChanged: !manager.isPremium()
                   ? (bool) {}
                   : (bool value) {
                       setState(() {
-                        settings[idx].value = value;
-                        manager.prefs.setBool(settings[idx].settingPair.key, value);
+                        manager.setSetting(key, value);
 
-                        if (settings[idx].settingPair.key == "dark_mode") {
+                        if (key == "darkMode") {
                           Provider.of<ThemeProvider>(context, listen: false).setTheme(value);
                         }
                       });

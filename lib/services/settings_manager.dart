@@ -1,40 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Singleton setting manager for
-SettingManager globalSettingManager = SettingManager();
-
-//Future<void> loadGlobalSettings() async {
-//  await globalSettingManager.loadSingleton();
-//  print("done loading global settings");
-//}
-
+// Enumerator for describing setting access
 enum SettingType { hidden, free, premium, enterprise }
 
-// Setting Classes used in the Setting Manager
-class SettingPair {
-  final String key;
+// Setting class used in Map
+class Setting {
+  Setting({this.text, this.description, this.type, this.settingType});
+
   final String text;
   final String description;
+  final SettingType settingType;
   final Type type;
-  final bool premium;
-  Function(BuildContext) fcn;
-
-  SettingPair({this.key, this.text, this.description, this.type, this.premium});
-
-  String toString() {
-    return "SettingPair(key: $key, text: $text, type: $type, premium: $premium)";
-  }
-}
-
-class Setting {
-  Setting({this.settingPair, this.value});
-
-  final SettingPair settingPair;
   var value;
 
   String toString() {
-    return "Setting(settingPair: ${settingPair.toString()}, value: ${value.toString()})";
+    return "Setting(text: $text, type: $type, settingType: $settingType, value: $value)";
   }
 }
 
@@ -42,70 +23,70 @@ class Setting {
 /// Setting Manager takes care of most of the work around saving/loading settings
 ///
 class SettingManager {
-  // Treat the Setting Manager as a singleton, only one should exist
-  static final SettingManager _instance = SettingManager.singleInstance();
+  // Shared Preferences
+  static SharedPreferences prefs;
 
-  /// Factory default constructor returns static instance
-  factory SettingManager() => _instance;
+  /// Asynchronous init function for calling in at app start up
+  init() async {
+    if (prefs == null) {
+      prefs = await SharedPreferences.getInstance();
 
-  /// Factor method creates the single instance
-  SettingManager.singleInstance() {
-    loadSingleton();
+      // Load the settings
+      loadSettings();
+      loaded = true;
+    }
   }
-
+  
   // Class attributes
-  SharedPreferences prefs;
-  Map<String, Setting> standardSettings;
-  Map<String, Setting> premiumSettings;
   bool loaded = false;
 
-  static final List<SettingPair> settingPairs = [
-    // Standard Settings
-//    SettingPair(key: "splashed", text: "Has user opened app before", type: bool, premium: false),
-//    SettingPair(key: "welcomed", text: "Has user completed welcoming", type: bool, premium: false),
-//    SettingPair(key: "registered", text: "Has user registered an account", type: bool, premium: false),
-//    SettingPair(key: "table_load_prompt", text: "Edit Table after loading", type: bool, premium: false),
+  static final Map<String, Setting> settings = {
+    "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
+    "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
+//    SettingPair(key: "tableLoadPrompt", text: "Edit Table after loading", type: bool, settingType: SettingType.free),
 
-    SettingPair(key: "show_notes", text: "Show Call Note and Result Columns", type: bool, premium: false),
-    SettingPair(key: "post_call_prompt", text: "Prompt on call completion", type: bool, premium: false),
-    SettingPair(key: "one_touch_call", text: "One Touch Call", type: bool, premium: false),
-    SettingPair(key: "is_premium", text: "Is the user a premium user", type: bool, premium: false),
-//    SettingPair(key: "is_enterprise", text: "Is the user an enterprise user", type: bool, premium: false),
+    "showNotes": Setting(text: "Show Call Note and Result Columns", type: bool, settingType: SettingType.free),
+    "postCallPrompt": Setting(text: "Prompt on call completion", type: bool, settingType: SettingType.free),
+    "OneTouchCall": Setting(text: "One Touch Call", type: bool, settingType: SettingType.free),
+    "isPremium": Setting(text: "Is the user a premium user", type: bool, settingType: SettingType.free),
+    // "isEnterprise": Setting(text: "Is the user an enterprise user", type: bool, settingType: SettingType.free),
 
     // Premium Settings
-    SettingPair(key: "dark_mode", text: "Dark Mode", type: bool, premium: true),
-    SettingPair(key: "additional_columns", text: "Additional Table Columns", type: bool, premium: true),
-    SettingPair(key: "edit_columns", text: "Edit Additional Table Columns", type: bool, premium: true),
-    SettingPair(key: "auto_call", text: "Automatically Call Next Person", type: bool, premium: true),
-//    SettingPair(key: "cloud_storage", text: "Cloud Storage", type: bool, premium: true),
-//    SettingPair(key: "client_tracking", text: "Client Tracking", type: bool, premium: true),
-  ];
+    "darkMode": Setting(text: "Dark Mode", type: bool, settingType: SettingType.premium),
+    "additionalColumns": Setting(text: "Additional Table Columns", type: bool, settingType: SettingType.premium),
+    "editColumns": Setting(text: "Edit Additional Table Columns", type: bool, settingType: SettingType.premium),
+    "autoCall": Setting(text: "Automatically Call Next Person", type: bool, settingType: SettingType.premium),
+  };
 
   ///
   /// Start up functions
   ///
-  void loadSingleton() {
-    SharedPreferences.getInstance().then((SharedPreferences _prefs) => fromPrefs(_prefs));
+  void loadSettings() {
+    settings.forEach((key, setting) {
+      if (setting.type == bool) {
+        setting.value = prefs.getBool(key) ?? false;
+      } else if (setting.type == int) {
+        setting.value = prefs.getInt(key);
+      } else if (setting.type == String) {
+        setting.value = prefs.getString(key) ?? "";
+      } else {
+        ArgumentError("SettingManager.loadSettings(), something went wrong when loading $key");
+      }
+    });
   }
 
-  void fromPrefs(SharedPreferences preferences) {
-    prefs = preferences;
-    standardSettings = loadSettings(premium: false);
-    premiumSettings = loadSettings(premium: true);
-    loaded = true;
-  }
+  // Return Standard Settings
+  Map<String, Setting> standardSettings() => getSettings(SettingType.free);
 
-  Map<String, Setting> loadSettings({bool premium = false}) {
-    var _settings = Map<String, Setting>.fromIterable(settingPairs,
-        key: (settingPair) => settingPair.key.toString(),
-        value: (settingPair) => settingPair.premium == premium
-            ? Setting(settingPair: settingPair, value: prefs.getBool(settingPair.key) ?? false)
-            : null);
+  // Return Premium Settings
+  Map<String, Setting> premiumSettings() => getSettings(SettingType.premium);
 
-    // Remove null entries
-    _settings.removeWhere((key, value) => value == null);
+  // Return Enterprise Settings
+  Map<String, Setting> enterpriseSettings() => getSettings(SettingType.enterprise);
 
-    return _settings;
+  // Return settings with given enumerator
+  Map<String, Setting> getSettings(SettingType settingType) {
+    return Map.from(settings)..removeWhere((key, value) => value.settingType != settingType);
   }
 
   ///
@@ -113,53 +94,55 @@ class SettingManager {
   ///
   void printSettings() {
     print("Normal Settings");
-    standardSettings.forEach((String key, Setting value) => print(value.toString()));
+    standardSettings().forEach((String key, Setting value) => print(value.toString()));
 
     print("Premium Settings");
-    premiumSettings.forEach((String key, Setting value) => print(value.toString()));
+    premiumSettings().forEach((String key, Setting value) => print(value.toString()));
   }
 
-  Map<String, Setting> getSettingMap(bool premium) {
-    return premium ? premiumSettings : standardSettings;
-  }
-
-  List<Setting> getSettingList(bool premium) {
-    return getSettingMap(premium).entries.map((e) => e.value).toList();
+  List<Setting> getSettingList(SettingType settingType) {
+    return getSettings(settingType).entries.map((e) => e.value).toList();
   }
 
   // Check to see if the user is premium
-  bool isPremium() => prefs.getBool("is_premium") ?? false;
-
-  Map<String, Setting> keyLookup(String key) {
-    // Look up the Key in both settings and return which setting set it comes in
-    return premiumSettings.containsKey(key) ? premiumSettings : standardSettings;
-  }
+  bool isPremium() => prefs.getBool("isPremium") ?? false;
+  bool isEnterprise() => prefs.getBool("isEnterprise") ?? false;
 
   dynamic getSetting(String key) {
-//    return keyLookup(key)[key].value;
-    Setting setting = keyLookup(key)[key];
+    if (!settings.containsKey(key)) {
+      ArgumentError("SettingManager.getSetting() can't access setting named '$key'");
+    }
+    Setting setting = settings[key];
 
-    if (setting.value.runtimeType == bool) {
+    if (setting.type == bool) {
       return prefs.getBool(key) ?? false;
-    } else if (setting.value.runtimeType == int) {
+    } else if (setting.type == int) {
       return prefs.getInt(key) ?? 0;
-    } else if (setting.value.runtimeType == String) {
+    } else if (setting.type == String) {
       return prefs.getString(key) ?? "";
     }
   }
 
   void setSetting(String key, dynamic value) async {
-    Map<String, Setting> settingMap = keyLookup(key);
+    if (!settings.containsKey(key)) {
+      ArgumentError("SettingManager.setSetting() can't access setting named '$key'");
+    }
 
-    // Store the value at the specified key
-    settingMap[key].value = value;
+    Setting setting = settings[key];
 
-    if (value.runtimeType == bool) {
-      prefs.setBool(key, value);
-    } else if (value.runtimeType == int) {
-      prefs.setInt(key, value);
-    } else if (value.runtimeType == String) {
-      prefs.setString(key, value);
+    // Update the setting object
+    setting.value = value;
+
+    // Update setting in shared_preferences
+    if (setting.type == bool) {
+      await prefs.setBool(key, value);
+    } else if (setting.type == int) {
+      await prefs.setInt(key, value);
+    } else if (setting.type == String) {
+      await prefs.setString(key, value);
     }
   }
 }
+
+// Single global instance of SettingManager
+final SettingManager globalSettingManager = SettingManager(); 
