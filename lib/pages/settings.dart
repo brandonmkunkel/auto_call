@@ -6,6 +6,8 @@ import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/widgets/settings_widgets.dart';
 
+import 'account.dart';
+
 class SettingsPage extends StatefulWidget {
   static const String routeName = "/Settings";
   final String title = "Settings";
@@ -25,10 +27,22 @@ class SettingsPageState extends State<SettingsPage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      drawer: AppDrawer(),
       body: SingleChildScrollView(
           child: Column(
         children: [
+          // Go to user account
+          ListTile(
+            title: Text("User Account"),
+            trailing: IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
+              },
+            ),
+          ),
+
+          Divider(),
+
           // Standard settings
           Column(
               children: globalSettingManager.standardSettings().entries.map((entry) {
@@ -59,7 +73,16 @@ class SettingsPageState extends State<SettingsPage> {
             children: globalSettingManager.premiumSettings().entries.map((entry) {
               return buildPremiumSettingWidget(entry.key, entry.value);
             }).toList(),
-          )
+          ),
+
+          // Divider(),
+          // Column(children: [
+          //   Text("Change Log"),
+          //   Text("Support"),
+          //   Text("Terms and conditions"),
+          //   Text("Privacy Policy")
+          // ],
+          // )
         ],
       )),
     );

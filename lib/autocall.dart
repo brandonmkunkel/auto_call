@@ -8,12 +8,12 @@ import 'package:firebase_analytics/observer.dart';
 import 'services/settings_manager.dart';
 
 import 'pages/onboarding.dart';
+import 'pages/login.dart';
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
 import 'pages/call_session.dart';
-import 'pages/old_calls.dart';
+import 'pages/past_sessions.dart';
 import 'pages/legal.dart';
-import 'pages/about.dart';
 import 'pages/settings.dart';
 import 'ui/theme.dart';
 
@@ -41,17 +41,18 @@ class _AutoCall extends State<AutoCall> {
           theme: Provider.of<ThemeProvider>(context).getTheme(),
 
           // Set apps first page by checking whether or not the user has been onboarded
-          home: globalSettingManager.getSetting("userOnboarded") ? HomePage() : OnBoardingPage() ,
+          home: globalSettingManager.getSetting("userOnboarded") ? HomePage() : OnboardingPage() ,
 
           // Routes
           routes: {
             HomePage.routeName: (context) => HomePage(),
+            OnboardingPage.routeName: (context) => OnboardingPage(),
+            LoginPage.routeName: (context) => LoginPage(),
             FileSelectorPage.routeName: (context) => FileSelectorPage(),
 //              CallPage.routeName: (context) => CallPage(),
-            OldCallsPage.routeName: (context) => OldCallsPage(),
+            PastSessionsPage.routeName: (context) => PastSessionsPage(),
             SettingsPage.routeName: (context) => SettingsPage(),
             LegalPage.routeName: (context) => LegalPage(),
-            AboutPage.routeName: (context) => AboutPage(),
           },
           onGenerateRoute: (settings) {
             // If you push the PassArguments route

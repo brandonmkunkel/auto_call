@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-// Import the firebase_core plugin
+// Import firebase plugins
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'services/settings_manager.dart';
 
-import 'app.dart';
+import 'autocall.dart';
+
+///
+/// Create instance of FireBase auth
+///
+// final FirebaseAuth _auth = FirebaseAuth.instance;
 
 ///
 /// Main for running the app

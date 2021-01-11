@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ScrollableTermsConditions extends StatelessWidget {
+  const ScrollableTermsConditions({Key key, }) : super(key: key);
+
   Widget build(BuildContext context) {
     return Scrollbar(child: LayoutBuilder(
       builder: (BuildContext context, BoxConstraints viewportConstraints) {

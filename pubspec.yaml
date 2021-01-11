@@ -31,6 +31,10 @@ dependencies:
   firebase_crashlytics: "^0.2.4"
   firebase_performance: "^0.4.3"
 
+  # Authentication packages
+  flutter_signin_button: ^1.0.0
+  google_sign_in: ^4.5.1
+
   # Other stuff
   introduction_screen:
   sqflite:

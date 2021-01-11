@@ -40,8 +40,11 @@ class CallSessionState extends State<CallSessionPage> {
     // Start up the Scroll Controller
     _controller = ScrollController(keepScrollOffset: true);
 
+    // Set a setting to show that there is an active call session
+    globalSettingManager.setSetting("activeCallSession", true);
+
     // Get settings for this page from the SettingsManager
-    autoCall = globalSettingManager.isPremium() ? globalSettingManager.getSetting("auto_call") : false;
+    autoCall = globalSettingManager.isPremium() ? globalSettingManager.getSetting("autoCall") : false;
     super.initState();
   }
 
@@ -59,7 +62,7 @@ class CallSessionState extends State<CallSessionPage> {
     bool callState = false;
 
     // Collect whether the user wants to call immediately
-    bool oneTouch = globalSettingManager.getSetting("one_touch_call");
+    bool oneTouch = globalSettingManager.getSetting("oneTouchCall");
 
     print("in monitorCall State before call");
 
@@ -79,8 +82,8 @@ class CallSessionState extends State<CallSessionPage> {
 
     print("make call - inCall $inCall");
 
-    bool postCallPrompt = globalSettingManager.getSetting("post_call_prompt");
-    bool _autoCall = globalSettingManager.getSetting("auto_call");
+    bool postCallPrompt = globalSettingManager.getSetting("postCallPrompt");
+    bool _autoCall = globalSettingManager.getSetting("autoCall");
 
     if (postCallPrompt) {
       // Show after call dialog after the call is complete
@@ -98,11 +101,10 @@ class CallSessionState extends State<CallSessionPage> {
       fileManager.phoneList.currentPerson().called = true;
       advanceController(forward: true);
     });
-//    }
   }
 
   Future<void> makeAutoCall() async {
-    while (!fileManager.phoneList.isComplete() && globalSettingManager.getSetting("auto_call")) {
+    while (!fileManager.phoneList.isComplete() && globalSettingManager.getSetting("autoCall")) {
       print("Inside while loop for makeAutoCall");
       await makeCall();
     }
@@ -241,7 +243,7 @@ class CallSessionState extends State<CallSessionPage> {
                                     onPressed: () async {
                                       FocusScope.of(context).unfocus();
 
-                                      if (globalSettingManager.getSetting("auto_call")) {
+                                      if (globalSettingManager.getSetting("autoCall")) {
                                         await makeAutoCall();
                                       } else {
                                         await makeCall();

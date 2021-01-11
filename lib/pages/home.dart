@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'file_selector.dart';
 import 'package:auto_call/ui/drawer.dart';
+import 'package:auto_call/ui/widgets/active_call_session_card.dart';
+import 'package:auto_call/pages/file_selector.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -35,13 +37,12 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Hello!\n", style: Theme.of(context).textTheme.headline5),
-              Text(
-                  "This app will help you get through a list of phone calls as fast as possible\n\n"
-                  "Simply use the button below to upload. For more tools and features, use the menu button at the top left.\n\n"
-                  "This app is free to use for a minimum set of productivity features. Premium/Enterprise features will be added in.\n",
-                  style: Theme.of(context).textTheme.bodyText2,
-                  textAlign: TextAlign.center),
+              Column(
+                children: [Text("Welcome!", style: Theme.of(context).textTheme.headline6),
+                  Text("Let's get back to work", style: Theme.of(context).textTheme.bodyText1),
+                ],
+              ),
+              ActiveCallSessionCard(),
             ],
           ),
         ),

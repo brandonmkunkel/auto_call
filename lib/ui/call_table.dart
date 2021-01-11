@@ -78,9 +78,9 @@ class _CallTableState extends State<CallTable> {
   @override
   Widget build(BuildContext context) {
     // Get Additional Settings for the call table from the SettingsManager
-    showCallNotes = globalSettingManager.getSetting("show_notes");
+    showCallNotes = globalSettingManager.getSetting("showNotes");
     additionalColumns =
-        globalSettingManager.isPremium() ? globalSettingManager.getSetting("additional_columns") : false;
+        globalSettingManager.isPremium() ? globalSettingManager.getSetting("additionalColumns") : false;
 
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Expanded(

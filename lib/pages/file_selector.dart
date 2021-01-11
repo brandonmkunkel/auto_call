@@ -88,7 +88,7 @@ class FileSelectorState extends State<FileSelectorPage> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text("Selected Files:", style: TextStyle(fontSize: 24)),
+              Text("Selected File:", style: TextStyle(fontSize: 24)),
               Divider(),
               Expanded(
                 child: new Builder(
@@ -118,62 +118,38 @@ class FileSelectorState extends State<FileSelectorPage> {
                           : Container(),
                 ),
               ),
-              Divider(),
-              new Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 20.0),
-                child: new Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 40.0,
-                      child: Text(
-                        "Is this file correct?",
-                        style: TextStyle(fontSize: 24),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Spacer(flex: 1),
-                        ButtonTheme(
-                          minWidth: MediaQuery.of(context).size.width * 0.40,
-                          height: MediaQuery.of(context).size.width * 0.15,
-                          child: RaisedButton(
-                            color: Theme.of(context).disabledColor,
-                            onPressed: () => _openFileExplorer(),
-                            child: new Text("Reselect", style: Theme.of(context).textTheme.display1),
-                          ),
-                        ),
-                        Spacer(flex: 1),
-                        ButtonTheme(
-                          minWidth: MediaQuery.of(context).size.width * 0.40,
-                          height: MediaQuery.of(context).size.width * 0.15,
-                          child: RaisedButton(
-                            color: Theme.of(context).accentColor,
-                            onPressed: () async {
-                              if (_paths != null) {
-                                Navigator.popAndPushNamed(
-                                  context,
-                                  CallSessionPage.routeName,
-                                  arguments: FileManager(_paths[0].path),
-                                );
-                              } else {
-                                showNoFileError(context);
-                              }
-                            },
-                            child: new Text("Yes", style: Theme.of(context).textTheme.display1),
-                          ),
-                        ),
-                        Spacer(flex: 1)
-                      ],
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+            FloatingActionButton.extended(
+              heroTag: "reselect_file",
+              icon: Icon(Icons.file_upload),
+              label: new Text("Reselect File", style: Theme.of(context).textTheme.headline6),
+              backgroundColor: Colors.red,
+              onPressed: () => _openFileExplorer(),
+            ),
+            FloatingActionButton.extended(
+                heroTag: "accept_file",
+                icon: Icon(Icons.check),
+                label: new Text("Continue", style: Theme.of(context).textTheme.headline6),
+                backgroundColor: Theme.of(context).accentColor,
+                onPressed: () async {
+                  if (_paths != null) {
+                    Navigator.popAndPushNamed(
+                      context,
+                      CallSessionPage.routeName,
+                      arguments: FileManager(_paths[0].path),
+                    );
+                  } else {
+                    showNoFileError(context);
+                  }
+                }),
+          ])),
     );
   }
 }

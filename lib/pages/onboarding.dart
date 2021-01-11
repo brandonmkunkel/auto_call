@@ -1,6 +1,4 @@
-import 'package:auto_call/services/settings_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import 'package:auto_call/ui/terms.dart';
@@ -8,12 +6,14 @@ import 'package:auto_call/services/settings_manager.dart';
 
 import 'home.dart';
 
-class OnBoardingPage extends StatefulWidget {
+class OnboardingPage extends StatefulWidget {
+  static const String routeName = "/Onboarding";
+
   @override
-  _OnBoardingPageState createState() => _OnBoardingPageState();
+  _OnboardingPageState createState() => _OnboardingPageState();
 }
 
-class _OnBoardingPageState extends State<OnBoardingPage> {
+class _OnboardingPageState extends State<OnboardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   bool agreedToTerms = globalSettingManager.getSetting("agreedToTerms");

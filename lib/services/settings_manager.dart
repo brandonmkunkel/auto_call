@@ -31,6 +31,8 @@ class SettingManager {
     if (prefs == null) {
       prefs = await SharedPreferences.getInstance();
 
+      // SharedPreferences.setMockInitialValues()
+
       // Load the settings
       loadSettings();
       loaded = true;
@@ -41,6 +43,10 @@ class SettingManager {
   bool loaded = false;
 
   static final Map<String, Setting> settings = {
+    // Hidden Settings
+    "activeCallSession": Setting(type: bool, settingType: SettingType.hidden),
+
+    // Visible Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
     "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
 //    SettingPair(key: "tableLoadPrompt", text: "Edit Table after loading", type: bool, settingType: SettingType.free),

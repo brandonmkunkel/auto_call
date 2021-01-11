@@ -6,16 +6,16 @@ import 'package:auto_call/pages/call_session.dart';
 
 enum oldCallEnum { load, email, delete }
 
-class OldCallsPage extends StatefulWidget {
+class PastSessionsPage extends StatefulWidget {
   static const String routeName = "/old_calls";
   final String title = "Old Calls";
   final String label = "Old Calls";
 
   @override
-  OldCallsState createState() => new OldCallsState();
+  PastSessionsState createState() => new PastSessionsState();
 }
 
-class OldCallsState extends State<OldCallsPage> {
+class PastSessionsState extends State<PastSessionsPage> {
   List<String> files;
   bool multiSelect = false;
   List<bool> selected = [];
@@ -45,7 +45,7 @@ class OldCallsState extends State<OldCallsPage> {
                         textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5))),
             Expanded(
                 child: FutureBuilder(
-              future: showOldCalls(context),
+              future: showPastSessions(context),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 return snapshot.hasData
                     ? snapshot.data
@@ -56,7 +56,7 @@ class OldCallsState extends State<OldCallsPage> {
         ));
   }
 
-  Future<Widget> showOldCalls(BuildContext context) async {
+  Future<Widget> showPastSessions(BuildContext context) async {
     files = await FileManager.findOldCalls();
 
     return files.isNotEmpty
