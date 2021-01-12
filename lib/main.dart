@@ -40,7 +40,8 @@ class App extends StatelessWidget {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          print("Something wrong");
+          showDialog(context: context, barrierDismissible: true, child: AlertDialog(title: Text("Something Went Wrong With Loading the App"),));
+          print("Something Went Wrong With Loading the App");
           // return Pop
         }
 

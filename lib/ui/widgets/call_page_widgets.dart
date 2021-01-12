@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_io.dart';
-
+import 'package:auto_call/pages/settings.dart';
 
 class SaveButton extends StatelessWidget {
   final FileManager fileManager;
@@ -69,6 +69,19 @@ class CallCloseButton extends StatelessWidget {
         }
       },
     );
+  }
+}
+
+class CallSettingsButton extends StatelessWidget {
+  CallSettingsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.settings),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage()));
+        });
   }
 }
 

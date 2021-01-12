@@ -16,11 +16,12 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  bool agreedToTerms = globalSettingManager.getSetting("agreedToTerms");
+  // Custom getter for pulling from the shared preferences cache
+  bool get agreedToTerms => globalSettingManager.getSetting("agreedToTerms");
 
   void _onIntroEnd(context) {
     // Verify that the user has indeed agreed to the user's terms and conditions
-    if (agreedToTerms) {
+    if (this.agreedToTerms) {
       // Log that the User has completed onboarding and accepting terms and conditions
       globalSettingManager.setSetting("userOnboarded", true);
 
@@ -38,8 +39,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    agreedToTerms = globalSettingManager.getSetting("agreedToTerms");
-
     const bodyStyle = TextStyle(fontSize: 19.0, color: Colors.white);
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: Colors.white),
@@ -100,12 +99,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 children: [
                   Text("I AGREE TO APP THE TERMS AND CONDITIONS"),
                   Checkbox(
-                      value: agreedToTerms,
+                      value: this.agreedToTerms,
                       onChanged: (value) {
                         setState(() {
-                          // Change value to update the widget states
-                          agreedToTerms = value;
-
                           // Store the agreement to the terms and conditions within the app
                           globalSettingManager.setSetting("agreedToTerms", value);
                         });

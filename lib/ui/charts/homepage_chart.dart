@@ -18,7 +18,7 @@ class HomeStatsCardState extends State<HomeStatsCard> {
            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
              Padding(
                padding: EdgeInsets.only(bottom: 15.0),
-               child: Text("Your Stats",
+               child: Text("Your Calling Stats",
                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.subtitle1),
              ),
              Text("Stats place holder chart"),

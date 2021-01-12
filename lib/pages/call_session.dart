@@ -39,6 +39,8 @@ class CallSessionState extends State<CallSessionPage> {
   bool get postCallPromptEnabled => globalSettingManager.getSetting("postCallPrompt");
   bool get autoCallEnabled => globalSettingManager.isPremium() ? globalSettingManager.getSetting("autoCall") : false;
   bool get oneTouchCallEnabled => globalSettingManager.getSetting("oneTouchCall");
+  bool get editColumnsEnabled =>
+      globalSettingManager.isPremium() ? globalSettingManager.getSetting("editColumns") : false;
 
   @override
   void initState() {
@@ -140,7 +142,15 @@ class CallSessionState extends State<CallSessionPage> {
   }
 
   Future<PhoneList> callTableFuture() async {
-    return fileManager.readFile();
+    return await fileManager.readFile();
+  }
+
+  bool isComplete() {
+    if (fileManager.phoneList == null) {
+      return false;
+    } else {
+      return fileManager.phoneList.isComplete();
+    }
   }
 
   @override
@@ -149,8 +159,9 @@ class CallSessionState extends State<CallSessionPage> {
       drawer: AppDrawer(),
       appBar: AppBar(
         title: Text(widget.title),
-        automaticallyImplyLeading: true,
+        // automaticallyImplyLeading: true,
         actions: <Widget>[
+          CallSettingsButton(),
           SaveButton(fileManager: fileManager),
           CloseButton(),
         ],
@@ -160,9 +171,6 @@ class CallSessionState extends State<CallSessionPage> {
       body: FutureBuilder<PhoneList>(
           future: callTableFuture(),
           builder: (BuildContext context, AsyncSnapshot<PhoneList> snapshot) {
-//            bool editColumns = globalSettingManager.isPremium() ?
-//              globalSettingManager.getSetting("edit_columns") : false;
-//
 //            if (snapshot.hasData && editColumns && acceptedColumns.isEmpty) {
 //              showDialog(context: context, barrierDismissible: true, child: PreSessionPrompt(fileManager: fileManager)).then(
 //                      (dynamic columns) {
@@ -170,105 +178,10 @@ class CallSessionState extends State<CallSessionPage> {
 //                  }
 //              );
 //            }
-
             return snapshot.hasData
                 ? Stack(children: [
-                   // NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
-                    CallTable(
-                      manager: fileManager,
-                      scrollController: _controller,
-                      textControllers: textControllers,
-//                      acceptedColumns: acceptedColumns
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: fileManager.phoneList.isComplete()
-                          ? Container(
-                              padding: EdgeInsets.symmetric(vertical: 10.0),
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).scaffoldBackgroundColor,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                      colors: [
-                                        Theme.of(context).backgroundColor.withOpacity(1.0),
-                                        Theme.of(context).backgroundColor.withOpacity(0.0)
-                                      ]),
-                              ),
-                              child: FloatingActionButton.extended(
-                                  label: Text('Calls Completed'),
-                                  icon: Icon(Icons.check_circle),
-                                  onPressed: () async {
-                                    FocusScope.of(context).unfocus();
-
-                                    widget.fileManager.phoneList.iterator = 0;
-                                    widget.fileManager.phoneList.people.forEach((person) {
-                                      person.called = false;
-                                    });
-
-//                                    // Store information from the user prompt
-//                                    var result = await showDialog(
-//                                        context: context, child: PostSessionPrompt(fileManager: fileManager));
-
-                                    setState(() {});
-                                    print("call_session.dart: COMPLETED");
-                                  }))
-                          : Container(
-                              padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 20.0),
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).scaffoldBackgroundColor,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.bottomCenter,
-                                      end: Alignment.topCenter,
-                                      colors: [
-                                        Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
-                                        Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
-                                      ]),
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  FloatingActionButton.extended(
-                                    label: Text('Back'),
-                                    icon: Icon(Icons.arrow_back),
-                                    onPressed: () {
-                                      FocusScope.of(context).unfocus();
-                                      advanceController(forward: false);
-                                    },
-                                    heroTag: "btn_back",
-                                    tooltip: "Back",
-                                  ),
-                                  FloatingActionButton(
-                                    onPressed: () async {
-                                      FocusScope.of(context).unfocus();
-
-                                      if (globalSettingManager.getSetting("autoCall")) {
-                                        await makeAutoCall();
-                                      } else {
-                                        await makeCall();
-                                      }
-                                    },
-                                    heroTag: "btn_call",
-                                    tooltip: "Call",
-                                    child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                                    backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
-                                  ),
-                                  FloatingActionButton.extended(
-                                    label: Text('Next'),
-                                    icon: Icon(Icons.arrow_forward),
-                                    onPressed: () {
-                                      FocusScope.of(context).unfocus();
-                                      advanceController(forward: true);
-                                    },
-                                    heroTag: "btn_next",
-                                    tooltip: "Call",
-                                  ),
-                                ],
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              )
-                              // fill in required params
-                              ),
-                    )
+                    // NewCallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
+                    CallTable(manager: fileManager, scrollController: _controller, textControllers: textControllers),
                   ])
                 : snapshot.hasError
                     ? Column(
@@ -286,6 +199,81 @@ class CallSessionState extends State<CallSessionPage> {
                       )
                     : Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
           }),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
+              ]),
+            ),
+            child: !isComplete()
+                ? Row(
+                    children: <Widget>[
+                      FloatingActionButton.extended(
+                          label: Text('Back'),
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            advanceController(forward: false);
+                          },
+                          heroTag: "btn_back",
+                          tooltip: "Back"),
+                      FloatingActionButton(
+                        onPressed: () async {
+                          FocusScope.of(context).unfocus();
+
+                          if (autoCallEnabled) {
+                            await makeAutoCall();
+                          } else {
+                            await makeCall();
+                          }
+                        },
+                        heroTag: "btn_call",
+                        tooltip: "Call",
+                        child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
+                        backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
+                      ),
+                      FloatingActionButton.extended(
+                        label: Text('Next'),
+                        icon: Icon(Icons.arrow_forward),
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          advanceController(forward: true);
+                        },
+                        heroTag: "btn_next",
+                        tooltip: "Call",
+                      ),
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  )
+                : FloatingActionButton.extended(
+                    label: Text('Calls Completed'),
+                    icon: Icon(Icons.check_circle),
+                    onPressed: () async {
+                      FocusScope.of(context).unfocus();
+
+                      widget.fileManager.phoneList.iterator = 0;
+                      widget.fileManager.phoneList.people.forEach((person) {
+                        person.called = false;
+                      });
+
+//                    // Store information from the user prompt
+//                    var result = await showDialog(
+//                        context: context, child: PostSessionPrompt(fileManager: fileManager));
+
+                      setState(() {});
+                      print("call_session.dart: COMPLETED");
+                    })
+            // fill in required params
+            ),
+      ),
     );
   }
 }

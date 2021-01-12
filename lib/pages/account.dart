@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
@@ -19,7 +20,15 @@ class AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: Container(),
+      body: Container(
+          padding: EdgeInsets.all(15.0),
+          child: SizedBox.expand(
+            child: Card(
+              child: Center(
+                child: Text("User Accounts Coming Soon!"),
+              ),
+            ),
+          )),
       floatingActionButton: FloatingActionButton.extended(
         label: Text(accountChanged ? "Save Changes" : "Exit"),
         icon: Icon(accountChanged ? Icons.save : Icons.close_rounded),

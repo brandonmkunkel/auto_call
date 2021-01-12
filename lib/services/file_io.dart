@@ -228,9 +228,7 @@ class FileManager {
   static Future<List<String>> findOldCalls() async {
     Directory _oldCallsDir = Directory(await oldCallsDirectory());
     List _files = _oldCallsDir.listSync(recursive: false);
-    return List.generate(_files.length, (int idx) {
-      return _files[idx].path;
-    });
+    return List.generate(_files.length, (int idx) => _files[idx].path);
   }
 
   static Future<void> deleteFile(String path) async {
