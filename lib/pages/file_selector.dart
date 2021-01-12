@@ -17,7 +17,6 @@ class FileSelectorPage extends StatefulWidget {
 }
 
 class FileSelectorState extends State<FileSelectorPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _fileName;
   String _directoryPath;
   FilePickerResult _result;
@@ -26,12 +25,10 @@ class FileSelectorState extends State<FileSelectorPage> {
   bool _loadingPath = false;
   bool _multiPick = false;
   FileType _pickingType = FileType.custom;
-  TextEditingController _controller = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(() => _extension = _controller.text);
     _openFileExplorer();
   }
 
@@ -58,23 +55,6 @@ class FileSelectorState extends State<FileSelectorPage> {
     });
   }
 
-  void _selectFolder() {
-    FilePicker.platform.getDirectoryPath().then((value) {
-      setState(() => _directoryPath = value);
-    });
-  }
-
-  void _clearCachedFiles() {
-    FilePicker.platform.clearTemporaryFiles().then((result) {
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          backgroundColor: result ? Colors.green : Colors.red,
-          content: Text((result ? 'Temporary files removed with success.' : 'Failed to clean temporary files')),
-        ),
-      );
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -98,9 +78,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                   Divider(),
                   Builder(
                     builder: (BuildContext context) => _loadingPath
-                        ? Center(child: SizedBox(height: 100.0, width: 100.0, child: const CircularProgressIndicator()))
+                        ? Center(child: SizedBox(height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
                         : _paths != null
-                            // ? Center(child: Text("sample"),)
                             ? Container(
                                 // child: Scrollbar(
                                 child: ListView.separated(
@@ -113,7 +92,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                                     final String path = _paths.map((e) => e.path).toList()[index].toString();
 
                                     return ListTile(
-                                      title: Text('File ${index + 1}: $name'),
+                                      title: Text('File Name: $name'),
                                       subtitle: Text('Path: $path'),
                                     );
                                   },
@@ -123,6 +102,15 @@ class FileSelectorState extends State<FileSelectorPage> {
                               )
                             : Center(child: Text("No file selected", style: Theme.of(context).textTheme.bodyText1)),
                   ),
+                  Container(
+                      padding: EdgeInsets.all(5.0),
+                      alignment: Alignment.bottomRight,
+                      child: RaisedButton.icon(
+                        icon: Icon(Icons.upload_file),
+                        label: new Text("Reselect File", style: Theme.of(context).textTheme.headline6),
+                        color: Colors.red,
+                        onPressed: () => _openFileExplorer(),
+                      ))
                 ],
               ),
             )),
@@ -142,67 +130,25 @@ class FileSelectorState extends State<FileSelectorPage> {
                 ],
               ),
             )),
-            Expanded(
-              child: Container(
-                  alignment: Alignment.bottomCenter,
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-                    FloatingActionButton.extended(
-                      heroTag: "reselect_file",
-                      icon: Icon(Icons.file_upload),
-                      label: new Text("Reselect File", style: Theme.of(context).textTheme.headline6),
-                      backgroundColor: Colors.red,
-                      onPressed: () => _openFileExplorer(),
-                    ),
-                    FloatingActionButton.extended(
-                        heroTag: "accept_file",
-                        icon: Icon(Icons.check),
-                        label: new Text("Continue", style: Theme.of(context).textTheme.headline6),
-                        backgroundColor: Theme.of(context).accentColor,
-                        onPressed: () async {
-                          if (_paths != null) {
-                            Navigator.popAndPushNamed(
-                              context,
-                              CallSessionPage.routeName,
-                              arguments: FileManager(_paths[0].path),
-                            );
-                          } else {
-                            showNoFileError(context);
-                          }
-                        }),
-                  ])),
-            )
           ],
         ),
       ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: Padding(
-      //     padding: const EdgeInsets.all(20.0),
-      //     child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-      //       FloatingActionButton.extended(
-      //         heroTag: "reselect_file",
-      //         icon: Icon(Icons.file_upload),
-      //         label: new Text("Reselect File", style: Theme.of(context).textTheme.headline6),
-      //         backgroundColor: Colors.red,
-      //         onPressed: () => _openFileExplorer(),
-      //       ),
-      //       FloatingActionButton.extended(
-      //           heroTag: "accept_file",
-      //           icon: Icon(Icons.check),
-      //           label: new Text("Continue", style: Theme.of(context).textTheme.headline6),
-      //           backgroundColor: Theme.of(context).accentColor,
-      //           onPressed: () async {
-      //             if (_paths != null) {
-      //               Navigator.popAndPushNamed(
-      //                 context,
-      //                 CallSessionPage.routeName,
-      //                 arguments: FileManager(_paths[0].path),
-      //               );
-      //             } else {
-      //               showNoFileError(context);
-      //             }
-      //           }),
-      //     ])),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.,
+      floatingActionButton: _paths == null
+          ? Container()
+          : FloatingActionButton.extended(
+              heroTag: "accept_file",
+              icon: Icon(Icons.check),
+              label: new Text("Continue", style: Theme.of(context).textTheme.headline6),
+              backgroundColor: Theme.of(context).accentColor,
+              onPressed: () async {
+                if (_paths != null) {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => CallSessionPage(fileManager: FileManager(_paths[0].path))));
+                } else {
+                  showNoFileError(context);
+                }
+              }),
     );
   }
 }

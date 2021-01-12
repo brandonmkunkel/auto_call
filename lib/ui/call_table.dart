@@ -51,9 +51,7 @@ class _CallTableState extends State<CallTable> {
   @override
   void dispose() {
     super.dispose();
-    focusNodes.forEach((focusNode) {
-      focusNode?.dispose();
-    });
+    focusNodes.forEach((focusNode) => focusNode?.dispose());
   }
 
   // Update the Scroll controller based on the given item offset

@@ -9,6 +9,7 @@ import 'package:auto_call/ui/call_table_new.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
+import 'package:auto_call/ui/widgets/call_page_widgets.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
 class CallSessionPage extends StatefulWidget {
@@ -24,7 +25,6 @@ class CallSessionPage extends StatefulWidget {
 }
 
 class CallSessionState extends State<CallSessionPage> {
-  bool autoCall = false;
   bool inCall = false;
   double rowSize = kMinInteractiveDimension;
   ScrollController _controller;
@@ -35,6 +35,11 @@ class CallSessionState extends State<CallSessionPage> {
   // Getter for file manager from widget parent
   FileManager get fileManager => widget.fileManager;
 
+  // Helpful Settings Getters
+  bool get postCallPromptEnabled => globalSettingManager.getSetting("postCallPrompt");
+  bool get autoCallEnabled => globalSettingManager.isPremium() ? globalSettingManager.getSetting("autoCall") : false;
+  bool get oneTouchCallEnabled => globalSettingManager.getSetting("oneTouchCall");
+
   @override
   void initState() {
     // Start up the Scroll Controller
@@ -44,7 +49,6 @@ class CallSessionState extends State<CallSessionPage> {
     globalSettingManager.setSetting("activeCallSession", true);
 
     // Get settings for this page from the SettingsManager
-    autoCall = globalSettingManager.isPremium() ? globalSettingManager.getSetting("autoCall") : false;
     super.initState();
   }
 
@@ -61,12 +65,9 @@ class CallSessionState extends State<CallSessionPage> {
   Future<bool> monitorCallState() async {
     bool callState = false;
 
-    // Collect whether the user wants to call immediately
-    bool oneTouch = globalSettingManager.getSetting("oneTouchCall");
-
     print("in monitorCall State before call");
 
-    PhoneManager.call(fileManager.phoneList.currentPerson().phone, oneTouch);
+    PhoneManager.call(fileManager.phoneList.currentPerson().phone, this.oneTouchCallEnabled);
 
     print("in monitorCall State after the call");
 
@@ -82,10 +83,7 @@ class CallSessionState extends State<CallSessionPage> {
 
     print("make call - inCall $inCall");
 
-    bool postCallPrompt = globalSettingManager.getSetting("postCallPrompt");
-    bool _autoCall = globalSettingManager.getSetting("autoCall");
-
-    if (postCallPrompt) {
+    if (this.postCallPromptEnabled) {
       // Show after call dialog after the call is complete
       await showDialog(
           context: context,
@@ -104,7 +102,7 @@ class CallSessionState extends State<CallSessionPage> {
   }
 
   Future<void> makeAutoCall() async {
-    while (!fileManager.phoneList.isComplete() && globalSettingManager.getSetting("autoCall")) {
+    while (!fileManager.phoneList.isComplete() && this.autoCallEnabled) {
       print("Inside while loop for makeAutoCall");
       await makeCall();
     }
@@ -288,103 +286,6 @@ class CallSessionState extends State<CallSessionPage> {
                       )
                     : Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
           }),
-    );
-  }
-}
-
-class SaveButton extends StatelessWidget {
-  final FileManager fileManager;
-  SaveButton({this.fileManager});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.save, color: Theme.of(context).accentColor),
-      iconSize: 40.0,
-      onPressed: () async {
-        bool acceptSave = await showDialog(barrierDismissible: false, context: context, child: SaveAlert());
-
-        if (acceptSave) {
-          // Find the Scaffold in the widget tree and use
-          // it to show a SnackBar.
-          await fileManager.saveCallSession();
-          await fileManager.saveToOldCalls();
-
-          // Show the snack
-          SnackBar snackBar = SnackBar(
-            content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
-            backgroundColor: Colors.grey[600],
-            action: SnackBarAction(
-              label: 'Undo',
-              textColor: Colors.white,
-              onPressed: () async {
-                // SDelete the files that were just saved
-                await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
-                await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
-              },
-            ),
-          );
-
-          // Show the snackbar
-          Scaffold.of(context).showSnackBar(snackBar);
-        }
-      },
-    );
-  }
-}
-
-class CloseButton extends StatelessWidget {
-  final FileManager fileManager;
-  CloseButton({this.fileManager});
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.cancel, color: Theme.of(context).accentColor),
-      iconSize: 40.0,
-      onPressed: () async {
-        bool acceptClose = await showDialog(
-            barrierDismissible: false, context: context, builder: (BuildContext context) => CloseAlert());
-
-        if (acceptClose) {
-//          bool acceptSave = await showDialog(
-//              barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
-//
-//          if (acceptSave) {
-//            print("should be doing some saving");
-//          }
-
-          Navigator.of(context).pop();
-        }
-      },
-    );
-  }
-}
-
-class CloseAlert extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text("Call Session Close Alert"),
-      content: Text("Are you sure you want end your call session?"),
-      actions: <Widget>[
-        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
-        FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
-      ],
-    );
-  }
-}
-
-class SaveAlert extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text("Save Call Session"),
-      content: Text("Do you wish to save your call session?"),
-      actions: <Widget>[
-        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
-        FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
-      ],
     );
   }
 }

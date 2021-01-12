@@ -53,7 +53,7 @@ class SettingManager {
 
     "showNotes": Setting(text: "Show Call Note and Result Columns", type: bool, settingType: SettingType.free),
     "postCallPrompt": Setting(text: "Prompt on call completion", type: bool, settingType: SettingType.free),
-    "OneTouchCall": Setting(text: "One Touch Call", type: bool, settingType: SettingType.free),
+    "oneTouchCall": Setting(text: "One Touch Call", type: bool, settingType: SettingType.free),
     "isPremium": Setting(text: "Is the user a premium user", type: bool, settingType: SettingType.free),
     // "isEnterprise": Setting(text: "Is the user an enterprise user", type: bool, settingType: SettingType.free),
 
@@ -116,7 +116,7 @@ class SettingManager {
 
   dynamic getSetting(String key) {
     if (!settings.containsKey(key)) {
-      ArgumentError("SettingManager.getSetting() can't access setting named '$key'");
+      print("SettingManager.getSetting() can't access setting named '$key'");
     }
     Setting setting = settings[key];
 

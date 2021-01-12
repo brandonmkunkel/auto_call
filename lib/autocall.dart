@@ -18,6 +18,8 @@ import 'pages/settings.dart';
 import 'ui/theme.dart';
 
 class AutoCall extends StatefulWidget {
+  final String title = "Auto Call";
+
   @override
   _AutoCall createState() => _AutoCall();
 }
@@ -37,7 +39,7 @@ class _AutoCall extends State<AutoCall> {
       create: (_) => themeChangeProvider,
       child: Consumer<ThemeProvider>(builder: (BuildContext context, value, Widget child) {
         return MaterialApp(
-          title: 'Flutter Demo',
+          title: widget.title,
           theme: Provider.of<ThemeProvider>(context).getTheme(),
 
           // Set apps first page by checking whether or not the user has been onboarded
