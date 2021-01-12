@@ -22,6 +22,7 @@ class Person {
   String result = "";
   List<String> additionalData = [];
   List<String> additionalLabels = [];
+  Map<String, String> additional;
 
   static final List<String> labels = ["name", "phone", "email", "result", "note", "called"];
   static final List<String> requiredLabels = ["name", "phone"];
@@ -54,8 +55,21 @@ class Person {
     this.additionalLabels = additionalLabels != null ? additionalData.cast<String>() : [];
   }
 
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> out = {
+      "name": name,
+      "phone": phone,
+      "email": email,
+      "result": result,
+      "note": note,
+      "called": called,
+    };
+    out.addAll(this.additional);
+    return out;
+  }
+
   String string() {
-    return name + ", " + phone + ", " + email;
+    return "Person{name: $name, phone: $phone, email: $email}";
   }
 
   static List<List<String>> orderedLabels() {

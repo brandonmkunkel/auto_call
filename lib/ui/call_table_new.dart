@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:auto_call/services/file_io.dart';
 import 'package:flutter/rendering.dart';
+
+import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class NewCallTable extends StatefulWidget {
   final ScrollController scrollController;
@@ -268,33 +270,6 @@ class _CallTableEntryState extends State<CallTableEntry> {
                   ).toList()),
             )
           ],
-    );
-  }
-}
-
-
-class HeaderText extends StatelessWidget {
-  final String text;
-  HeaderText(this.text);
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyText1.color));
-  }
-}
-
-class CalledText extends StatelessWidget {
-  final String text;
-  final bool called;
-  CalledText({this.text, this.called});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-          color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.bodyText1.color,
-          fontSize: Theme.of(context).textTheme.bodyText1.fontSize),
     );
   }
 }

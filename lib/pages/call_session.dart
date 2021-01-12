@@ -180,7 +180,7 @@ class CallSessionState extends State<CallSessionPage> {
                       manager: fileManager,
                       scrollController: _controller,
                       textControllers: textControllers,
-//                      acceptedColumns: acceptedColumns,
+//                      acceptedColumns: acceptedColumns
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,

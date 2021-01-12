@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
 class AccountPage extends StatefulWidget {
-  static const String routeName = "/Account";
+  static const String routeName = "/account";
   final String title = "Account Page";
   final String label = "Account Page";
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:auto_call/pages/file_selector.dart';
+import 'package:auto_call/ui/charts/homepage_chart.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/widgets/active_call_session_card.dart';
-import 'package:auto_call/pages/file_selector.dart';
-
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -32,17 +32,13 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(15.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Column(
-                children: [Text("Welcome!", style: Theme.of(context).textTheme.headline6),
-                  Text("Let's get back to work", style: Theme.of(context).textTheme.bodyText1),
-                ],
-              ),
               ActiveCallSessionCard(),
+              HomeStatsCard()
             ],
           ),
         ),
@@ -51,7 +47,7 @@ class _HomePageState extends State<HomePage> {
         label: Text("New Call Session"),
         icon: Icon(Icons.add_call),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FileSelectorPage()));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => FileSelectorPage()));
         },
         tooltip: 'Start new call session',
       ),

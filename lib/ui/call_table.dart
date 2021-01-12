@@ -5,6 +5,7 @@ import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
+import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class CallTable extends StatefulWidget {
   final ScrollController scrollController;
@@ -238,36 +239,5 @@ class _CallTableState extends State<CallTable> {
                         onTap: () => setStateIterator(i)),
                   ]
                 : []));
-  }
-}
-
-class HeaderText extends StatelessWidget {
-  final String text;
-  HeaderText(this.text);
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        style: TextStyle(
-          color: Theme.of(context).textTheme.bodyText1.color,
-          fontSize: Theme.of(context).textTheme.bodyText2.fontSize * 1.2,
-          fontWeight: FontWeight.bold,
-        ));
-  }
-}
-
-class CalledText extends StatelessWidget {
-  final String text;
-  final bool called;
-  TextAlign align = TextAlign.left;
-
-  CalledText({this.text, this.called, this.align});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text,
-        textAlign: align,
-        style: TextStyle(
-            color: called ? Theme.of(context).disabledColor : Theme.of(context).textTheme.bodyText1.color,
-            fontSize: Theme.of(context).textTheme.bodyText1.fontSize));
   }
 }

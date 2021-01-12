@@ -19,8 +19,14 @@ class AnalyticsState extends State<AnalyticsPage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: Row(children: [
-          Container(child: DonutPieChart.withSampleData()),
-        ]));
+        body: Container(
+            padding: EdgeInsets.all(15.0),
+            child: SingleChildScrollView(
+            child: Column(children: [
+
+
+
+            ],)))
+    );
   }
 }

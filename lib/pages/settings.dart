@@ -9,7 +9,7 @@ import 'package:auto_call/ui/widgets/settings_widgets.dart';
 import 'account.dart';
 
 class SettingsPage extends StatefulWidget {
-  static const String routeName = "/Settings";
+  static const String routeName = "/settings";
   final String title = "Settings";
   final String label = "Settings";
 

@@ -21,6 +21,7 @@ class DonutPieChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
+      padding: EdgeInsets.all(10),
         child: charts.PieChart(seriesList,
         animate: animate,
         // Configure the width of the pie slices to 60px. The remaining space in

@@ -7,7 +7,7 @@ import 'package:auto_call/services/settings_manager.dart';
 import 'home.dart';
 
 class OnboardingPage extends StatefulWidget {
-  static const String routeName = "/Onboarding";
+  static const String routeName = "/onboarding";
 
   @override
   _OnboardingPageState createState() => _OnboardingPageState();

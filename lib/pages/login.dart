@@ -10,10 +10,8 @@ import 'package:auto_call/pages/home.dart';
 import 'register.dart';
 import 'sign_in.dart';
 
-
-
 class LoginPage extends StatefulWidget {
-  static const String routeName = "/Login";
+  static const String routeName = "/login";
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -22,7 +20,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // Navigates to a new page
   void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context) /*!*/ .push(
+    Navigator.of(context).push(
       MaterialPageRoute<void>(builder: (_) => page),
     );
   }
