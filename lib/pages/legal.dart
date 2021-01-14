@@ -16,12 +16,12 @@ class LegalPageState extends State<LegalPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
       drawer: AppDrawer(),
-      body: new Stack(children: <Widget>[
+      body: Stack(children: <Widget>[
         Container(
           padding: EdgeInsets.all(10.0),
           child: ScrollableTermsConditions(),

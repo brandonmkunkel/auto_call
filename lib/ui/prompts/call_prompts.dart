@@ -19,7 +19,7 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
 
   @override
   void initState() {
-    _focusNode = new FocusNode();
+    _focusNode = FocusNode();
     super.initState();
   }
 
@@ -31,8 +31,8 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    bool premium = globalSettingManager.getSetting("is_premium");
-    bool autoCall = globalSettingManager.getSetting("auto_call");
+    bool premium = globalSettingManager.get("is_premium");
+    bool autoCall = globalSettingManager.get("auto_call");
 
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).backgroundColor.withOpacity(0.9)),
@@ -115,7 +115,7 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
                         child: autoCall ? Text("Pause Auto Call") : Text("Restart Auto Call"),
                         onPressed: () {
                           setState(() {
-                            globalSettingManager.setSetting("auto_call", !autoCall);
+                            globalSettingManager.set("auto_call", !autoCall);
                           });
                         },
                         color: autoCall ? Colors.red : Colors.green,

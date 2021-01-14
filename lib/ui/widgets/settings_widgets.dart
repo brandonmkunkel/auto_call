@@ -30,7 +30,7 @@ class BoolSettingsState extends State<BoolSettingsWidget> {
         value: widget.setting.value,
         onChanged: (bool value) {
           setState(() {
-            globalSettingManager.setSetting(widget.settingKey, value);
+            globalSettingManager.set(widget.settingKey, value);
           });
         },
       ),

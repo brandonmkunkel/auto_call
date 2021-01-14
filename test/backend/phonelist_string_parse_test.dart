@@ -23,8 +23,8 @@ void main() {
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
     test("not empty", () => expect(phoneList.isNotEmpty(), true));
-    test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
-    test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
+    test("label mapping - name match", () => expect(phoneList.labelMap["name"], 0));
+    test("label mapping - phone match", () => expect(phoneList.labelMap["phone"], 1));
   });
 
   group('PhoneList Build with email', () {
@@ -40,9 +40,9 @@ void main() {
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
     test("not empty", () => expect(phoneList.isNotEmpty(), true));
-    test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
-    test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
-    test("label mapping - email match", () => expect(phoneList.labelMapping["email"], 2));
+    test("label mapping - name match", () => expect(phoneList.labelMap["name"], 0));
+    test("label mapping - phone match", () => expect(phoneList.labelMap["phone"], 1));
+    test("label mapping - email match", () => expect(phoneList.labelMap["email"], 2));
   });
 
   group('PhoneList Build from data with header but split names', () {
@@ -74,9 +74,9 @@ void main() {
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
     test("not empty", () => expect(phoneList.isNotEmpty(), true));
-    test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
-    test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
-    test("label mapping - email match", () => expect(phoneList.labelMapping["email"], 2));
+    test("label mapping - name match", () => expect(phoneList.labelMap["name"], 0));
+    test("label mapping - phone match", () => expect(phoneList.labelMap["phone"], 1));
+    test("label mapping - email match", () => expect(phoneList.labelMap["email"], 2));
   });
 
   group('PhoneList Build from data with additional headers', () {
@@ -92,13 +92,13 @@ void main() {
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
     test("not empty", () => expect(phoneList.isNotEmpty(), true));
-    test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
-    test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
-    test("label mapping - email match", () => expect(phoneList.labelMapping["email"], 2));
+    test("label mapping - name match", () => expect(phoneList.labelMap["name"], 0));
+    test("label mapping - phone match", () => expect(phoneList.labelMap["phone"], 1));
+    test("label mapping - email match", () => expect(phoneList.labelMap["email"], 2));
 
     // Verify additional headers
-    test("label mapping - 3 correct", () => expect(phoneList.labelMapping[data[0][3]], 3));
-    test("label mapping - 4 correct", () => expect(phoneList.labelMapping[data[0][4]], 4));
+    test("label mapping - 3 correct", () => expect(phoneList.labelMap[data[0][3]], 3));
+    test("label mapping - 4 correct", () => expect(phoneList.labelMap[data[0][4]], 4));
   });
 
   ///
@@ -118,9 +118,9 @@ void main() {
     // Verify that our counter has incremented.
     test("no header present", () => expect(phoneList.headerPresent, false));
     test("list not empty", () => expect(phoneList.isNotEmpty(), true));
-    test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
-    test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
-    test("label mapping - email match", () => expect(phoneList.labelMapping["email"], 2));
+    test("label mapping - name match", () => expect(phoneList.labelMap["name"], 0));
+    test("label mapping - phone match", () => expect(phoneList.labelMap["phone"], 1));
+    test("label mapping - email match", () => expect(phoneList.labelMap["email"], 2));
   });
 
   // group('PhoneList Build from data with poor formatting', () {

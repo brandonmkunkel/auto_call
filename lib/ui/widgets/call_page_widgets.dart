@@ -1,25 +1,27 @@
+import 'package:auto_call/services/settings_manager.dart';
 import 'package:flutter/material.dart';
 
+import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/file_io.dart';
 import 'package:auto_call/pages/settings.dart';
 
 class SaveButton extends StatelessWidget {
   final FileManager fileManager;
-  SaveButton({this.fileManager});
+  final PhoneList phoneList;
+  SaveButton({@required this.fileManager, @required this.phoneList});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.save),
-      // iconSize: 40.0,
       onPressed: () async {
         bool acceptSave = await showDialog(barrierDismissible: false, context: context, child: SaveAlert());
 
         if (acceptSave) {
           // Find the Scaffold in the widget tree and use
           // it to show a SnackBar.
-          await fileManager.saveCallSession();
-          await fileManager.saveToOldCalls();
+          await fileManager.saveCallSession(phoneList);
+          await fileManager.saveToOldCalls(phoneList);
 
           // Show the snack
           SnackBar snackBar = SnackBar(
@@ -52,12 +54,12 @@ class CallCloseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.cancel),
-      // iconSize: 40.0,
       onPressed: () async {
         bool acceptClose = await showDialog(
             barrierDismissible: false, context: context, builder: (BuildContext context) => CloseAlert());
 
         if (acceptClose) {
+
 //          bool acceptSave = await showDialog(
 //              barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
 //
@@ -65,6 +67,7 @@ class CallCloseButton extends StatelessWidget {
 //            print("should be doing some saving");
 //          }
 
+          globalSettingManager.set("activeCallSession", false);
           Navigator.of(context).pop();
         }
       },

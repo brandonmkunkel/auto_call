@@ -57,80 +57,81 @@ class FileSelectorState extends State<FileSelectorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       resizeToAvoidBottomPadding: false,
       drawer: AppDrawer(),
-      appBar: new AppBar(
+      appBar: AppBar(
         title: const Text('File Selection'),
       ),
       body: Container(
         padding: const EdgeInsets.all(15.0),
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Card(
-                child: Container(
-              padding: EdgeInsets.all(15.0),
-              child: Column(
-                children: [
-                  Text("Selected File:", style: Theme.of(context).textTheme.headline6),
-                  Divider(),
-                  Builder(
-                    builder: (BuildContext context) => _loadingPath
-                        ? Center(child: SizedBox(height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
-                        : _paths != null
-                            ? Container(
-                                // child: Scrollbar(
-                                child: ListView.separated(
-                                  shrinkWrap: true,
-                                  itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    final bool isMultiPath = _paths != null && _paths.isNotEmpty;
-                                    final String name =
-                                        (isMultiPath ? _paths.map((e) => e.name).toList()[index] : _fileName ?? '...');
-                                    final String path = _paths.map((e) => e.path).toList()[index].toString();
+        child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Card(
+                    child: Container(
+                      padding: EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          Text(_paths != null ? "Selected File:" : "No File Selected:", style: Theme.of(context).textTheme.headline6),
+                          Divider(),
+                          Builder(
+                            builder: (BuildContext context) => _loadingPath
+                                ? Center(child: SizedBox(height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
+                                : _paths != null
+                                ? Container(
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final bool isMultiPath = _paths != null && _paths.isNotEmpty;
+                                  final String name =
+                                  (isMultiPath ? _paths.map((e) => e.name).toList()[index] : _fileName ?? '...');
+                                  final String path = _paths.map((e) => e.path).toList()[index].toString();
 
-                                    return ListTile(
-                                      title: Text('File Name: $name'),
-                                      subtitle: Text('Path: $path'),
-                                    );
-                                  },
-                                  separatorBuilder: (BuildContext context, int index) => const Divider(),
-                                ),
-                                // ),
-                              )
-                            : Center(child: Text("No file selected", style: Theme.of(context).textTheme.bodyText1)),
-                  ),
-                  Container(
-                      padding: EdgeInsets.all(5.0),
-                      alignment: Alignment.bottomRight,
-                      child: RaisedButton.icon(
-                        icon: Icon(Icons.upload_file),
-                        label: new Text("Reselect File", style: Theme.of(context).textTheme.headline6),
-                        color: Colors.red,
-                        onPressed: () => _openFileExplorer(),
-                      ))
-                ],
-              ),
-            )),
-            Card(
-                child: Container(
-              padding: EdgeInsets.all(15.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("Call Session Settings", style: Theme.of(context).textTheme.headline6),
-                  Divider(),
-                  Container(padding: EdgeInsets.all(15.0), child: Text("Coming soon!")),
-                  // ListTile(leading: Text("Title:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
-                  // ListTile(leading: Text("Stuff:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
-                  // ListTile(leading: Text("Stuff:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
-                  // ListTile(leading: Text("Stuff:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
-                ],
-              ),
-            )),
-          ],
+                                  return ListTile(
+                                    title: Text('File Name: $name'),
+                                    subtitle: Text('Path: $path'),
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) => const Divider(),
+                              ),
+                              // ),
+                            )
+                                : Center(child: Text("You cannot continue without selecting a file. Please select a file.", style: Theme.of(context).textTheme.bodyText1)),
+                          ),
+                          Container(
+                              padding: EdgeInsets.all(5.0),
+                              alignment: Alignment.bottomRight,
+                              child: RaisedButton.icon(
+                                icon: Icon(Icons.upload_file),
+                                label: Text(_paths != null ? "Reselect File" : "Select File", style: Theme.of(context).textTheme.headline6),
+                                color: Colors.red,
+                                onPressed: () => _openFileExplorer(),
+                              ))
+                        ],
+                      ),
+                    )),
+                Card(
+                    child: Container(
+                      padding: EdgeInsets.all(15.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Call Session Settings", style: Theme.of(context).textTheme.headline6),
+                          Divider(),
+                          Container(padding: EdgeInsets.all(15.0), child: Text("Coming soon!")),
+                          // ListTile(leading: Text("Title:"), title: TextFormField(autofocus: true, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: 'Title'),)),
+                          // ListTile(leading: Text("Stuff:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
+                          // ListTile(leading: Text("Stuff:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
+                          // ListTile(leading: Text("Stuff:"), title: TextFormField(autofocus: false, decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10), border: OutlineInputBorder(), hintText: '..........'),)),
+                        ],
+                      ),
+                    )),
+              ],
+            )
         ),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.,
@@ -139,15 +140,11 @@ class FileSelectorState extends State<FileSelectorPage> {
           : FloatingActionButton.extended(
               heroTag: "accept_file",
               icon: Icon(Icons.check),
-              label: new Text("Continue", style: Theme.of(context).textTheme.headline6),
+              label: Text("Continue", style: Theme.of(context).textTheme.headline6),
               backgroundColor: Theme.of(context).accentColor,
               onPressed: () async {
-                if (_paths != null) {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => CallSessionPage(fileManager: FileManager(_paths[0].path))));
-                } else {
-                  showNoFileError(context);
-                }
               }),
     );
   }

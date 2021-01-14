@@ -12,7 +12,7 @@ class ScrollableTermsConditions extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(5),
               color: Colors.grey,
-              child: new FutureBuilder(
+              child: FutureBuilder(
                   future: DefaultAssetBundle.of(context).loadString("assets/text/terms_conditions.txt"),
                   builder: (context, snapshot) {
                     return Container(

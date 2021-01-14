@@ -114,7 +114,7 @@ class SettingManager {
   bool isPremium() => prefs.getBool("isPremium") ?? false;
   bool isEnterprise() => prefs.getBool("isEnterprise") ?? false;
 
-  dynamic getSetting(String key) {
+  dynamic get(String key) {
     if (!settings.containsKey(key)) {
       print("SettingManager.getSetting() can't access setting named '$key'");
     }
@@ -129,7 +129,7 @@ class SettingManager {
     }
   }
 
-  void setSetting(String key, dynamic value) async {
+  void set(String key, dynamic value) async {
     if (!settings.containsKey(key)) {
       ArgumentError("SettingManager.setSetting() can't access setting named '$key'");
     }

@@ -23,9 +23,9 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -98,7 +98,7 @@ class SettingsPageState extends State<SettingsPage> {
               value: setting.value,
               onChanged: (bool value) {
                 setState(() {
-                  manager.setSetting(key, value);
+                  manager.set(key, value);
                 });
               },
             ),
@@ -125,7 +125,7 @@ class SettingsPageState extends State<SettingsPage> {
                   ? (bool) {}
                   : (bool value) {
                       setState(() {
-                        manager.setSetting(key, value);
+                        manager.set(key, value);
 
                         if (key == "darkMode") {
                           Provider.of<ThemeProvider>(context, listen: false).setTheme(value);

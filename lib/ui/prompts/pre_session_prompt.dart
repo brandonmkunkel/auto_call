@@ -2,11 +2,13 @@ import 'package:auto_call/services/settings_manager.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/phone_list.dart';
 
 class PreSessionPrompt extends StatefulWidget {
   final FileManager fileManager;
+  final PhoneList phoneList;
 
-  PreSessionPrompt({Key key, @required this.fileManager}) : super(key: key);
+  PreSessionPrompt({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
 
   @override
   PreSessionPromptState createState() => new PreSessionPromptState();
@@ -17,7 +19,7 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
 
   @override
   void initState() {
-    columns = List(widget.fileManager.phoneList.additionalLabels.length);
+    columns = List(widget.phoneList.additionalLabels.length);
     super.initState();
   }
 
@@ -28,7 +30,7 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    bool editColumns = globalSettingManager.isPremium() ? globalSettingManager.getSetting("edit_columns") : false;
+    bool editColumns = globalSettingManager.isPremium() ? globalSettingManager.get("edit_columns") : false;
 
     return Container(
         decoration: BoxDecoration(color: Theme.of(context).backgroundColor.withOpacity(0.9)),
@@ -54,7 +56,7 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
                             onChanged: (bool value) {
                               columns[idx] = value;
                             }),
-                        title: Text(widget.fileManager.phoneList.additionalLabels[idx]),
+                        title: Text(widget.phoneList.additionalLabels[idx]),
                       );
                     }),
                     Align(

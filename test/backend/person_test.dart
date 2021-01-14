@@ -16,11 +16,13 @@ void main() {
   // });
 
   group('Person constructor default', () {
+    int id = 0;
     String name = "spongebob squarepants";
     String number = "8007766437";
 
-    Person person = Person(name, number);
+    Person person = Person(id, name, number);
 
+    test("id is correct", () => expect(person.id, id));
     test("name is correct", () => expect(person.name, name));
     test("number is correct", () => expect(person.phone, number));
     test("email is blank", () => expect(person.email, ""));
@@ -30,13 +32,15 @@ void main() {
   });
 
   group('Person constructor default', () {
+    int id = 0;
     String name = "spongebob squarepants";
     String number = "8007766437";
     String email = "pineapple@bikini_bottom.com";
 
-    Person person = Person(name, number, email: email);
+    Person person = Person(id, name, number, email: email);
 
     // Verify that our counter has incremented.
+    test("id is correct", () => expect(person.id, id));
     test("name is correct", () => expect(person.name, name));
     test("number is correct", () => expect(person.phone, number));
     test("email is blank", () => expect(person.email, email));
@@ -45,6 +49,7 @@ void main() {
   });
 
   group('Person constructor with optional data', () {
+    int id = 0;
     String name = "spongebob squarepants";
     String number = "8007766437";
     String email = "pineapple@bikini_bottom.com";
@@ -53,7 +58,9 @@ void main() {
     bool called = false;
     List additionalData = ["12341234", "USA"];
 
-    Person person = Person(name,
+    Person person = Person(
+        id,
+        name,
         number,
         email: email,
         note: note,
@@ -63,6 +70,7 @@ void main() {
     );
 
     // Verify that our counter has incremented.
+    test("id is correct", () => expect(person.id, id));
     test("name is correct", () => expect(person.name, name));
     test("phone is correct", () => expect(person.phone, number));
     test("email is correct", () => expect(person.email, email));

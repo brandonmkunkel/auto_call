@@ -10,27 +10,9 @@ import 'dart:io';
 
 import 'package:auto_call/services/phone_list.dart';
 
-///
-/// General Async function for reading files
-///
-//Future<FileManager> readFileAsync(String path) async {
-//  FileManager fileManager = FileManager(path);
-//  await fileManager.readFile();
-//  return fileManager;
-//}
 
 ///
-/// FileIOWrapper is a class that wraps function pointers
-///
-class FileIOWrapper {
-  const FileIOWrapper(this.read, this.save);
-
-  final Future<List<List<dynamic>>> Function(String) read;
-  final void Function(String, List<List<dynamic>>) save;
-}
-
-///
-/// CSV FILES
+/// Raw text
 ///
 List<List<dynamic>> readTextAsCSV(String data) {
   return const CsvToListConverter().convert(data);
@@ -40,6 +22,9 @@ String saveTextAsCSV(List<List<dynamic>> data) {
   return const ListToCsvConverter().convert(data);
 }
 
+///
+/// CSV FILES
+///
 class CSVWrapper {
   Future<List<List<dynamic>>> read(String path) async {
     final input = File(path).openRead().transform(utf8.decoder);
@@ -105,7 +90,6 @@ class FileManager {
   String fileName;
   String ext;
   String formattedTime;
-  PhoneList phoneList;
 
   FileManager(String path) {
     this.path = path;
@@ -113,6 +97,10 @@ class FileManager {
     this.fileName = getFileName(path);
     this.ext = getExtension(path);
     this.formattedTime = getFormattedTime();
+
+    if (!this.checkValidExtension()) {
+      print("Not a valid file type");
+    }
   }
 
   // Check to see if the given file is one of the approved file types
@@ -120,31 +108,23 @@ class FileManager {
 
   // Read the file from the stored path
   Future<PhoneList> readFile() async {
-    if (!checkValidExtension()) {
-      print("Not a valid file type");
-    }
-
-    if (this.phoneList == null) {
-      // Use async loading of the file
-      this.phoneList = PhoneList.fromData(await registeredInterfaces[ext].read(path));
-    }
-
-    return this.phoneList;
+    print("readFile");
+    return PhoneList.fromData(await registeredInterfaces[ext].read(path));
   }
 
   // Save the file to the same location but under a new name
-  Future<void> saveCallSession() async {
-    await _saveFile(updatedFilePath(path), this.phoneList.export());
+  Future<void> saveCallSession(PhoneList phoneList) async {
+    await _saveFile(updatedFilePath(path), phoneList.export());
   }
 
-  Future<void> saveToOldCalls() async {
+  Future<void> saveToOldCalls(PhoneList phoneList) async {
     String oldCallsDir = await oldCallsDirectory();
 
     // Check to see if this file is already stored as an old call
     if (this.directory != oldCallsDir) {
       // Create the path for the file to be saved in /old_calls
       String oldCallsPath = oldCallsDir + oldCallsFileName(path, date: formattedTime);
-      await _saveFile(oldCallsPath, this.phoneList.export());
+      await _saveFile(oldCallsPath, phoneList.export());
     }
   }
 
@@ -205,7 +185,7 @@ class FileManager {
 
     // Create the directory
     if (!await oldCallsDir.exists()) {
-      oldCallsDir.create();
+      oldCallsDir.create(recursive: true);
     }
     return oldCallsDir.path;
   }

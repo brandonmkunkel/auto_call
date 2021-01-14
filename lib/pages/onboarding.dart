@@ -17,13 +17,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   // Custom getter for pulling from the shared preferences cache
-  bool get agreedToTerms => globalSettingManager.getSetting("agreedToTerms");
+  bool get agreedToTerms => globalSettingManager.get("agreedToTerms");
 
   void _onIntroEnd(context) {
     // Verify that the user has indeed agreed to the user's terms and conditions
     if (this.agreedToTerms) {
       // Log that the User has completed onboarding and accepting terms and conditions
-      globalSettingManager.setSetting("userOnboarded", true);
+      globalSettingManager.set("userOnboarded", true);
 
       // Go to the home page (replacing this page)
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
@@ -103,7 +103,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       onChanged: (value) {
                         setState(() {
                           // Store the agreement to the terms and conditions within the app
-                          globalSettingManager.setSetting("agreedToTerms", value);
+                          globalSettingManager.set("agreedToTerms", value);
                         });
                       })
                 ],

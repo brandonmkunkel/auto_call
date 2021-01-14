@@ -44,6 +44,7 @@ dependencies:
   charts_flutter:
 
   # Phone calls
+  table_sticky_headers:
   url_launcher:
   flutter_phone_state: ^0.5.9
   flutter_phone_direct_caller : ^1.0.1

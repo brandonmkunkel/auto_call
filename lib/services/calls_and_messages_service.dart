@@ -13,7 +13,9 @@ class PhoneManager {
 
   /// Two touch call requires the user to complete the call
   static void twoTouchCall(String phoneNumber) async {
+    print("two touch call start");
     FlutterPhoneState.startPhoneCall(phoneNumber);
+    print("two touch call start");
   }
 
   /// Call interface which checks for oneTouch call option
@@ -28,36 +30,36 @@ class PhoneManager {
     }
   }
 
-  Future<void> waitForCallCompletion(String phoneNumber) async {
-//  Future.wait(
-//      Future.value(phoneCall.done)
-//  );
-//  List<PhoneCallEvent> phoneEvents = _accumulate(FlutterPhoneState.phoneCallEvents);
-//  List events = Map.fromEntries(phoneEvents.reversed.map((PhoneCallEvent event) {
-//    return MapEntry(event.call.id, event.call);
-//  })).values.where((c) => c.isComplete).toList();
-//
-//  print(events);
+  // Future<void> waitForCallCompletion(String phoneNumber) async {
+  //  Future.wait(
+  //      Future.value(phoneCall.done)
+  //  );
+  //  List<PhoneCallEvent> phoneEvents = _accumulate(FlutterPhoneState.phoneCallEvents);
+  //  List events = Map.fromEntries(phoneEvents.reversed.map((PhoneCallEvent event) {
+  //    return MapEntry(event.call.id, event.call);
+  //  })).values.where((c) => c.isComplete).toList();
+  //
+  //  print(events);
+  //
+  //   // for (final call in FlutterPhoneState.activeCalls) {}
+  //
+  //  FutureBuilder<PhoneCall>(
+  //    builder: (context, snap) {
+  //      if (snap.hasData && snap.data?.isComplete == true) {
+  //        return Text("${phoneCall.duration?.inSeconds ?? '?'}s");
+  //      } else {
+  //        return CircularProgressIndicator();
+  //      }
+  //    },
+  //    future: ,
+  //  ));
+  // }
 
-    for (final call in FlutterPhoneState.activeCalls) {}
-
-//  FutureBuilder<PhoneCall>(
-//    builder: (context, snap) {
-//      if (snap.hasData && snap.data?.isComplete == true) {
-//        return Text("${phoneCall.duration?.inSeconds ?? '?'}s");
-//      } else {
-//        return CircularProgressIndicator();
-//      }
-//    },
-//    future: ,
-//  ));
-  }
-
-  List<R> _accumulate<R>(Stream<R> input) {
-    final items = <R>[];
-    input.forEach((item) {
-      if (item != null) items.add(item);
-    });
-    return items;
-  }
+  // List<R> _accumulate<R>(Stream<R> input) {
+  //   final items = <R>[];
+  //   input.forEach((item) {
+  //     if (item != null) items.add(item);
+  //   });
+  //   return items;
+  // }
 }

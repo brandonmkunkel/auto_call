@@ -21,11 +21,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //80% of screen width
-    double cWidth = MediaQuery.of(context).size.width * 0.9;
-    double cHeight = MediaQuery.of(context).size.width * 0.9;
-    double smallestDim = cWidth < cHeight ? cWidth : cHeight;
-
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(

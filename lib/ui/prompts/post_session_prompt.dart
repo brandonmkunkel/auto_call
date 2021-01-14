@@ -1,11 +1,15 @@
+import 'package:auto_call/services/phone_list.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/services/settings_manager.dart';
 
 class PostSessionPrompt extends StatefulWidget {
   final FileManager fileManager;
+  final PhoneList phoneList;
 
-  PostSessionPrompt({Key key, @required this.fileManager}) : super(key: key);
+  PostSessionPrompt({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
 
   @override
   PostSessionPromptState createState() => new PostSessionPromptState();
@@ -44,12 +48,8 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: RaisedButton(child: Text("Done"), onPressed: () {
-//                        widget.fileManager.phoneList.iterator = 0;
-//                        widget.fileManager.phoneList.people.forEach((person) {
-//                          person.called = false;
-//                        });
+                        globalSettingManager.set("activeCallSession", false);
 
-                        // Pop the Dialog off of the screen
                         Navigator.of(context).pop();
                       }),
                     )

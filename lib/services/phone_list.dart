@@ -14,10 +14,11 @@ enum Result {
 }
 
 class Person {
-  bool called = false;
+  int id = 0;
   String name = "";
   String phone = "";
   String email = "";
+  bool called = false;
   String note = "";
   String result = "";
   List<String> additionalData = [];
@@ -37,13 +38,14 @@ class Person {
     "Success": Result.Success,
   };
 
-  Person(String name, String phone,
+  Person(int id, String name, String phone,
       {String email = "",
       String result = "",
       String note = "",
       bool called = false,
       List<dynamic> additionalLabels,
       List<dynamic> additionalData}) {
+    this.id = id;
     this.name = name;
     this.phone = phone;
     this.email = email;
@@ -85,32 +87,25 @@ class Person {
 }
 
 class PhoneList {
-  List<List<dynamic>> data = [];
   bool headerPresent = false;
-  Map<String, int> labelMapping = new Map();
+  Map<String, int> labelMap = new Map();
   List<String> additionalLabels = [];
   List<Person> people = [];
   int iterator = 0;
   int firstUncalled = 0;
   int lastUncalled = 0;
 
+  FileManager manager;
+
   ///
   /// Constructors
   ///
-  PhoneList(String path) {
-    processFile(path);
-  }
-
-  PhoneList.fromFile(String path) {
-    processFile(path);
-  }
-
-  PhoneList.fromString(String rawText) {
-    processData(readTextAsCSV(rawText));
-  }
-
   PhoneList.fromData(List<List<dynamic>> inputData) {
     processData(inputData);
+  }
+
+  void registerFileManager(FileManager _manager) {
+    manager = _manager;
   }
 
   ///
@@ -122,28 +117,29 @@ class PhoneList {
   bool isNotEmpty() => people.isNotEmpty;
 
   List<List> export() {
-    List<List> headers = [Person.orderedLabels()[0] + additionalLabels + Person.orderedLabels()[1]];
-    return headers + List<List>.generate(people.length, (int idx) => people[idx].encode());
+    return [this.allHeaderLabels()] + List<List>.generate(people.length, (int idx) => people[idx].encode());
+  }
+
+  List<String> allHeaderLabels() {
+    return Person.orderedLabels()[0] + additionalLabels + Person.orderedLabels()[1];
+  }
+
+  List<String> chosenHeaderLabels() {
+    return [];
   }
 
   ///
   /// Methods for processing information from data that was read
   ///
-  void processFile(String path) async {
-    processData(await CSVWrapper().read(path));
-  }
-
   void processData(List<List<dynamic>> inputData) {
-    data = inputData;
-
-    if (data.isNotEmpty) {
-      findHeaders();
-      buildPeople();
+    if (inputData.isNotEmpty) {
+      findHeaders(inputData);
+      buildPeople(inputData);
     }
   }
 
-  void findHeaders() {
-    List<dynamic> header = data[0];
+  void findHeaders(List<List<dynamic>> inputData) {
+    List<dynamic> header = inputData[0];
     BestMatch match;
     String label;
 
@@ -153,16 +149,16 @@ class PhoneList {
       match = StringSimilarity.findBestMatch(label, Person.labels);
 
       if (match.bestMatch.rating > 0.75) {
-        labelMapping[label] = match.bestMatchIndex;
+        labelMap[label] = match.bestMatchIndex;
       } else {
         // If we have not found any matched, register this inside or label map
-        labelMapping[label] = idx;
+        labelMap[label] = idx;
         additionalLabels.add(label);
       }
     }
 
     // If the Label Map has both of the required "name" and "phone" then say the header is valid
-    if (labelMapping.containsKey(Person.requiredLabels[0]) && labelMapping.containsKey(Person.requiredLabels[1])) {
+    if (labelMap.containsKey(Person.requiredLabels[0]) && labelMap.containsKey(Person.requiredLabels[1])) {
       headerPresent = true;
     } else {
       // If no header was found directly via the search, then try to find the entry labels manually
@@ -170,33 +166,35 @@ class PhoneList {
     }
   }
 
-  void buildPeople() {
+  void buildPeople(List<List<dynamic>> inputData) {
     // If a header was determined to people found, then select the correct entries from the
     // loaded csv
-    List<List<dynamic>> rows = headerPresent ? data.sublist(1) : data;
+    List<List<dynamic>> rows = headerPresent ? inputData.sublist(1) : inputData;
 
     // By now we assume correct evaluation of the labels/matching indices to now do a proper lookup
     // within each `row`
 
-    for (List<dynamic> entry in rows) {
-      if (MagicRegex.isName(entry[labelMapping["name"]].toString()) &&
-          MagicRegex.isNumber(entry[labelMapping["phone"]].toString())) {
-        people.add(Person(
-          entry[labelMapping["name"]].trim(),
-          entry[labelMapping["phone"]].toString().trim(),
-          email: labelMapping.containsKey("email") ? entry[labelMapping["email"]].trim() : "",
-          note: labelMapping.containsKey("note") ? entry[labelMapping["note"]].trim() : "",
-          result: labelMapping.containsKey("result") ? entry[labelMapping["result"]].trim() : "",
-          called: labelMapping.containsKey("called")
-              ? entry[labelMapping["called"]].toString().toLowerCase().trim() == "true"
-              : false,
-          additionalLabels: List.generate(
-              additionalLabels.length, (int index) => labelMapping[additionalLabels[index]].toString().trim()),
-          additionalData: List.generate(
-              additionalLabels.length, (int index) => entry[labelMapping[additionalLabels[index]]].toString().trim()),
-        ));
-      }
-    }
+    rows.asMap()
+        .forEach((id, entry) {
+          if (MagicRegex.isName(entry[labelMap["name"]].toString()) &&
+              MagicRegex.isNumber(entry[labelMap["phone"]].toString())) {
+                people.add(Person(
+                  id,
+                  entry[labelMap["name"]].trim(),
+                  entry[labelMap["phone"]].toString().trim(),
+                  email: labelMap.containsKey("email") ? entry[labelMap["email"]].trim() : "",
+                  note: labelMap.containsKey("note") ? entry[labelMap["note"]].trim() : "",
+                  result: labelMap.containsKey("result") ? entry[labelMap["result"]].trim() : "",
+                  called: labelMap.containsKey("called")
+                      ? entry[labelMap["called"]].toString().toLowerCase().trim() == "true"
+                      : false,
+                  additionalLabels: List.generate(additionalLabels.length,
+                      (int index) => labelMap[additionalLabels[index]].toString().trim()),
+                  additionalData: List.generate(additionalLabels.length,
+                      (int index) => entry[labelMap[additionalLabels[index]]].toString().trim()),
+                ));
+          }
+        });
   }
 
   ///
@@ -216,21 +214,21 @@ class PhoneList {
       // Check to see if we found a name already, and check if we haven't found one
       if (!nameFound) {
         nameFound = checkName(text.toString());
-        if (nameFound) labelMapping["name"] = index;
+        if (nameFound) labelMap["name"] = index;
         matched = nameFound;
       }
 
       // Check to see if we found a phone number already, and check if we haven't found one
       if (!phoneFound && !matched) {
         phoneFound = checkPhoneNumber(text.toString());
-        if (phoneFound) labelMapping["phone"] = index;
+        if (phoneFound) labelMap["phone"] = index;
         matched = phoneFound;
       }
 
       // Check to see if we found as email already, and check if we haven't found one
       if (!emailFound && !matched) {
         emailFound = checkEmail(text.toString());
-        if (emailFound) labelMapping["email"] = index;
+        if (emailFound) labelMap["email"] = index;
         matched = emailFound;
       }
 
@@ -250,7 +248,7 @@ class PhoneList {
   List getAdditionalColumns() {
     return List.generate(people.length, (int i) {
       return List.generate(additionalLabels.length, (int idx) {
-        return people[i].additionalData[labelMapping[additionalLabels[idx]]];
+        return people[i].additionalData[labelMap[additionalLabels[idx]]];
       });
     });
   }
@@ -267,8 +265,10 @@ class PhoneList {
   }
 
   void advance({bool forward = true}) {
-    if (forward) advanceIterator();
-    else reverseIterator();
+    if (forward)
+      advanceIterator();
+    else
+      reverseIterator();
   }
 
   void advanceIterator() {

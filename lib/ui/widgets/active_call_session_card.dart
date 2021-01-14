@@ -12,7 +12,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
 
   @override
   Widget build(BuildContext context) {
-    bool activeCallSession = globalSettingManager.getSetting("activeCallSession");
+    bool activeCallSession = globalSettingManager.get("activeCallSession");
 
     return !activeCallSession
         ? deletedCallSession
@@ -50,7 +50,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                         onPressed: () {
                           setState(() {
                             deletedCallSession = true;
-                            globalSettingManager.setSetting("activeCallSession", false);
+                            globalSettingManager.set("activeCallSession", false);
                           });
                         }
                       ),

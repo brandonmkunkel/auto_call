@@ -27,7 +27,7 @@ class AutoCall extends StatefulWidget {
 class _AutoCall extends State<AutoCall> {
   // Dynamic Theme
   ThemeProvider themeChangeProvider =
-      new ThemeProvider(globalSettingManager.loaded ? globalSettingManager.getSetting("darkMode") : false);
+      ThemeProvider(globalSettingManager.loaded ? globalSettingManager.get("darkMode") : false);
 
   // Firebase Analytics observers
   static FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -43,7 +43,7 @@ class _AutoCall extends State<AutoCall> {
           theme: Provider.of<ThemeProvider>(context).getTheme(),
 
           // Set apps first page by checking whether or not the user has been onboarded
-          home: globalSettingManager.getSetting("userOnboarded") ? HomePage() : OnboardingPage() ,
+          home: globalSettingManager.get("userOnboarded") ? HomePage() : OnboardingPage() ,
 
           // Routes
           routes: {
