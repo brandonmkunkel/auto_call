@@ -23,9 +23,6 @@ class AnalyticsState extends State<AnalyticsPage> {
             padding: EdgeInsets.all(15.0),
             child: SingleChildScrollView(
             child: Column(children: [
-
-
-
             ],)))
     );
   }

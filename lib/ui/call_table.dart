@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
@@ -28,8 +28,6 @@ class CallTable extends StatefulWidget {
 }
 
 class _CallTableState extends State<CallTable> {
-  bool showCallNotes = false;
-  bool additionalColumns = false;
   bool editColumns = false;
   List<bool> acceptedColumns = [];
   double rowSize = kMinInteractiveDimension;
@@ -37,6 +35,9 @@ class _CallTableState extends State<CallTable> {
 
   // Getter for the FileManager
   FileManager get fileManager => widget.fileManager;
+
+  bool get showCallNotes => globalSettingManager.get("showNotes");
+  bool get additionalColumns => globalSettingManager.isPremium() ? globalSettingManager.get("additionalColumns") : false;
 
   @override
   void initState() {
@@ -78,10 +79,6 @@ class _CallTableState extends State<CallTable> {
 
   @override
   Widget build(BuildContext context) {
-    // Get Additional Settings for the call table from the SettingsManager
-    showCallNotes = globalSettingManager.get("showNotes");
-    additionalColumns = globalSettingManager.isPremium() ? globalSettingManager.get("additionalColumns") : false;
-
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       Expanded(
           child: SingleChildScrollView(
@@ -99,9 +96,9 @@ class _CallTableState extends State<CallTable> {
                       columnSpacing: showCallNotes || additionalColumns ? 10.0 : 30.0,
                       dataRowHeight: rowSize,
                       columns: [
-                            DataColumn(label: HeaderText("#"), numeric: true),
-                            DataColumn(label: HeaderText("Name"), numeric: false),
-                            DataColumn(label: HeaderText("Phone"), numeric: false),
+                            const DataColumn(label: const HeaderText("#"), numeric: true),
+                            const DataColumn(label: const HeaderText("Name"), numeric: false),
+                            const DataColumn(label: const HeaderText("Phone"), numeric: false),
                           ] +
 
                           // Use additionalColumns to add user columns
@@ -115,18 +112,18 @@ class _CallTableState extends State<CallTable> {
                           // Use bareMinimum to hide the call Note and Result
                           (showCallNotes
                               ? [
-                                  DataColumn(label: HeaderText("Note"), numeric: false),
-                                  DataColumn(label: HeaderText("Result"), numeric: false),
+                                  const DataColumn(label: const HeaderText("Note"), numeric: false),
+                                  const DataColumn(label: const HeaderText("Result"), numeric: false),
                                 ]
                               : []),
                       rows: List<DataRow>.generate(widget.phoneList.people.length, (i) => rowBuilder(context, i)),
                     ),
                   ])),
               Container(
-                  height: rowSize,
-                  alignment: Alignment.center,
-                  child: Text("End of Phone List", textAlign: TextAlign.center)),
-              Container(height: rowSize * 1.5)
+                  padding: EdgeInsets.only(top: 0.5 * rowSize),
+                  height: rowSize * 2.5,
+                  alignment: Alignment.topCenter,
+                  child: const Text("End of Phone List", textAlign: TextAlign.center)),
             ]),
       )),
     ]);
@@ -196,7 +193,7 @@ class _CallTableState extends State<CallTable> {
                             widget.phoneList.people[i].note = text;
                             focusNodes[i].unfocus();
                           },
-                          decoration: InputDecoration(border: InputBorder.none, hintText: '..........'),
+                          decoration: const InputDecoration(border: InputBorder.none, hintText: '..........'),
                         ),
                         onTap: () => setStateIterator(i)),
                     DataCell(
@@ -211,7 +208,7 @@ class _CallTableState extends State<CallTable> {
                                 widget.phoneList.people[i].result = outcome;
                               });
                             },
-                            hint: Text("Result"),
+                            hint: const Text("Result"),
                             isDense: true,
                             isExpanded: false,
                             items: Person.resultMap.keys

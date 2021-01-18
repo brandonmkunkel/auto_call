@@ -11,7 +11,7 @@ import 'pages/onboarding.dart';
 import 'pages/login.dart';
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
-import 'pages/call_session.dart';
+import 'pages/call_page.dart';
 import 'pages/past_sessions.dart';
 import 'pages/legal.dart';
 import 'pages/settings.dart';

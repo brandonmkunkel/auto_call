@@ -48,7 +48,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
       imagePadding: EdgeInsets.zero,
     );
 
-    return IntroductionScreen(
+    return Scaffold(
+      primary: true,
+        body: IntroductionScreen(
       key: introKey,
       pages: [
         PageViewModel(
@@ -128,6 +130,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
       ),
-    );
+    ));
   }
 }

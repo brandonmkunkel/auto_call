@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
@@ -27,8 +27,6 @@ class NewCallTable extends StatefulWidget {
 }
 
 class _NewCallTableState extends State<NewCallTable> {
-  bool showCallNotes = false;
-  bool additionalColumns = false;
   bool editColumns = false;
   List<bool> acceptedColumns = [];
   double rowSize = kMinInteractiveDimension;
@@ -37,6 +35,9 @@ class _NewCallTableState extends State<NewCallTable> {
 
   // Getter for the FileManager
   FileManager get fileManager => widget.manager;
+
+  bool get showCallNotes => globalSettingManager.get("showNotes");
+  bool get additionalColumns => globalSettingManager.isPremium() ? globalSettingManager.get("additionalColumns") : false;
 
   @override
   void initState() {
@@ -99,10 +100,6 @@ class _NewCallTableState extends State<NewCallTable> {
 
   @override
   Widget build(BuildContext context) {
-    // Get Additional Settings for the call table from the SettingsManager
-    showCallNotes = globalSettingManager.get("showNotes");
-    additionalColumns = globalSettingManager.isPremium() ? globalSettingManager.get("additionalColumns") : false;
-
     return StickyHeadersTable(
       columnsLength: columns().length,
       // cellAlignments: CellAlignments.variableColumnAlignment,

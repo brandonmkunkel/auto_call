@@ -1,7 +1,7 @@
 import 'package:string_similarity/string_similarity.dart';
 
 import 'package:auto_call/services/regex.dart';
-import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/file_manager.dart';
 
 enum Result {
   Empty,
@@ -95,38 +95,46 @@ class PhoneList {
   int firstUncalled = 0;
   int lastUncalled = 0;
 
-  FileManager manager;
-
   ///
   /// Constructors
   ///
-  PhoneList.fromData(List<List<dynamic>> inputData) {
-    processData(inputData);
-  }
+  ///
 
-  void registerFileManager(FileManager _manager) {
-    manager = _manager;
+  /// Static asynchronous constructor
+  static Future<PhoneList> fromData(List<List<dynamic>> inputData) async {
+    PhoneList phoneList = PhoneList();
+    phoneList.processData(inputData);
+    return phoneList;
   }
 
   ///
   /// Methods for interacting with the final class
   ///
+  int get length => people.length;
+
   Person operator [](int idx) => people[idx];
 
   /// Check if the phone List is empty
   bool isNotEmpty() => people.isNotEmpty;
 
-  List<List> export() {
+  /// Export the whole PhoneLast as a List of Lists
+  List<List<dynamic>> export() {
     return [this.allHeaderLabels()] + List<List>.generate(people.length, (int idx) => people[idx].encode());
   }
 
+  /// Return a string of all Header label strings
   List<String> allHeaderLabels() {
     return Person.orderedLabels()[0] + additionalLabels + Person.orderedLabels()[1];
   }
 
+  /// Return a string of all optionally chosen header labels
   List<String> chosenHeaderLabels() {
     return [];
   }
+  //
+  // String toString() {
+  //   return export().toString();
+  // }
 
   ///
   /// Methods for processing information from data that was read
@@ -138,6 +146,7 @@ class PhoneList {
     }
   }
 
+  /// Determine or resolve what headers are present within the data
   void findHeaders(List<List<dynamic>> inputData) {
     List<dynamic> header = inputData[0];
     BestMatch match;
@@ -213,21 +222,21 @@ class PhoneList {
 
       // Check to see if we found a name already, and check if we haven't found one
       if (!nameFound) {
-        nameFound = checkName(text.toString());
+        nameFound = MagicRegex.isName(text.toString());
         if (nameFound) labelMap["name"] = index;
         matched = nameFound;
       }
 
       // Check to see if we found a phone number already, and check if we haven't found one
       if (!phoneFound && !matched) {
-        phoneFound = checkPhoneNumber(text.toString());
+        phoneFound = MagicRegex.isNumber(text.toString());
         if (phoneFound) labelMap["phone"] = index;
         matched = phoneFound;
       }
 
       // Check to see if we found as email already, and check if we haven't found one
       if (!emailFound && !matched) {
-        emailFound = checkEmail(text.toString());
+        emailFound = MagicRegex.isEmail(text.toString());
         if (emailFound) labelMap["email"] = index;
         matched = emailFound;
       }
@@ -239,12 +248,6 @@ class PhoneList {
   ///
   /// Checking functions that use Regex for resolving headers from data
   ///
-  bool checkName(String text) => MagicRegex.isName(text);
-
-  bool checkPhoneNumber(String text) => MagicRegex.isNumber(text);
-
-  bool checkEmail(String text) => MagicRegex.isEmail(text);
-
   List getAdditionalColumns() {
     return List.generate(people.length, (int i) {
       return List.generate(additionalLabels.length, (int idx) {
@@ -259,11 +262,13 @@ class PhoneList {
   /// Check if the call list is complete, which requires all persons to be called
   bool isComplete() => people?.every((Person person) => person.called == true) ?? false;
 
+  /// Find the iterator range of the uncalled persons within the list
   void checkRemainingCallRange() {
     firstUncalled = people.indexWhere((Person p) => !p.called);
     lastUncalled = people.lastIndexWhere((Person p) => !p.called);
   }
 
+  /// Advance the iterator either forward or backwards with bounds checking
   void advance({bool forward = true}) {
     if (forward)
       advanceIterator();

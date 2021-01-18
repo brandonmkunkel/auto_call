@@ -33,7 +33,7 @@ class AccountPageState extends State<AccountPage> {
         label: Text(accountChanged ? "Save Changes" : "Exit"),
         icon: Icon(accountChanged ? Icons.save : Icons.close_rounded),
         backgroundColor: accountChanged ? Colors.green : Colors.red,
-        onPressed: () {
+        onPressed: () async {
           if (accountChanged) {
 
           }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:auto_call/services/file_io.dart';
+import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/ui/drawer.dart';
-import 'package:auto_call/pages/call_session.dart';
+import 'package:auto_call/pages/call_page.dart';
 
 enum oldCallEnum { load, email, delete }
 
@@ -84,12 +84,8 @@ class PastSessionsState extends State<PastSessionsPage> {
         tooltip: 'Select option for the file',
         onSelected: (oldCallEnum _enum) async {
           if (_enum == oldCallEnum.load) {
-            Navigator.pushNamed(
-              context,
-              CallSessionPage.routeName,
-//              arguments: await readFileAsync(files[index].toString()),
-              arguments: FileManager(files[index].toString()),
-            );
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => CallSessionPage(fileManager: FileManager.fromFile(files[index].toString()))));
           } else if (_enum == oldCallEnum.email) {
             print("trying to email");
           } else if (_enum == oldCallEnum.delete) {

@@ -86,16 +86,11 @@ class FileManager {
     "xlsx": ExcelWrapper(),
   };
   String path;
-  String directory;
-  String fileName;
-  String ext;
   String formattedTime;
 
-  FileManager(String path) {
+  /// Construct a FileManager object based off a file path
+  FileManager.fromFile(String path) {
     this.path = path;
-    this.directory = getDirectory(path);
-    this.fileName = getFileName(path);
-    this.ext = getExtension(path);
     this.formattedTime = getFormattedTime();
 
     if (!this.checkValidExtension()) {
@@ -103,17 +98,29 @@ class FileManager {
     }
   }
 
-  // Check to see if the given file is one of the approved file types
-  bool checkValidExtension() => registeredInterfaces.containsKey(ext);
+  /// Returns file name of FileManager instance based on its path
+  String get fileName => getFileName(path);
 
-  // Read the file from the stored path
+  /// Returns directory of FileManager instance based on its path
+  String get directory => getDirectory(path);
+
+  /// Returns extension of FileManager instance based on its path
+  String get extension => getExtension(path);
+
+  /// Check to see if the given file is one of the approved file types
+  bool checkValidExtension() => registeredInterfaces.containsKey(extension);
+
+  ///
+  /// Futures based file interaction with instances of FileManager
+  ///
   Future<PhoneList> readFile() async {
-    print("readFile");
-    return PhoneList.fromData(await registeredInterfaces[ext].read(path));
+    // Read the file from the stored path
+    return await PhoneList.fromData(await registeredInterfaces[extension].read(path));
   }
 
-  // Save the file to the same location but under a new name
+
   Future<void> saveCallSession(PhoneList phoneList) async {
+    // Save the file to the same location but under a new name
     await _saveFile(updatedFilePath(path), phoneList.export());
   }
 
@@ -136,7 +143,7 @@ class FileManager {
         await Permission.storage.request();
       }
 
-      await registeredInterfaces[ext].save(path, data);
+      await registeredInterfaces[extension].save(path, data);
     } else {
       print("Not a valid file type");
     }
@@ -167,6 +174,7 @@ class FileManager {
   }
 
   static Future<String> userDirectory() async {
+    // Get the user Directory from the Path Provider lib
     Directory dir = await getExternalStorageDirectory();
     return dir.path;
   }
@@ -180,6 +188,7 @@ class FileManager {
   }
 
   static Future<String> oldCallsDirectory() async {
+    // Get the old calls directory from within the App's document directory
     Directory dir = await getApplicationDocumentsDirectory();
     Directory oldCallsDir = Directory(dir.path + "/old_calls/");
 
@@ -200,8 +209,7 @@ class FileManager {
 
   // Formatted time is used for saving into old call files and the global database
   static String getFormattedTime() {
-    DateTime now = DateTime.now();
-    return DateFormat('yyyy-MM-dd_kk-mm').format(now);
+    return DateFormat('yyyy-MM-dd_kk-mm').format(DateTime.now());
   }
 
   // Look through the old calls directory and look for saved old calls

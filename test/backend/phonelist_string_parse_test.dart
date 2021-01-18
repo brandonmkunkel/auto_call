@@ -18,7 +18,10 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList = PhoneList.fromData(data);
+    PhoneList phoneList;
+    PhoneList.fromData(data).then((PhoneList _phoneList) {
+      phoneList=_phoneList;
+    });
 
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
@@ -35,7 +38,10 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList = PhoneList.fromData(data);
+    PhoneList phoneList;
+    PhoneList.fromData(data).then((PhoneList _phoneList) {
+      phoneList=_phoneList;
+    });
 
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
@@ -69,7 +75,10 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList = PhoneList.fromData(data);
+    PhoneList phoneList;
+    PhoneList.fromData(data).then((PhoneList _phoneList) {
+      phoneList=_phoneList;
+    });
 
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
@@ -87,7 +96,10 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList = PhoneList.fromData(data);
+    PhoneList phoneList;
+    PhoneList.fromData(data).then((PhoneList _phoneList) {
+      phoneList=_phoneList;
+    });
 
     // Verify that our counter has incremented.
     test("header present", () => expect(phoneList.headerPresent, true));
@@ -113,7 +125,10 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList = PhoneList.fromData(data);
+    PhoneList phoneList;
+    PhoneList.fromData(data).then((PhoneList _phoneList) {
+      phoneList=_phoneList;
+    });
 
     // Verify that our counter has incremented.
     test("no header present", () => expect(phoneList.headerPresent, false));
