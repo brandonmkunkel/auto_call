@@ -128,8 +128,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                                   padding: EdgeInsets.all(5.0),
                                   alignment: Alignment.bottomRight,
                                   child: RaisedButton.icon(
-                                    icon: Icon(Icons.upload_file),
-                                    label: Text(_paths != null ? "Reselect File" : "Select File", style: Theme.of(context).textTheme.headline6),
+                                    icon: Icon(Icons.upload_file, color: Theme.of(context).primaryTextTheme.button.color),
+                                    label: Text(_paths != null ? "Reselect File" : "Select File", style: Theme.of(context).primaryTextTheme.button),
                                     color: Colors.red,
                                     onPressed: () => _openFileExplorer(),
                                   ))
@@ -161,7 +161,7 @@ class FileSelectorState extends State<FileSelectorPage> {
           : FloatingActionButton.extended(
               heroTag: "accept_file",
               icon: Icon(Icons.check),
-              label: Text("Continue", style: Theme.of(context).textTheme.headline6),
+              label: Text("Continue"),
               backgroundColor: Theme.of(context).accentColor,
               onPressed: () async {
                 // Navigator.of(context).pushReplacement(MaterialPageRoute(

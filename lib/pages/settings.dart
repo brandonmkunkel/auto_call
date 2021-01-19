@@ -19,8 +19,9 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   final SettingManager manager = globalSettingManager;
-  bool isPremium = false;
-
+  
+  bool get isPremium => manager.isPremium();
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,15 +57,15 @@ class SettingsPageState extends State<SettingsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
+              Icon(Icons.stars, color: isPremium ? Theme.of(context).accentColor : Colors.grey[500]),
               Text(
-                manager.isPremium() ? "Premium Settings" : "Available Only for Premium Accounts",
+                isPremium ? "Premium Settings" : "Available Only for Premium Accounts",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500],
+                    color: isPremium ? Theme.of(context).accentColor : Colors.grey[500],
                     fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
               ),
-              Icon(Icons.stars, color: manager.isPremium() ? Theme.of(context).accentColor : Colors.grey[500]),
+              Icon(Icons.stars, color: isPremium ? Theme.of(context).accentColor : Colors.grey[500]),
             ],
           ),
 
@@ -118,10 +119,10 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return ListTile(
             title: Text(settings.text,
-                style: TextStyle(color: !manager.isPremium() ? Colors.grey[500] : Theme.of(context).accentColor)),
+                style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
             trailing: Switch(
-              value: !manager.isPremium() ? false : settings.value,
-              onChanged: !manager.isPremium()
+              value: !isPremium ? false : settings.value,
+              onChanged: !isPremium
                   ? (bool) {}
                   : (bool value) {
                       setState(() {

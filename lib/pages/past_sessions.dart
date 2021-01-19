@@ -1,3 +1,4 @@
+import 'package:auto_call/pages/file_selector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
@@ -21,11 +22,6 @@ class PastSessionsState extends State<PastSessionsPage> {
 
   /// Whether multi select is on
   bool get multiSelect => selected.containsValue(true);
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +131,18 @@ class PastSessionsState extends State<PastSessionsPage> {
         : Container(
             padding: EdgeInsets.all(20.0),
             alignment: Alignment.center,
-            child: Text("No old call sessions found.", style: Theme.of(context).textTheme.subtitle1));
+            child: Column(
+              children: [
+                Text("No old call sessions found.", style: Theme.of(context).textTheme.subtitle1),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => FileSelectorPage()));
+                  },
+                  child: Text("Start a Call Session"),
+                )
+              ],
+            ),
+          );
   }
 
   Widget _popUpFile(BuildContext context, int index) {
