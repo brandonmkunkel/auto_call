@@ -18,9 +18,9 @@ class HeaderText extends StatelessWidget {
 class CalledText extends StatelessWidget {
   final String text;
   final bool called;
-  TextAlign align = TextAlign.left;
+  final TextAlign align;
 
-  CalledText({this.text, this.called, this.align});
+  const CalledText({@required this.text, @required this.called, this.align = TextAlign.left});
 
   @override
   Widget build(BuildContext context) {

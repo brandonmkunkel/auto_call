@@ -56,14 +56,6 @@ class _AutoCall extends State<AutoCall> {
             SettingsPage.routeName: (context) => SettingsPage(),
             LegalPage.routeName: (context) => LegalPage(),
           },
-          onGenerateRoute: (settings) {
-            // If you push the PassArguments route
-            if (settings.name == CallSessionPage.routeName) {
-              return MaterialPageRoute(builder: (context) => CallSessionPage(fileManager: settings.arguments));
-            } else {
-              return null;
-            }
-          },
           navigatorObservers: <NavigatorObserver>[observer],
         );
       }),

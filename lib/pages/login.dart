@@ -20,8 +20,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // Navigates to a new page
   void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => page),
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => page)
     );
   }
 

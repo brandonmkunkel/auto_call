@@ -18,28 +18,23 @@ class SaveButton extends StatelessWidget {
         bool acceptSave = await showDialog(barrierDismissible: false, context: context, child: SaveAlert());
 
         if (acceptSave) {
-          // Find the Scaffold in the widget tree and use
-          // it to show a SnackBar.
           await fileManager.saveCallSession(phoneList);
           await fileManager.saveToOldCalls(phoneList);
 
-          // Show the snack
-          SnackBar snackBar = SnackBar(
+          // Find the Scaffold in the widget tree and use it to show a SnackBar.
+          Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
             backgroundColor: Colors.grey[600],
             action: SnackBarAction(
               label: 'Undo',
               textColor: Colors.white,
               onPressed: () async {
-                // SDelete the files that were just saved
+                // Delete the files that were just saved
                 await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
                 await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
               },
             ),
-          );
-
-          // Show the snackbar
-          Scaffold.of(context).showSnackBar(snackBar);
+          ));
         }
       },
     );
@@ -59,10 +54,9 @@ class CallCloseButton extends StatelessWidget {
             barrierDismissible: false, context: context, builder: (BuildContext context) => CloseAlert());
 
         if (acceptClose) {
+         bool acceptSave = await showDialog(
+             barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
 
-//          bool acceptSave = await showDialog(
-//              barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
-//
 //          if (acceptSave) {
 //            print("should be doing some saving");
 //          }

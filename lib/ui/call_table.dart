@@ -36,8 +36,10 @@ class _CallTableState extends State<CallTable> {
   // Getter for the FileManager
   FileManager get fileManager => widget.fileManager;
 
+  // Getters for global settings
   bool get showCallNotes => globalSettingManager.get("showNotes");
-  bool get additionalColumns => globalSettingManager.isPremium() ? globalSettingManager.get("additionalColumns") : false;
+  bool get additionalColumns =>
+      globalSettingManager.isPremium() ? globalSettingManager.get("additionalColumns") : false;
 
   @override
   void initState() {
@@ -79,9 +81,8 @@ class _CallTableState extends State<CallTable> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      Expanded(
-          child: SingleChildScrollView(
+    return Scrollbar(
+      child: SingleChildScrollView(
         controller: widget.scrollController,
         scrollDirection: Axis.vertical,
         child: Column(
@@ -92,7 +93,7 @@ class _CallTableState extends State<CallTable> {
                   scrollDirection: Axis.horizontal,
                   child: Row(children: <Widget>[
                     DataTable(
-                      horizontalMargin: showCallNotes || additionalColumns ? 0.0 : 20.0,
+                      horizontalMargin: showCallNotes || additionalColumns ? 5.0 : 10.0,
                       columnSpacing: showCallNotes || additionalColumns ? 10.0 : 30.0,
                       dataRowHeight: rowSize,
                       columns: [
@@ -125,8 +126,8 @@ class _CallTableState extends State<CallTable> {
                   alignment: Alignment.topCenter,
                   child: const Text("End of Phone List", textAlign: TextAlign.center)),
             ]),
-      )),
-    ]);
+      ),
+    );
   }
 
   DataRow rowBuilder(BuildContext context, int i) {
@@ -135,7 +136,7 @@ class _CallTableState extends State<CallTable> {
         selected: i == widget.phoneList.iterator ? true : false,
         cells: [
               DataCell(
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
                     i == widget.phoneList.iterator
                         ? SizedBox(
                             width: 36.0,
@@ -156,7 +157,7 @@ class _CallTableState extends State<CallTable> {
                                     widget.phoneList.people[i].called = !widget.phoneList.people[i].called;
                                   });
                                 })),
-                    CalledText(text: (i + 1).toString(), called: widget.phoneList.people[i].called)
+                    CalledText(text: (i + 1).toString(), called: widget.phoneList.people[i].called),
                   ]),
                   onTap: () => setStateIterator(i)),
               DataCell(CalledText(text: widget.phoneList.people[i].name, called: widget.phoneList.people[i].called),
@@ -179,6 +180,7 @@ class _CallTableState extends State<CallTable> {
                 ? [
                     DataCell(
                         TextFormField(
+                          maxLines: 2,
                           controller: widget.textControllers[i],
                           focusNode: focusNodes[i],
                           style: TextStyle(
@@ -208,7 +210,7 @@ class _CallTableState extends State<CallTable> {
                                 widget.phoneList.people[i].result = outcome;
                               });
                             },
-                            hint: const Text("Result"),
+                            hint: CalledText(text: "Result", called: widget.phoneList.people[i].called),
                             isDense: true,
                             isExpanded: false,
                             items: Person.resultMap.keys

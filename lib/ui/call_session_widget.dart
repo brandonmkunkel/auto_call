@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:auto_call/pages/settings.dart';
+
 import 'package:auto_call/services/calls_and_messages_service.dart';
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_table.dart';
 import 'package:auto_call/ui/call_table_new.dart';
+import 'package:auto_call/ui/call_table_sticky.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
@@ -134,16 +137,11 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     });
   }
 
-  Future<PhoneList> readFile() async {
-    return await fileManager.readFile();
-  }
-
   // Check that the phonelist is complete
   bool isComplete() => phoneList?.isComplete() ?? false;
 
   @override
   Widget build(BuildContext context) {
-
     //     if (snapshot.hasData && editColumns && acceptedColumns.isEmpty) {
     //   showDialog(context: context, barrierDismissible: true, child: PreSessionPrompt(fileManager: fileManager)).then(
     //           (dynamic columns) {
@@ -156,11 +154,18 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
       drawer: AppDrawer(),
       appBar: AppBar(
         title: Text(widget.title),
-        // automaticallyImplyLeading: true,
         actions: <Widget>[
-          CallSettingsButton(),
+          // CallSettingsButton(),
           SaveButton(fileManager: fileManager, phoneList: phoneList),
           CallCloseButton(),
+          IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () async {
+                // Trigger a Widget redraw after pulling form settings
+                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage()));
+
+                setState(() {});
+              })
         ],
       ),
 
@@ -217,7 +222,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                           advanceController(forward: true);
                         },
                         heroTag: "btn_next",
-                        tooltip: "Call",
+                        tooltip: "Forward",
                       ),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.center,

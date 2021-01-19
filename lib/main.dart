@@ -41,8 +41,6 @@ class App extends StatelessWidget {
         // Check for errors
         if (snapshot.hasError) {
           showDialog(context: context, barrierDismissible: true, child: AlertDialog(title: Text("Something Went Wrong With Loading the App"),));
-          print("Something Went Wrong With Loading the App");
-          // return Pop
         }
 
         // Once complete, show your application

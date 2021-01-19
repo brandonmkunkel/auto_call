@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 import 'package:auto_call/services/regex.dart';
@@ -38,8 +39,11 @@ class Person {
     "Success": Result.Success,
   };
 
-  Person(int id, String name, String phone,
-      {String email = "",
+  Person({
+      @required int id,
+      @required String name,
+      @required String phone,
+      String email = "",
       String result = "",
       String note = "",
       bool called = false,
@@ -87,6 +91,9 @@ class Person {
 }
 
 class PhoneList {
+  // String path;
+  // String name;
+
   bool headerPresent = false;
   Map<String, int> labelMap = new Map();
   List<String> additionalLabels = [];
@@ -95,17 +102,22 @@ class PhoneList {
   int firstUncalled = 0;
   int lastUncalled = 0;
 
-  ///
-  /// Constructors
-  ///
-  ///
-
-  /// Static asynchronous constructor
+  /// Static asynchronous constructor used for testing
   static Future<PhoneList> fromData(List<List<dynamic>> inputData) async {
     PhoneList phoneList = PhoneList();
     phoneList.processData(inputData);
     return phoneList;
   }
+
+  /// Static asynchronous constructor
+  // static Future<PhoneList> fromFile(String path) async {
+  //   PhoneList phoneList = await FileManager.readFile();
+  //   return await FileManager.readFile();
+  // }
+  //
+  // static Future<PhoneList> fromDB(String path) async {
+  //   return await
+  // }
 
   ///
   /// Methods for interacting with the final class
@@ -119,7 +131,7 @@ class PhoneList {
 
   /// Export the whole PhoneLast as a List of Lists
   List<List<dynamic>> export() {
-    return [this.allHeaderLabels()] + List<List>.generate(people.length, (int idx) => people[idx].encode());
+    return [this.allHeaderLabels()] + List<List<String>>.generate(people.length, (int idx) => people[idx].encode());
   }
 
   /// Return a string of all Header label strings
@@ -139,7 +151,7 @@ class PhoneList {
   ///
   /// Methods for processing information from data that was read
   ///
-  void processData(List<List<dynamic>> inputData) {
+  Future<void> processData(List<List<dynamic>> inputData) async {
     if (inputData.isNotEmpty) {
       findHeaders(inputData);
       buildPeople(inputData);
@@ -183,27 +195,26 @@ class PhoneList {
     // By now we assume correct evaluation of the labels/matching indices to now do a proper lookup
     // within each `row`
 
-    rows.asMap()
-        .forEach((id, entry) {
-          if (MagicRegex.isName(entry[labelMap["name"]].toString()) &&
-              MagicRegex.isNumber(entry[labelMap["phone"]].toString())) {
-                people.add(Person(
-                  id,
-                  entry[labelMap["name"]].trim(),
-                  entry[labelMap["phone"]].toString().trim(),
-                  email: labelMap.containsKey("email") ? entry[labelMap["email"]].trim() : "",
-                  note: labelMap.containsKey("note") ? entry[labelMap["note"]].trim() : "",
-                  result: labelMap.containsKey("result") ? entry[labelMap["result"]].trim() : "",
-                  called: labelMap.containsKey("called")
-                      ? entry[labelMap["called"]].toString().toLowerCase().trim() == "true"
-                      : false,
-                  additionalLabels: List.generate(additionalLabels.length,
-                      (int index) => labelMap[additionalLabels[index]].toString().trim()),
-                  additionalData: List.generate(additionalLabels.length,
-                      (int index) => entry[labelMap[additionalLabels[index]]].toString().trim()),
-                ));
-          }
-        });
+    rows.asMap().forEach((id, entry) {
+      if (MagicRegex.isName(entry[labelMap["name"]].toString()) &&
+          MagicRegex.isNumber(entry[labelMap["phone"]].toString())) {
+        people.add(Person(
+          id: id,
+          name: entry[labelMap["name"]].trim(),
+          phone: entry[labelMap["phone"]].toString().trim(),
+          email: labelMap.containsKey("email") ? entry[labelMap["email"]].trim() : "",
+          note: labelMap.containsKey("note") ? entry[labelMap["note"]].trim() : "",
+          result: labelMap.containsKey("result") ? entry[labelMap["result"]].trim() : "",
+          called: labelMap.containsKey("called")
+              ? entry[labelMap["called"]].toString().toLowerCase().trim() == "true"
+              : false,
+          additionalLabels: List.generate(
+              additionalLabels.length, (int index) => labelMap[additionalLabels[index]].toString().trim()),
+          additionalData: List.generate(
+              additionalLabels.length, (int index) => entry[labelMap[additionalLabels[index]]].toString().trim()),
+        ));
+      }
+    });
   }
 
   ///

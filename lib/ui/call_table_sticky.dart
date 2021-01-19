@@ -9,8 +9,8 @@ import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class TableCell extends StatelessWidget {
-  TableCell.content({
-    @required this.child,
+  TableCell.content(
+    this.child, {
     this.textStyle,
     this.cellDimensions = CellDimensions.base,
     this.onTap,
@@ -18,8 +18,8 @@ class TableCell extends StatelessWidget {
         cellHeight = cellDimensions.contentCellHeight,
         _padding = EdgeInsets.symmetric(horizontal: 5.0);
 
-  TableCell.legend({
-    @required this.child,
+  TableCell.legend(
+    this.child, {
     this.textStyle,
     this.cellDimensions = CellDimensions.base,
     this.onTap,
@@ -27,8 +27,8 @@ class TableCell extends StatelessWidget {
         cellHeight = cellDimensions.stickyLegendHeight,
         _padding = EdgeInsets.only(left: 24.0);
 
-  TableCell.stickyRow({
-    @required this.child,
+  TableCell.stickyRow(
+    this.child, {
     this.textStyle,
     this.cellDimensions = CellDimensions.base,
     this.onTap,
@@ -36,8 +36,8 @@ class TableCell extends StatelessWidget {
         cellHeight = cellDimensions.stickyLegendHeight,
         _padding = EdgeInsets.zero;
 
-  TableCell.stickyColumn({
-    @required this.child,
+  TableCell.stickyColumn(
+    this.child, {
     this.textStyle,
     this.cellDimensions = CellDimensions.base,
     this.onTap,
@@ -75,7 +75,7 @@ class TableCell extends StatelessWidget {
                 child: child,
               ),
             ),
-            // Divider(),
+            Divider(),
           ],
         ),
         // decoration: BoxDecoration(
@@ -89,14 +89,14 @@ class TableCell extends StatelessWidget {
   }
 }
 
-class NewCallTable extends StatefulWidget {
+class StickyCallTable extends StatefulWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
   final ScrollController scrollController;
   final List<TextEditingController> textControllers;
   final List<bool> acceptedColumns;
 
-  NewCallTable(
+  StickyCallTable(
       {Key key,
       @required this.fileManager,
       @required this.phoneList,
@@ -106,10 +106,10 @@ class NewCallTable extends StatefulWidget {
       : super(key: key);
 
   @override
-  _NewCallTableState createState() => _NewCallTableState();
+  _StickyCallTableState createState() => _StickyCallTableState();
 }
 
-class _NewCallTableState extends State<NewCallTable> {
+class _StickyCallTableState extends State<StickyCallTable> {
   bool editColumns = false;
   List<bool> acceptedColumns = [];
   double rowSize = kMinInteractiveDimension;
@@ -155,18 +155,18 @@ class _NewCallTableState extends State<NewCallTable> {
 
   void setStateIterator(int i) {
     setState(() {
-      FocusScope.of(context).unfocus();
-
-      // Only do a scroll update if the selected item is kinda far away, to avoid annoying scroll animations
-      int desiredOffset = i - phoneList.iterator;
-      updateController(desiredOffset.abs() > 5 ? desiredOffset : 0);
+      // FocusScope.of(context).unfocus();
+      //
+      // // Only do a scroll update if the selected item is kinda far away, to avoid annoying scroll animations
+      // int desiredOffset = i - phoneList.iterator;
+      // updateController(desiredOffset.abs() > 5 ? desiredOffset : 0);
       phoneList.iterator = i;
     });
   }
 
   List columns() {
     return [
-          // HeaderText("#"),
+          HeaderText("#"),
           HeaderText("Name"),
           HeaderText("Phone"),
         ] +
@@ -185,73 +185,53 @@ class _NewCallTableState extends State<NewCallTable> {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-        controller: widget.scrollController,
-        child: ListView.separated(
-          controller: widget.scrollController,
-          scrollDirection: Axis.vertical,
-          itemCount: phoneList.people.length,
-          separatorBuilder: (context, i) => Divider(),
-          itemBuilder: (context, i) => ListTile(
-            leading: Container(
-                width: 80.0,
-                alignment: Alignment.centerLeft,
-                child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                  i == widget.phoneList.iterator
-                      ? IconButton(
-                          padding: const EdgeInsets.all(0.0),
-                          icon: Icon(Icons.forward, color: Theme.of(context).iconTheme.color),
-                    onPressed: (){},
-                  )
-                      : IconButton(
-                          padding: const EdgeInsets.all(0.0),
-                          icon: Icon(Icons.check_circle,
-                              color: widget.phoneList.people[i].called
-                                  ? Theme.of(context).accentColor
-                                  : Theme.of(context).disabledColor),
-                          onPressed: () {
-                            setState(() {
-                              widget.phoneList.people[i].called = !widget.phoneList.people[i].called;
-                            });
-                          }),
-                  CalledText(text: (i + 1).toString(), called: widget.phoneList.people[i].called)
-                ])),
-            title: TableCell.content(
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: rowBuilder(context, i)),
-                onTap: () => setState(() {
-                      setStateIterator(i);
-                    })),
-          ),
-        ));
+    return StickyHeadersTable(
+      columnsLength: columns().length,
+      // cellAlignments: CellAlignments.variableColumnAlignment,
+      rowsLength: phoneList.people.length,
+      columnsTitleBuilder: (i) => GestureDetector(
+        // child: Text(widget.titleColumn[i]),
+        child: columns()[i],
+        onTap: () => setStateIterator(i),
+      ),
+      rowsTitleBuilder: (i) => InkWell(
+        child: i == phoneList.iterator
+            ? IconButton(
+                padding: const EdgeInsets.all(5.0),
+                icon: Icon(Icons.forward, color: Theme.of(context).iconTheme.color),
+                onPressed: () {},
+              )
+            : IconButton(
+                padding: const EdgeInsets.all(5.0),
+                icon: Icon(Icons.check_circle,
+                    color:
+                        phoneList.people[i].called ? Theme.of(context).accentColor : Theme.of(context).disabledColor),
+                onPressed: () {
+                  setState(() {
+                    phoneList.people[i].called = !phoneList.people[i].called;
+                  });
+                }),
+        onTap: () => setStateIterator(i),
+      ),
+      contentCellBuilder: (i, j) => TableCell.content(
+        // child: Text(widget.data[i][j]),
+        rowBuilder(context, j)[i],
+        // color: getContentColor(i, j),
+        onTap: () => setState(() {
+          // selectedColumn = j;
+          // selectedRow = i;
+          setStateIterator(i);
+        }),
+      ),
+      // legendCell: Text('#'),
+    );
   }
 
   List<Widget> rowBuilder(BuildContext context, int i) {
     bool selected = i == phoneList.iterator ? true : false;
 
     return [
-          // Container(
-          //     child: i == phoneList.iterator
-          //         ? IconButton(
-          //             padding: const EdgeInsets.all(5.0),
-          //             icon: Icon(
-          //               Icons.forward,
-          //               color: Theme.of(context).iconTheme.color,
-          //             ))
-          //         : IconButton(
-          //             padding: const EdgeInsets.all(5.0),
-          //             icon: Icon(Icons.check_circle,
-          //                 color: phoneList.people[i].called
-          //                     ? Theme.of(context).accentColor
-          //                     : Theme.of(context).disabledColor),
-          //             onPressed: () {
-          //               setState(() {
-          //                 phoneList.people[i].called = !phoneList.people[i].called;
-          //               });
-          //             })),
-          // Container(child: CalledText(text: phoneList.people[i].id.toString(), called: phoneList.people[i].called)),
+          Container(child: CalledText(text: phoneList.people[i].id.toString(), called: phoneList.people[i].called)),
           Container(child: CalledText(text: phoneList.people[i].name, called: phoneList.people[i].called)),
           Container(child: CalledText(text: phoneList.people[i].phone, called: phoneList.people[i].called)),
         ] +
@@ -293,7 +273,7 @@ class _NewCallTableState extends State<NewCallTable> {
                             phoneList.people[i].result = outcome;
                           });
                         },
-                        hint: Text("Result"),
+                        hint: CalledText(text: "Result", called: phoneList.people[i].called),
                         isDense: true,
                         isExpanded: false,
                         items: Person.resultMap.keys
