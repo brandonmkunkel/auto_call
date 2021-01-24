@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +26,16 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, Setting> standardSettings = globalSettingManager.standardSettings();
+    Map<String, Setting> premiumSettings = globalSettingManager.premiumSettings();
+    Map<String, Setting> enterpriseSettings = globalSettingManager.enterpriseSettings();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
+      body: Scrollbar(child:
+      SingleChildScrollView(
           child: Column(
         children: [
           // Go to user account
@@ -46,10 +52,6 @@ class SettingsPageState extends State<SettingsPage> {
           Divider(),
 
           // Standard settings
-          // ListView.builder(
-          //   itemCount: ,
-          //   itemBuilder: ,
-          // )
           Column(
               children: globalSettingManager.standardSettings().entries.map((entry) {
             return buildStandardSettingWidget(entry.key, entry.value);
@@ -82,23 +84,44 @@ class SettingsPageState extends State<SettingsPage> {
           ),
 
           Divider(),
+
+          // Bottom App Information
           Column(
-            children: [
-              ListTile(
-                title: Text("Change Log"),
-                onTap: () async {
-                  await showDialog(
-                      context: context, child: AlertDialog(title: Text("Release Notes:"), content: changelog()));
-                },
-              ),
-              ListTile(title: Text("Support")),
-              ListTile(title: Text("Terms and conditions")),
-              ListTile(title: Text("Privacy Policy")),
-              ListTile(title: Text("Version: ")),
-            ],
-          )
+                children: ListTile.divideTiles(
+              context: context,
+              tiles: [
+                // ListTile(title: Text("Support")),
+                ListTile(
+                  dense: true,
+                  title: Text("Terms and Conditions"),
+                  onTap: () async {
+                    await showDialog(
+                        context: context,
+                        child: AlertDialog(title: Text("Terms and Conditions:"), content: termsAndConditions()));
+                  },
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text("Privacy Policy"),
+                  onTap: () async {
+                    await showDialog(
+                        context: context, child: AlertDialog(title: Text("Privacy Policy:"), content: privacyPolicy()));
+                  },
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text("Release Notes"),
+                  onTap: () async {
+                    await showDialog(
+                        context: context, child: AlertDialog(title: Text("Release Notes:"), content: changelog()));
+                  },
+                ),
+                ListTile(dense: true, title: Text("App Version: ")),
+                ListTile(dense: true, title: autoCallCopyright(textAlign: TextAlign.start)),
+              ],
+            ).toList()),
         ],
-      )),
+      ))),
     );
   }
 
@@ -109,14 +132,15 @@ class SettingsPageState extends State<SettingsPage> {
           return ListTile(
             title: Text(setting.text),
             // subtitle: Text(setting.description),
-            trailing: Switch(
-              value: setting.value,
-              onChanged: (bool value) {
-                setState(() {
-                  manager.set(key, value);
-                });
-              },
-            ),
+            trailing:
+              Switch(
+                value: setting.value,
+                onChanged: (bool value) {
+                  setState(() {
+                    manager.set(key, value);
+                  });
+                },
+              ),
           );
         }
 
@@ -125,6 +149,8 @@ class SettingsPageState extends State<SettingsPage> {
           return Container();
         }
     }
+
+    return Container();
   }
 
   Widget buildPremiumSettingWidget(String key, Setting setting) {
@@ -139,7 +165,7 @@ class SettingsPageState extends State<SettingsPage> {
             trailing: Switch(
               value: !isPremium ? false : setting.value,
               onChanged: !isPremium
-                  ? (bool) {}
+                  ? (bool value) {}
                   : (bool value) {
                       setState(() {
                         manager.set(key, value);
@@ -157,5 +183,7 @@ class SettingsPageState extends State<SettingsPage> {
           return Container();
         }
     }
+
+    return Container();
   }
 }

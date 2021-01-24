@@ -149,7 +149,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    //     if (snapshot.hasData && editColumns && acceptedColumns.isEmpty) {
+    //     if (editColumns && acceptedColumns.isEmpty) {
     //   showDialog(context: context, barrierDismissible: true, child: PreSessionPrompt(fileManager: fileManager)).then(
     //           (dynamic columns) {
     //         acceptedColumns = columns;

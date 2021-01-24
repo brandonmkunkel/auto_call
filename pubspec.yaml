@@ -72,7 +72,7 @@ flutter_native_splash:
 # Deploys the App icons to Android/IOS locations. Use the following command
 # flutter pub run flutter_launcher_icons:main
 flutter_icons:
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/logo_square.png"
   android: true
   ios: true
 

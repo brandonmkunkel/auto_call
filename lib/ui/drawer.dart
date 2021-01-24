@@ -5,6 +5,7 @@ import 'package:auto_call/pages/settings.dart';
 import 'package:auto_call/pages/legal.dart';
 import 'package:auto_call/pages/onboarding.dart';
 import 'package:auto_call/pages/login.dart';
+import 'package:auto_call/ui/terms.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -65,7 +66,7 @@ class AppDrawer extends StatelessWidget {
                   child: Align(
                       alignment: Alignment.bottomCenter,
                       child: ListTile(
-                        title: Text('Copyright 2020 | Brandon Kunkel', textAlign: TextAlign.center),
+                        title: autoCallCopyright(),
                         onTap: () => navigatorUpdate(context, LegalPage.routeName),
                       )),
                 ),
