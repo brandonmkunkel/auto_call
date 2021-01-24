@@ -52,6 +52,10 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     // Set a setting to show that there is an active call session
     globalSettingManager.set("activeCallSession", true);
 
+    fileManager.outputFilePath().then((String path) {
+      globalSettingManager.set("activeCallSessionPath", path);
+    });
+
     // Get settings for this page from the SettingsManager
     super.initState();
   }
@@ -97,6 +101,9 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     setState(() {
       phoneList.currentPerson().called = true;
       advanceController(forward: true);
+
+      // Async save to log the current progress each call
+      fileManager.saveCallSession(phoneList);
     });
   }
 

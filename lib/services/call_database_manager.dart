@@ -14,10 +14,10 @@ Future<Database> openPhoneDatabase({@required String name}) async {
     // constructed for each platform.
     join(await getDatabasesPath(), '$name.db'),
 
-    // When the database is first created, create a table to store persons.
+    // When the database is first created, create a table to store people.
     onCreate: (db, version) {
       return db.execute(
-        "CREATE TABLE persons(id INTEGER PRIMARY KEY, name TEXT, phone TEXT)",
+        "CREATE TABLE people(id INTEGER PRIMARY KEY, name TEXT, phone TEXT)",
       );
     },
 
@@ -32,15 +32,15 @@ Future<void> insertPerson(Database db, Person person) async {
   // `conflictAlgorithm`. In this case, if the same person is inserted
   // multiple times, it replaces the previous data.
   await db.insert(
-    'persons',
+    'people',
     person.toMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
 
-Future<List<Person>> persons(Database db) async {
+Future<List<Person>> people(Database db) async {
   // Query the table for all The Persons.
-  final List<Map<String, dynamic>> maps = await db.query('persons');
+  final List<Map<String, dynamic>> maps = await db.query('people');
 
   // Convert the List<Map<String, dynamic> into a List<Person>.
   return List.generate(maps.length, (i) {
@@ -55,7 +55,7 @@ Future<List<Person>> persons(Database db) async {
 Future<void> updatePerson(Database db, Person person) async {
   // Update the given Person.
   await db.update(
-    'persons',
+    'people',
     person.toMap(),
 
     // Ensure that the Person has a matching id.
@@ -69,7 +69,7 @@ Future<void> updatePerson(Database db, Person person) async {
 Future<void> deletePerson(Database db, int id) async {
   // Remove the Person from the database.
   await db.delete(
-    'persons',
+    'people',
 
     // Use a `where` clause to delete a specific person.
     where: "id = ?",

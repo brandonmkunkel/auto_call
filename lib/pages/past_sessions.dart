@@ -8,9 +8,9 @@ import 'package:auto_call/pages/call_page.dart';
 enum oldCallEnum { load, delete }
 
 class PastSessionsPage extends StatefulWidget {
-  static const String routeName = "/old_calls";
-  final String title = "Old Call Sessions";
-  final String label = "Old Call Sessions";
+  static const String routeName = "/past_sessions";
+  static const String label = "Past Sessions";
+  final String title = "Past Sessions";
 
   @override
   PastSessionsState createState() => new PastSessionsState();
@@ -28,13 +28,10 @@ class PastSessionsState extends State<PastSessionsPage> {
     return Scaffold(
       drawer: AppDrawer(),
       appBar: AppBar(title: Text(widget.title)),
-      body: Column(
-        children: [
-          Expanded(
-              child: FutureBuilder(
+      body: FutureBuilder(
             future: FileManager.findOldCalls(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData && snapshot.data != null) {
+              if (snapshot.connectionState == ConnectionState.done) {
                 files = snapshot.data;
                 return showPastSessions(context, snapshot.data);
               }
@@ -49,8 +46,6 @@ class PastSessionsState extends State<PastSessionsPage> {
               // Loading Screen
               return Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
             },
-          ))
-        ],
       ),
       floatingActionButton: multiSelect
           ? Row(
@@ -73,12 +68,11 @@ class PastSessionsState extends State<PastSessionsPage> {
                       selected.forEach((key, value) async {
                         if (value) {
                           await FileManager.deleteFile(files[key]);
-                          print("deleted ${files[key]}");
                         }
+                      });
 
-                        setState(() {
-                          selected.clear();
-                        });
+                      setState(() {
+                        selected.clear();
                       });
                     })
               ],
@@ -98,7 +92,27 @@ class PastSessionsState extends State<PastSessionsPage> {
                   return ListTile(
                     dense: true,
                     title: Text(FileManager.getFileName(oldCalls[index])),
-                    trailing: _popUpFile(context, index),
+                    subtitle: Text("Date Modified: ${FileManager.getDateModified(oldCalls[index])}"),
+                    trailing: PopupMenuButton(
+                        tooltip: 'Select option for the file',
+                        onSelected: (oldCallEnum _enum) async {
+                          if (_enum == oldCallEnum.load) {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    CallSessionPage(fileManager: FileManager.fromFile(oldCalls[index]))));
+                          } else if (_enum == oldCallEnum.delete) {
+                            await FileManager.deleteFile(oldCalls[index]);
+                          }
+
+                          // Trigger widget rebuilds
+                          setState(() {});
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem<oldCallEnum>(value: oldCallEnum.load, child: Text('Load')),
+                            PopupMenuItem<oldCallEnum>(value: oldCallEnum.delete, child: Text('Delete'))
+                          ];
+                        }),
                     leading: selected.containsValue(true)
                         ? Checkbox(
                             value: selected[index] ?? false,
@@ -143,27 +157,5 @@ class PastSessionsState extends State<PastSessionsPage> {
               ],
             ),
           );
-  }
-
-  Widget _popUpFile(BuildContext context, int index) {
-    return PopupMenuButton(
-        tooltip: 'Select option for the file',
-        onSelected: (oldCallEnum _enum) async {
-          if (_enum == oldCallEnum.load) {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => CallSessionPage(fileManager: FileManager.fromFile(files[index].toString()))));
-          } else if (_enum == oldCallEnum.delete) {
-            await FileManager.deleteFile(files[index].toString());
-          }
-
-          // Trigger widget rebuilds
-          setState(() {});
-        },
-        itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem<oldCallEnum>(value: oldCallEnum.load, child: Text('Load')),
-            PopupMenuItem<oldCallEnum>(value: oldCallEnum.delete, child: Text('Delete'))
-          ];
-        });
   }
 }

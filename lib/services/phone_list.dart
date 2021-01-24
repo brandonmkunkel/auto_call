@@ -91,8 +91,8 @@ class Person {
 }
 
 class PhoneList {
-  // String path;
-  // String name;
+  String path;
+  String name;
 
   bool headerPresent = false;
   Map<String, int> labelMap = new Map();
@@ -155,6 +155,10 @@ class PhoneList {
     if (inputData.isNotEmpty) {
       findHeaders(inputData);
       buildPeople(inputData);
+
+      // Do some bounds checking to set the first iterator correctly
+      checkRemainingCallRange();
+      iterator = firstUncalled;
     }
   }
 

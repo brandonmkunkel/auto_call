@@ -19,21 +19,13 @@ class SaveButton extends StatelessWidget {
 
         if (acceptSave) {
           await fileManager.saveCallSession(phoneList);
-          await fileManager.saveToOldCalls(phoneList);
 
-          // Find the Scaffold in the widget tree and use it to show a SnackBar.
+          // Find the Scaffold in the widget tree and use it to show a SnackBar which tells the user that the
+          // Call session was saved
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
             backgroundColor: Colors.grey[600],
-            action: SnackBarAction(
-              label: 'Undo',
-              textColor: Colors.white,
-              onPressed: () async {
-                // Delete the files that were just saved
-                await FileManager.deleteFile(await FileManager.savedFilePath(fileManager.path));
-                await FileManager.deleteFile(await FileManager.oldCallsPath(fileManager.path));
-              },
-            ),
+            behavior: SnackBarBehavior.floating
           ));
         }
       },
@@ -57,11 +49,8 @@ class CallCloseButton extends StatelessWidget {
          bool acceptSave = await showDialog(
              barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
 
-//          if (acceptSave) {
-//            print("should be doing some saving");
-//          }
-
           globalSettingManager.set("activeCallSession", false);
+          globalSettingManager.set("activeCallSessionPath", "");
           Navigator.of(context).pop();
         }
       },

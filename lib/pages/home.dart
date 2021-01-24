@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/ui/charts/homepage_chart.dart';
 import 'package:auto_call/ui/drawer.dart';
-import 'package:auto_call/ui/widgets/active_call_session_card.dart';
+import 'package:auto_call/ui/widgets/call_session_cards.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);

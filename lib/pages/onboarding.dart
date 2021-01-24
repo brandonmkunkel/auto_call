@@ -39,97 +39,84 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0, color: Colors.white);
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: Colors.white),
-      bodyTextStyle: bodyStyle,
+      bodyTextStyle: TextStyle(fontSize: 18.0, color: Colors.white),
       descriptionPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
       pageColor: Colors.green,
       imagePadding: EdgeInsets.zero,
     );
 
     return Scaffold(
-      primary: true,
-        body: IntroductionScreen(
-      key: introKey,
-      pages: [
-        PageViewModel(
-          title: "Call more clients faster",
-          body: "We know how tiring it can be to make a bunch of calls. Let us help you with that!",
-          image: _buildImage(context, 'onboarding1'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Upload an Excel file or simple text File",
-          body: "Make sure this file has at least two columns, 'Name' and 'Number'",
-          image: _buildImage(context, 'onboarding2'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Let the magic happen!",
-          body: "We take care of typing their numbers and dialing them, so you can focus and take notes!",
-          image: _buildImage(context, 'onboarding3'),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: "Accept Terms and Conditions",
-          body: "Before we continue, let's take care of some paperwork",
-          image: _buildImage(context, 'onboarding2'),
-          // footer: RaisedButton(
-          //   onPressed: () {
-          //     introKey.currentState?.animateScroll(0);
-          //   },
-          //   child: const Text(
-          //     'FooButton',
-          //     style: TextStyle(color: Colors.white),
-          //   ),
-          //   color: Colors.lightBlue,
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: BorderRadius.circular(8.0),
-          //   ),
-          // ),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-            title: "Terms and Conditions",
-            bodyWidget: ScrollableTermsConditions(),
-            decoration: pageDecoration,
-            footer: Container(
-              color: Colors.grey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text("I AGREE TO APP THE TERMS AND CONDITIONS"),
-                  Checkbox(
-                      value: this.agreedToTerms,
-                      onChanged: (value) {
-                        setState(() {
-                          // Store the agreement to the terms and conditions within the app
-                          globalSettingManager.set("agreedToTerms", value);
-                        });
-                      })
-                ],
-              ),
-            )),
-      ],
-      onDone: () => _onIntroEnd(context),
-      // onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-      showSkipButton: true,
-      skipFlex: 0,
-      nextFlex: 0,
-      skip: const Text('Skip', style: TextStyle(color: Colors.white)),
-      next: const Icon(Icons.arrow_forward, color: Colors.white),
-      done: agreedToTerms
-          ? Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
-          : Container(),
-      dotsDecorator: const DotsDecorator(
-        size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeSize: Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-        ),
-      ),
-    ));
+        primary: true,
+        body: SafeArea(
+            child: IntroductionScreen(
+          key: introKey,
+          pages: [
+            PageViewModel(
+              title: "Call more clients faster",
+              body: "We know how tiring it can be to make a bunch of calls. Let us help you with that!",
+              image: _buildImage(context, 'onboarding1'),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "Upload an Excel file or simple text File",
+              body: "Make sure this file has at least two columns, 'Name' and 'Number'",
+              image: _buildImage(context, 'onboarding2'),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "Let the magic happen!",
+              body: "We take care of typing their numbers and dialing them, so you can focus and take notes!",
+              image: _buildImage(context, 'onboarding3'),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "Accept Terms and Conditions",
+              body: "Before we continue, let's take care of some paperwork",
+              image: _buildImage(context, 'onboarding2'),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+                title: "Terms and Conditions",
+                bodyWidget: termsAndConditions(),
+                decoration: pageDecoration,
+                footer: Container(
+                  color: Colors.grey,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("I AGREE TO APP THE TERMS AND CONDITIONS"),
+                      Checkbox(
+                          value: this.agreedToTerms,
+                          onChanged: (value) {
+                            setState(() {
+                              // Store the agreement to the terms and conditions within the app
+                              globalSettingManager.set("agreedToTerms", value);
+                            });
+                          })
+                    ],
+                  ),
+                )),
+          ],
+          onDone: () => _onIntroEnd(context),
+          onSkip: () => _onIntroEnd(context),
+          showSkipButton: this.agreedToTerms,
+          skipFlex: 0,
+          nextFlex: 0,
+          skip: const Text('Skip', style: TextStyle(color: Colors.white)),
+          next: const Icon(Icons.arrow_forward, color: Colors.white),
+          done: agreedToTerms
+              ? Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
+              : Container(),
+          dotsDecorator: const DotsDecorator(
+            size: Size(10.0, 10.0),
+            color: Color(0xFFBDBDBD),
+            activeSize: Size(22.0, 10.0),
+            activeShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0)),
+            ),
+          ),
+        )));
   }
 }

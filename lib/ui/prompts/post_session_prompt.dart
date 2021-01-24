@@ -49,6 +49,7 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
                       alignment: Alignment.centerRight,
                       child: RaisedButton(child: Text("Done"), onPressed: () {
                         globalSettingManager.set("activeCallSession", false);
+                        globalSettingManager.set("activeCallSessionPath", "");
 
                         Navigator.of(context).pop();
                       }),

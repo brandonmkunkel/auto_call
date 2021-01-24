@@ -15,7 +15,7 @@ class Setting {
   var value;
 
   String toString() {
-    return "Setting(text: $text, type: $type, settingType: $settingType, value: $value)";
+    return "Setting(text: $text, description: $description, type: $type, settingType: $settingType, value: $value)";
   }
 }
 
@@ -45,6 +45,7 @@ class SettingManager {
   static final Map<String, Setting> settings = {
     // Hidden Settings
     "activeCallSession": Setting(type: bool, settingType: SettingType.hidden),
+    "activeCallSessionPath": Setting(type: String, settingType: SettingType.hidden),
 
     // Visible Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),

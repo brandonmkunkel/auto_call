@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:auto_call/ui/terms.dart';
 import 'package:auto_call/ui/theme.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/settings_manager.dart';
@@ -19,9 +20,9 @@ class SettingsPage extends StatefulWidget {
 
 class SettingsPageState extends State<SettingsPage> {
   final SettingManager manager = globalSettingManager;
-  
+
   bool get isPremium => manager.isPremium();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,6 +46,10 @@ class SettingsPageState extends State<SettingsPage> {
           Divider(),
 
           // Standard settings
+          // ListView.builder(
+          //   itemCount: ,
+          //   itemBuilder: ,
+          // )
           Column(
               children: globalSettingManager.standardSettings().entries.map((entry) {
             return buildStandardSettingWidget(entry.key, entry.value);
@@ -76,14 +81,22 @@ class SettingsPageState extends State<SettingsPage> {
             }).toList(),
           ),
 
-          // Divider(),
-          // Column(children: [
-          //   Text("Change Log"),
-          //   Text("Support"),
-          //   Text("Terms and conditions"),
-          //   Text("Privacy Policy")
-          // ],
-          // )
+          Divider(),
+          Column(
+            children: [
+              ListTile(
+                title: Text("Change Log"),
+                onTap: () async {
+                  await showDialog(
+                      context: context, child: AlertDialog(title: Text("Release Notes:"), content: changelog()));
+                },
+              ),
+              ListTile(title: Text("Support")),
+              ListTile(title: Text("Terms and conditions")),
+              ListTile(title: Text("Privacy Policy")),
+              ListTile(title: Text("Version: ")),
+            ],
+          )
         ],
       )),
     );
@@ -95,6 +108,7 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return ListTile(
             title: Text(setting.text),
+            // subtitle: Text(setting.description),
             trailing: Switch(
               value: setting.value,
               onChanged: (bool value) {
@@ -113,15 +127,17 @@ class SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  Widget buildPremiumSettingWidget(String key, Setting settings) {
-    switch (settings.type) {
+  Widget buildPremiumSettingWidget(String key, Setting setting) {
+    switch (setting.type) {
       case bool:
         {
           return ListTile(
-            title: Text(settings.text,
+            title: Text(setting.text,
                 style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
+            // subtitle: Text(setting.description,
+            //     style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
             trailing: Switch(
-              value: !isPremium ? false : settings.value,
+              value: !isPremium ? false : setting.value,
               onChanged: !isPremium
                   ? (bool) {}
                   : (bool value) {

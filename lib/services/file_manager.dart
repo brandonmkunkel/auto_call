@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_call/services/phone_list.dart';
-
+import 'package:auto_call/services/regex.dart';
 
 ///
 /// Raw text
@@ -89,16 +89,16 @@ class FileManager {
   String formattedTime;
 
   /// Construct a FileManager object based off a file path
-  FileManager.fromFile(String path) {
+  FileManager.fromFile(String path, {bool reuseDateTime = false}) {
     this.path = path;
-    this.formattedTime = getFormattedTime();
+    this.formattedTime = reuseDateTime ? "" : getFormattedTime();
 
     if (!this.checkValidExtension()) {
       print("Not a valid file type");
     }
   }
 
-  /// Returns file name of FileManager instance based on its path
+  /// Returns file name of input file used by FileManager based on its path
   String get fileName => getFileName(path);
 
   /// Returns directory of FileManager instance based on its path
@@ -118,21 +118,9 @@ class FileManager {
     return await PhoneList.fromData(await registeredInterfaces[extension].read(path));
   }
 
-
   Future<void> saveCallSession(PhoneList phoneList) async {
-    // Save the file to the same location but under a new name
-    await _saveFile(updatedFilePath(path), phoneList.export());
-  }
-
-  Future<void> saveToOldCalls(PhoneList phoneList) async {
-    String oldCallsDir = await oldCallsDirectory();
-
-    // Check to see if this file is already stored as an old call
-    if (this.directory != oldCallsDir) {
-      // Create the path for the file to be saved in /old_calls
-      String oldCallsPath = oldCallsDir + oldCallsFileName(path, date: formattedTime);
-      await _saveFile(oldCallsPath, phoneList.export());
-    }
+    String oldCallsPath = await callsDirectory() + callFilePath(path, date: formattedTime);
+    await _saveFile(oldCallsPath, phoneList.export());
   }
 
   // Save the file to the same location but under a new name
@@ -147,6 +135,14 @@ class FileManager {
     } else {
       print("Not a valid file type");
     }
+  }
+
+  String outputFileName() {
+    return callFilePath(path, date: formattedTime);
+  }
+
+  Future<String> outputFilePath() async {
+    return await callsDirectory() + outputFileName();
   }
 
   ///
@@ -166,6 +162,11 @@ class FileManager {
     return path.split(".").last;
   }
 
+  // Get the date modified of this file
+  static String getDateModified(String path) {
+    return File(path).lastModifiedSync().toString();
+  }
+
   static String updatedFilePath(String path) {
     // Split at the extension label, add "update" and rejoin to not overwrite the excel sheet
     List paths = path.split(".");
@@ -180,17 +181,13 @@ class FileManager {
   }
 
   static Future<String> savedFilePath(String path) async {
-    return updatedFilePath(path);
+    return await callsDirectory() + getFileName(path);
   }
 
-  static Future<String> oldCallsPath(String path) async {
-    return await oldCallsDirectory() + oldCallsFileName(path);
-  }
-
-  static Future<String> oldCallsDirectory() async {
+  static Future<String> callsDirectory() async {
     // Get the old calls directory from within the App's document directory
     Directory dir = await getApplicationDocumentsDirectory();
-    Directory oldCallsDir = Directory(dir.path + "/old_calls/");
+    Directory oldCallsDir = Directory(dir.path + "/call_sessions/");
 
     // Create the directory
     if (!await oldCallsDir.exists()) {
@@ -199,7 +196,7 @@ class FileManager {
     return oldCallsDir.path;
   }
 
-  static String oldCallsFileName(String path, {String date = ""}) {
+  static String callFilePath(String path, {String date = ""}) {
     // Split at the extension label, add "update" and rejoin to not overwrite the excel sheet
     List name = getFileName(path).split(".");
     String dateString = date ?? getFormattedTime();
@@ -209,22 +206,30 @@ class FileManager {
 
   // Formatted time is used for saving into old call files and the global database
   static String getFormattedTime() {
-    return DateFormat('yyyy-MM-dd_kk-mm').format(DateTime.now());
+    return fileDateFormat().format(DateTime.now());
   }
 
   // Look through the old calls directory and look for saved old calls
   static Future<List<String>> findOldCalls() async {
-    Directory _oldCallsDir = Directory(await oldCallsDirectory());
+    Directory _oldCallsDir = Directory(await callsDirectory());
     List _files = _oldCallsDir.listSync(recursive: false);
     return List.generate(_files.length, (int idx) => _files[idx].path);
   }
 
   static Future<void> deleteFile(String path) async {
-    var filePath = File(path);
-    filePath.exists().then((isThere) {
-      if (isThere) {
-        filePath.deleteSync(recursive: false);
-      }
-    });
+    File file = File(path);
+    bool isThere = file.existsSync();
+    if (isThere) {
+      file.deleteSync(recursive: false);
+    }
+  }
+
+  static String dateFormatString() {
+    return 'yyyy-MM-dd_kk-mm-ss';
+  }
+
+  static DateFormat fileDateFormat() {
+    // Standardize the DateTime format used in naming files
+    return DateFormat(dateFormatString());
   }
 }
