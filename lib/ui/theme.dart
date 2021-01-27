@@ -24,8 +24,9 @@ class ThemeProvider with ChangeNotifier {
 // This file will hold information describing the Theme for the App
 final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
-    backgroundColor: Colors.grey[00],
-    primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey : Colors.green,
+    backgroundColor: Colors.grey[100],
+    scaffoldBackgroundColor: Colors.grey[100],
+    primarySwatch: Colors.green,
     disabledColor: Colors.grey[400],
     fontFamily: "Raleway"
 );
@@ -34,7 +35,7 @@ final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     backgroundColor: Colors.grey[900],
     scaffoldBackgroundColor: Colors.grey[900],
-    primarySwatch: defaultTargetPlatform == TargetPlatform.iOS ? Colors.grey : Colors.green,
+    primarySwatch: Colors.green,
     accentColor: Colors.green[600],
     disabledColor: Colors.grey[700],
     fontFamily: "Raleway"
