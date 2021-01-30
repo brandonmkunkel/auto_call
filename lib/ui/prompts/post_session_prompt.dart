@@ -1,6 +1,6 @@
-import 'package:auto_call/services/phone_list.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
+
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/settings_manager.dart';

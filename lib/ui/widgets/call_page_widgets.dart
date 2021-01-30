@@ -15,14 +15,14 @@ class SaveButton extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.save),
       onPressed: () async {
-        bool acceptSave = await showDialog(barrierDismissible: false, context: context, child: SaveAlert());
+        bool acceptSave = await showDialog(barrierDismissible: false, context: context, builder: (_) => SaveAlert());
 
         if (acceptSave) {
           await fileManager.saveCallSession(phoneList);
 
           // Find the Scaffold in the widget tree and use it to show a SnackBar which tells the user that the
           // Call session was saved
-          Scaffold.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
             backgroundColor: Colors.grey[600],
             behavior: SnackBarBehavior.floating

@@ -24,7 +24,7 @@ class LegalPageState extends State<LegalPage> {
       body: Stack(children: <Widget>[
         Container(
           padding: EdgeInsets.all(10.0),
-          child: ScrollableAssetText(),
+          child: termsAndConditions(),
         )
       ]),
     );

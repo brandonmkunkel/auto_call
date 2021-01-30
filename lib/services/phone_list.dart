@@ -170,7 +170,7 @@ class PhoneList {
 
     // First look to see if there really is a header row
     for (int idx = 0; idx < header.length; idx++) {
-      String label = header[idx].toString().toLowerCase().trim();
+      label = header[idx].toString().toLowerCase().trim();
       match = StringSimilarity.findBestMatch(label, Person.labels);
 
       if (match.bestMatch.rating > 0.75) {

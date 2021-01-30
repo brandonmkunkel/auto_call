@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import 'package:auto_call/ui/terms.dart';
 import 'package:auto_call/ui/theme.dart';
-import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/widgets/settings_widgets.dart';
 
@@ -53,7 +52,7 @@ class SettingsPageState extends State<SettingsPage> {
 
           // Standard settings
           Column(
-              children: globalSettingManager.standardSettings().entries.map((entry) {
+              children: standardSettings.entries.map((entry) {
             return buildStandardSettingWidget(entry.key, entry.value);
           }).toList()),
 
@@ -78,7 +77,7 @@ class SettingsPageState extends State<SettingsPage> {
 
           // Premium Settings
           Column(
-            children: globalSettingManager.premiumSettings().entries.map((entry) {
+            children: premiumSettings.entries.map((entry) {
               return buildPremiumSettingWidget(entry.key, entry.value);
             }).toList(),
           ),
@@ -97,7 +96,7 @@ class SettingsPageState extends State<SettingsPage> {
                   onTap: () async {
                     await showDialog(
                         context: context,
-                        child: AlertDialog(title: Text("Terms and Conditions:"), content: termsAndConditions()));
+                        builder: (_) => AlertDialog(title: Text("Terms and Conditions:"), content: termsAndConditions()));
                   },
                 ),
                 ListTile(
@@ -105,7 +104,8 @@ class SettingsPageState extends State<SettingsPage> {
                   title: Text("Privacy Policy"),
                   onTap: () async {
                     await showDialog(
-                        context: context, child: AlertDialog(title: Text("Privacy Policy:"), content: privacyPolicy()));
+                        context: context,
+                        builder: (_) => AlertDialog(title: Text("Privacy Policy:"), content: privacyPolicy()));
                   },
                 ),
                 ListTile(
@@ -113,7 +113,7 @@ class SettingsPageState extends State<SettingsPage> {
                   title: Text("Release Notes"),
                   onTap: () async {
                     await showDialog(
-                        context: context, child: AlertDialog(title: Text("Release Notes:"), content: changelog()));
+                        context: context, builder: (_) => AlertDialog(title: Text("Release Notes:"), content: changelog()));
                   },
                 ),
                 ListTile(dense: true, title: Text("App Version: ")),

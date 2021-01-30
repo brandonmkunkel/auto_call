@@ -79,7 +79,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                             await showDialog(
                                 context: context,
                                 barrierDismissible: true,
-                                child: AlertDialog(
+                                builder: (_) => AlertDialog(
                                   title: Text("Error Loading File"),
                                   content: Text("We couldn't find a valid old call session file to open. "
                                       "This file may be corrupted or lost, try searching within ${PastSessionsPage.label} instead"),

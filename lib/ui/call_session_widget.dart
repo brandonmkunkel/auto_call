@@ -243,7 +243,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
 
                       // Store information from the user prompt
                       var result = await showDialog(
-                          context: context, child: PostSessionPrompt(fileManager: fileManager, phoneList: phoneList));
+                          context: context, builder: (_) => PostSessionPrompt(fileManager: fileManager, phoneList: phoneList));
 
                       Navigator.of(context).pop();
                     })

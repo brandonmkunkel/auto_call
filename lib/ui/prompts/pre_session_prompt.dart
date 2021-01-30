@@ -19,7 +19,6 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
 
   @override
   void initState() {
-    columns = List(widget.phoneList.additionalLabels.length);
     super.initState();
   }
 
