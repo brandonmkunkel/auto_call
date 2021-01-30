@@ -5,6 +5,7 @@ use_modular_headers!
 
 # add the Firebase pod for Google Analytics
 pod 'Firebase/Analytics'
+pod 'Firebase/Auth'
 pod 'Firebase/Crashlytics'
 pod 'Firebase/Performance'
 

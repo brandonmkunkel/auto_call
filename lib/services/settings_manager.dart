@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Enumerator for describing setting access
@@ -23,11 +22,10 @@ class Setting {
 /// Setting Manager takes care of most of the work around saving/loading settings
 ///
 class SettingManager {
-  // Shared Preferences
   static SharedPreferences prefs;
 
   /// Asynchronous init function for calling in at app start up
-  init() async {
+  Future init() async {
     if (prefs == null) {
       prefs = await SharedPreferences.getInstance();
 
