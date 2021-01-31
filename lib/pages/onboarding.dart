@@ -100,11 +100,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 )),
           ],
           onDone: () => _onIntroEnd(context),
-          onSkip: () => _onIntroEnd(context),
+          // onSkip: () => _onIntroEnd(context),
           showSkipButton: this.agreedToTerms,
           skipFlex: 0,
           nextFlex: 0,
-          skip: const Text('Skip', style: TextStyle(color: Colors.white)),
+          // skip: const Text('Skip', style: TextStyle(color: Colors.white)),
           next: const Icon(Icons.arrow_forward, color: Colors.white),
           done: agreedToTerms
               ? Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
