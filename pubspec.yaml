@@ -25,11 +25,11 @@ dependencies:
   cupertino_icons:
 
   # Firebase dependencies
-  firebase_core: "^0.5.3"
-  firebase_analytics: "^6.3.0"
-  firebase_auth: "^0.18.4+1"
-  firebase_crashlytics: "^0.2.4"
-  firebase_performance: "^0.4.3"
+  firebase_core: ^0.5.3
+  firebase_analytics: ^6.3.0
+  firebase_auth: ^0.18.4+1
+  firebase_crashlytics: ^0.2.4
+  firebase_performance: ^0.4.3
 
   # Authentication packages
   flutter_signin_button: ^1.0.0
@@ -43,6 +43,7 @@ dependencies:
   provider:
   charts_flutter:
   flutter_svg:
+  package_info: ^0.4.3+4
 
   # Phone calls
   table_sticky_headers:
@@ -73,7 +74,8 @@ flutter_native_splash:
 # Deploys the App icons to Android/IOS locations. Use the following command
 # flutter pub run flutter_launcher_icons:main
 flutter_icons:
-  image_path: "assets/images/logo_square.png"
+  image_path_android: "assets/images/logo.png"
+  image_path_ios: "assets/images/logo_square.png"
   android: true
   ios: true
 

@@ -116,7 +116,7 @@ class SettingsPageState extends State<SettingsPage> {
                         context: context, builder: (_) => AlertDialog(title: Text("Release Notes:"), content: changelog()));
                   },
                 ),
-                ListTile(dense: true, title: Text("App Version: ")),
+                ListTile(dense: true, title: VersionText()),
                 ListTile(dense: true, title: autoCallCopyright(textAlign: TextAlign.start)),
               ],
             ).toList()),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
+import 'package:package_info/package_info.dart';
 
 class ScrollableAssetText extends StatefulWidget {
   final String assetPath;
@@ -35,49 +35,42 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
   }
 }
 
-// class ScrollableAssetTextState extends State<ScrollableAssetText> {
-//   Widget build(BuildContext context) {
-//     return Container(
-//         padding: EdgeInsets.all(5),
-//         color: Colors.grey,
-//         child: Scrollbar(
-//             child: FutureBuilder(
-//                         future: rootBundle.loadString(widget.assetPath),
-//                         builder: (context, snapshot) {
-//                           return Column(
-//                             children: [Markdown(data: snapshot.data ?? '')],
-//                           );
-//                         })));
-//   }
-// }
+class VersionText extends StatefulWidget {
+  VersionText({Key key}) : super(key: key);
 
-// class VersionText extends StatefulWidget {
-//   VersionText({Key key}) : super(key: key);
-//
-//   @override
-//   VersionTextState createState() => VersionTextState();
-// }
-//
-// class VersionTextState extends State<VersionText> {
-//   Widget build(BuildContext context) {
-//     return FutureBuilder(
-//         future: PackageInfo.fromPlatform(),
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.done) {
-//             // print(snapshot.data);
-//             // PackageInfo packageInfo = snapshot.data;
-//             // // String appName = packageInfo.appName;
-//             // // String packageName = packageInfo.packageName;
-//             // String version = packageInfo.version;
-//             // String buildNumber = packageInfo.buildNumber;
-//
-//             // return Text('App Version: $version+$buildNumber');
-//           }
-//
-//           return Text('App Version: ');
-//         });
-//   }
-// }
+  @override
+  VersionTextState createState() => VersionTextState();
+}
+
+class VersionTextState extends State<VersionText> {
+  String appName;
+  String version;
+  String buildNumber;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Executes after build is done
+      getVersion();
+    });
+  }
+
+  Future<void> getVersion() async {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      // Refresh the page once the data is captured
+      setState(() {
+        appName = packageInfo.appName;
+        version = packageInfo.version;
+        buildNumber = packageInfo.buildNumber;
+      });
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return Text('App Version: $version+$buildNumber');
+  }
+}
 
 /// Pre-defined Widgets functions for returning specific Scrollable Text widgets
 Widget termsAndConditions() => ScrollableAssetText(assetPath: "assets/text/terms_conditions.txt");

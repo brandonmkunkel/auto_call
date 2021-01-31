@@ -35,24 +35,9 @@ class AppDrawer extends StatelessWidget {
                   title: Text('Home', style: Theme.of(context).textTheme.subtitle1),
                   onTap: () => navigatorUpdate(context, HomePage.routeName),
                 ),
-//        ListTile(
-//          leading: Icon(Icons.note_add),
-//          title: Text('File Selector', style: Theme.of(context).textTheme.subtitle1),
-//          onTap: () => navigatorUpdate(context, FileSelectorPage.routeName),
-//        ),
-//        ListTile(
-//          leading: Icon(Icons.cloud_upload),
-//          title: Text('Call Session', style: Theme.of(context).textTheme.subtitle1),
-//          onTap: () => navigatorUpdate(context, CallSessionPage.routeName),
-//        ),
-//        ListTile(
-//          leading: Icon(Icons.history),
-//          title: Text('Call Page', style: Theme.of(context).textTheme.subtitle1),
-//          onTap: () => navigatorUpdate(context, CallPage.routeName),
-//        ),
                 ListTile(
                   leading: Icon(Icons.history),
-                  title: Text('Old Calls', style: Theme.of(context).textTheme.subtitle1),
+                  title: Text('Past Sessions', style: Theme.of(context).textTheme.subtitle1),
                   onTap: () => navigatorUpdate(context, PastSessionsPage.routeName),
                 ),
                 ListTile(
@@ -68,6 +53,7 @@ class AppDrawer extends StatelessWidget {
 
   void navigatorUpdate(BuildContext context, String desiredRoute) {
     if (Navigator.canPop(context)) {
+      print("can pop");
       Navigator.of(context).pop();
     }
 
