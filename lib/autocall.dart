@@ -13,7 +13,6 @@ import 'pages/home.dart';
 import 'pages/file_selector.dart';
 import 'pages/call_page.dart';
 import 'pages/past_sessions.dart';
-import 'pages/legal.dart';
 import 'pages/settings.dart';
 import 'ui/theme.dart';
 
@@ -51,10 +50,8 @@ class _AutoCall extends State<AutoCall> {
             OnboardingPage.routeName: (context) => OnboardingPage(),
             LoginPage.routeName: (context) => LoginPage(),
             FileSelectorPage.routeName: (context) => FileSelectorPage(),
-//              CallPage.routeName: (context) => CallPage(),
             PastSessionsPage.routeName: (context) => PastSessionsPage(),
             SettingsPage.routeName: (context) => SettingsPage(),
-            LegalPage.routeName: (context) => LegalPage(),
           },
           navigatorObservers: <NavigatorObserver>[observer],
         );

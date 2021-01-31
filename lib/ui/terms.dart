@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
+import 'dart:io';
 
 class ScrollableAssetText extends StatefulWidget {
   final String assetPath;
@@ -14,24 +14,26 @@ class ScrollableAssetText extends StatefulWidget {
 
 class ScrollableAssetTextState extends State<ScrollableAssetText> {
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(5),
-        color: Colors.grey,
-        child: Scrollbar(
-            child: SingleChildScrollView(
-                child: Container(
-                    padding: EdgeInsets.all(5),
-                    child: FutureBuilder(
-                        future: rootBundle.loadString(widget.assetPath),
-                        builder: (context, snapshot) {
-                          return Text(snapshot.data ?? '',
-                              softWrap: true,
-                              textAlign: widget.textAlign,
-                              style: TextStyle(fontWeight: FontWeight.w600));
-                        })))));
+    return Row(children: [
+      Expanded(
+          child: Container(
+              padding: EdgeInsets.all(5),
+              color: Colors.grey,
+              child: Scrollbar(
+                  child: SingleChildScrollView(
+                      child: Container(
+                          padding: EdgeInsets.all(5),
+                          child: FutureBuilder(
+                              future: rootBundle.loadString(widget.assetPath),
+                              builder: (context, snapshot) {
+                                return Text(snapshot.data ?? '',
+                                    softWrap: true,
+                                    textAlign: widget.textAlign,
+                                    style: TextStyle(fontWeight: FontWeight.w600));
+                              }))))))
+    ]);
   }
 }
-
 
 // class ScrollableAssetTextState extends State<ScrollableAssetText> {
 //   Widget build(BuildContext context) {
@@ -48,8 +50,6 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
 //                         })));
 //   }
 // }
-
-
 
 // class VersionText extends StatefulWidget {
 //   VersionText({Key key}) : super(key: key);
@@ -84,4 +84,5 @@ Widget termsAndConditions() => ScrollableAssetText(assetPath: "assets/text/terms
 Widget privacyPolicy() => ScrollableAssetText(assetPath: "assets/text/privacy_policy.txt");
 Widget changelog() => ScrollableAssetText(assetPath: "CHANGELOG.md", textAlign: TextAlign.start);
 
-Widget autoCallCopyright({TextAlign textAlign=TextAlign.center}) => Text("Copyright 2021 - Brandon Kunkel", textAlign: textAlign,);
+Widget autoCallCopyright({TextAlign textAlign = TextAlign.center}) =>
+    Text("© Copyright 2020-${DateTime.now().year} Brandon Kunkel", textAlign: textAlign);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 import 'package:auto_call/ui/terms.dart';
@@ -31,9 +32,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   Widget _buildImage(BuildContext context, String assetName) {
-    return Align(
-      child: Image.asset('assets/images/$assetName.png', height: MediaQuery.of(context).size.height * 0.4),
+    return Container(
       alignment: Alignment.bottomCenter,
+      child: Image.asset('assets/images/$assetName.png', height: MediaQuery.of(context).size.height * 0.4),
+    );
+  }
+
+  Widget _buildSVG(BuildContext context, String assetName, {String semanticsLabel}) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: SvgPicture.asset('assets/svg/$assetName.svg', color: Colors.white, semanticsLabel: semanticsLabel),
     );
   }
 
@@ -42,9 +50,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     const pageDecoration = const PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: Colors.white),
       bodyTextStyle: TextStyle(fontSize: 18.0, color: Colors.white),
-      descriptionPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
       pageColor: Colors.green,
-      imagePadding: EdgeInsets.zero,
     );
 
     return Scaffold(
@@ -56,25 +62,25 @@ class _OnboardingPageState extends State<OnboardingPage> {
             PageViewModel(
               title: "Call more clients faster",
               body: "We know how tiring it can be to make a bunch of calls. Let us help you with that!",
-              image: _buildImage(context, 'onboarding1'),
+              image: _buildSVG(context, 'onboarding1'),
               decoration: pageDecoration,
             ),
             PageViewModel(
               title: "Upload an Excel file or simple text File",
               body: "Make sure this file has at least two columns, 'Name' and 'Number'",
-              image: _buildImage(context, 'onboarding2'),
+              image: _buildSVG(context, 'onboarding2'),
               decoration: pageDecoration,
             ),
             PageViewModel(
               title: "Let the magic happen!",
               body: "We take care of typing their numbers and dialing them, so you can focus and take notes!",
-              image: _buildImage(context, 'onboarding3'),
+              image: _buildSVG(context, 'onboarding3'),
               decoration: pageDecoration,
             ),
             PageViewModel(
               title: "Accept Terms and Conditions",
               body: "Before we continue, let's take care of some paperwork",
-              image: _buildImage(context, 'onboarding2'),
+              image: _buildSVG(context, 'onboarding2'),
               decoration: pageDecoration,
             ),
             PageViewModel(
@@ -100,11 +106,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 )),
           ],
           onDone: () => _onIntroEnd(context),
-          // onSkip: () => _onIntroEnd(context),
+          onSkip: () => _onIntroEnd(context),
           showSkipButton: this.agreedToTerms,
           skipFlex: 0,
           nextFlex: 0,
-          // skip: const Text('Skip', style: TextStyle(color: Colors.white)),
+          skip: const Text('Skip', style: TextStyle(color: Colors.white)),
           next: const Icon(Icons.arrow_forward, color: Colors.white),
           done: agreedToTerms
               ? Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))

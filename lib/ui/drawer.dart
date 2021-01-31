@@ -61,15 +61,7 @@ class AppDrawer extends StatelessWidget {
                   onTap: () => navigatorUpdate(context, SettingsPage.routeName),
                 ),
                 Divider(),
-                Expanded(
-                  flex: 1,
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: ListTile(
-                        title: autoCallCopyright(),
-                        onTap: () => navigatorUpdate(context, LegalPage.routeName),
-                      )),
-                ),
+                Expanded(child: Align(alignment: Alignment.bottomCenter, child: ListTile(title: autoCallCopyright()))),
               ],
             )));
   }

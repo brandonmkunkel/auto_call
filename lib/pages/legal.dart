@@ -23,7 +23,6 @@ class LegalPageState extends State<LegalPage> {
       drawer: AppDrawer(),
       body: Stack(children: <Widget>[
         Container(
-          padding: EdgeInsets.all(10.0),
           child: termsAndConditions(),
         )
       ]),

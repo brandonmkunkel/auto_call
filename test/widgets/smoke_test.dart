@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:auto_call/main.dart';
+import 'package:auto_call/pages/onboarding.dart';
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/analytics.dart';
 import 'package:auto_call/pages/file_selector.dart';
@@ -52,6 +53,10 @@ void main() {
 
     testWidgets('App Startup', (WidgetTester tester) async {
       await tester.pumpWidget(App());
+    });
+
+    testWidgets('Onboarding', (WidgetTester tester) async {
+      await tester.pumpWidget(buildTestableWidget(OnboardingPage()));
     });
 
     testWidgets('HomePage', (WidgetTester tester) async {
