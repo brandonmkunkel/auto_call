@@ -47,10 +47,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    const pageDecoration = const PageDecoration(
+    PageDecoration pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: Colors.white),
       bodyTextStyle: TextStyle(fontSize: 18.0, color: Colors.white),
-      pageColor: Colors.green,
+      pageColor: Theme.of(context).primaryColor,
     );
 
     return Scaffold(
@@ -117,11 +117,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
               : Container(),
           dotsDecorator: const DotsDecorator(
             size: Size(10.0, 10.0),
-            color: Color(0xFFBDBDBD),
+            color: Colors.grey,
+            activeColor: Colors.white,
             activeSize: Size(22.0, 10.0),
-            activeShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25.0)),
-            ),
+            // activeShape: RoundedRectangleBorder(
+            //   borderRadius: BorderRadius.all(Radius.circular(25.0)),
+            // ),
           ),
         )));
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/past_sessions.dart';
 import 'package:auto_call/pages/settings.dart';
-import 'package:auto_call/pages/legal.dart';
 import 'package:auto_call/pages/onboarding.dart';
 import 'package:auto_call/pages/login.dart';
 import 'package:auto_call/ui/terms.dart';

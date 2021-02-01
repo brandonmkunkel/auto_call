@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/pages/onboarding.dart';
 import 'package:auto_call/pages/home.dart';
 
 import 'register.dart';
@@ -34,6 +33,16 @@ class _LoginPageState extends State<LoginPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Card(child: Container(
+            child: SignInButtonBuilder(
+              icon: Icons.verified_user,
+              backgroundColor: Colors.orange,
+              text: 'Sign In',
+              onPressed: () => _pushPage(context, SignInPage()),
+            ),
+            padding: const EdgeInsets.all(10),
+            alignment: Alignment.center,
+          )),
           Container(
             child: SignInButtonBuilder(
               icon: Icons.person_add,
@@ -41,17 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               text: 'Registration',
               onPressed: () => _pushPage(context, RegisterPage()),
             ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
-          Container(
-            child: SignInButtonBuilder(
-              icon: Icons.verified_user,
-              backgroundColor: Colors.orange,
-              text: 'Sign In',
-              onPressed: () => _pushPage(context, SignInPage()),
-            ),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(10),
             alignment: Alignment.center,
           ),
         ],

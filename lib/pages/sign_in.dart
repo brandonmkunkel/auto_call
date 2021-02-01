@@ -52,9 +52,9 @@ class _SignInPageState extends State<SignInPage> {
           children: <Widget>[
             _EmailPasswordForm(),
             _EmailLinkSignInSection(),
-            _AnonymouslySignInSection(),
+            // _AnonymouslySignInSection(),
             _PhoneSignInSection(Scaffold.of(context)),
-            _OtherProvidersSignInSection(),
+            // _OtherProvidersSignInSection(),
           ],
         );
       }),

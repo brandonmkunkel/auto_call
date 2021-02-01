@@ -44,6 +44,7 @@ dependencies:
   charts_flutter:
   flutter_svg:
   package_info: ^0.4.3+4
+  flutter_markdown: ^0.5.2
 
   # Phone calls
   table_sticky_headers:

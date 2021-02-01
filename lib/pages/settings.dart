@@ -25,6 +25,9 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Color accentColor = Theme.of(context).accentColor;
+    // Color accentColor = Theme.of(context).floatingActionButtonTheme.backgroundColor;
+
     Map<String, Setting> standardSettings = globalSettingManager.standardSettings();
     Map<String, Setting> premiumSettings = globalSettingManager.premiumSettings();
     Map<String, Setting> enterpriseSettings = globalSettingManager.enterpriseSettings();
@@ -33,9 +36,9 @@ class SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Scrollbar(child:
-      SingleChildScrollView(
-          child: Column(
+      body: Scrollbar(
+          child: SingleChildScrollView(
+              child: Column(
         children: [
           // Go to user account
           ListTile(
@@ -51,10 +54,12 @@ class SettingsPageState extends State<SettingsPage> {
           Divider(),
 
           // Standard settings
-          Column(
-              children: standardSettings.entries.map((entry) {
-            return buildStandardSettingWidget(entry.key, entry.value);
-          }).toList()),
+          Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                  children: standardSettings.entries.map((entry) {
+                return buildStandardSettingWidget(entry.key, entry.value);
+              }).toList())),
 
           // Setting Divider
           Divider(),
@@ -63,63 +68,62 @@ class SettingsPageState extends State<SettingsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Icon(Icons.stars, color: isPremium ? Theme.of(context).accentColor : Colors.grey[500]),
+              Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
               Text(
                 isPremium ? "Premium Settings" : "Available Only for Premium Accounts",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: isPremium ? Theme.of(context).accentColor : Colors.grey[500],
+                    color: isPremium ? accentColor : Colors.grey[500],
                     fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
               ),
-              Icon(Icons.stars, color: isPremium ? Theme.of(context).accentColor : Colors.grey[500]),
+              Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
             ],
           ),
 
           // Premium Settings
-          Column(
-            children: premiumSettings.entries.map((entry) {
-              return buildPremiumSettingWidget(entry.key, entry.value);
-            }).toList(),
-          ),
+          Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Column(
+                children: premiumSettings.entries.map((entry) {
+                  return buildPremiumSettingWidget(entry.key, entry.value);
+                }).toList(),
+              )),
 
           Divider(),
 
-          // Bottom App Information
           Column(
-                children: ListTile.divideTiles(
-              context: context,
-              tiles: [
-                // ListTile(title: Text("Support")),
-                ListTile(
-                  dense: true,
-                  title: Text("Terms and Conditions"),
-                  onTap: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(title: Text("Terms and Conditions:"), content: termsAndConditions()));
-                  },
-                ),
-                ListTile(
-                  dense: true,
-                  title: Text("Privacy Policy"),
-                  onTap: () async {
-                    await showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(title: Text("Privacy Policy:"), content: privacyPolicy()));
-                  },
-                ),
-                ListTile(
-                  dense: true,
-                  title: Text("Release Notes"),
-                  onTap: () async {
-                    await showDialog(
-                        context: context, builder: (_) => AlertDialog(title: Text("Release Notes:"), content: changelog()));
-                  },
-                ),
-                ListTile(dense: true, title: VersionText()),
-                ListTile(dense: true, title: autoCallCopyright(textAlign: TextAlign.start)),
-              ],
-            ).toList()),
+              children: ListTile.divideTiles(
+            context: context,
+            tiles: [
+              // ListTile(title: Text("Contact Support: ")),
+              ListTile(
+                dense: true,
+                title: Text("Terms and Conditions"),
+                onTap: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => Scaffold(appBar: AppBar(title: Text("Terms and Conditions:")), body: termsAndConditions())));
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Privacy Policy"),
+                onTap: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => Scaffold(appBar: AppBar(title: Text("Privacy Policy:")), body: privacyPolicy())));
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: Text("Release Notes"),
+                onTap: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => Scaffold(appBar: AppBar(title: Text("Release Notes")), body: ReleaseNotes())));
+                },
+              ),
+              ListTile(dense: true, title: VersionText()),
+              ListTile(dense: true, title: autoCallCopyright(textAlign: TextAlign.start)),
+            ],
+          ).toList()),
         ],
       ))),
     );
@@ -132,15 +136,15 @@ class SettingsPageState extends State<SettingsPage> {
           return ListTile(
             title: Text(setting.text),
             // subtitle: Text(setting.description),
-            trailing:
-              Switch(
-                value: setting.value,
-                onChanged: (bool value) {
-                  setState(() {
-                    manager.set(key, value);
-                  });
-                },
-              ),
+            trailing: Switch(
+              value: setting.value,
+              activeColor: Theme.of(context).accentColor,
+              onChanged: (bool value) {
+                setState(() {
+                  manager.set(key, value);
+                });
+              },
+            ),
           );
         }
 
@@ -164,6 +168,7 @@ class SettingsPageState extends State<SettingsPage> {
             //     style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
             trailing: Switch(
               value: !isPremium ? false : setting.value,
+              activeColor: Theme.of(context).accentColor,
               onChanged: !isPremium
                   ? (bool value) {}
                   : (bool value) {

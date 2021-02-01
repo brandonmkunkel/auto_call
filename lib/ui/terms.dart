@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
+
 class ScrollableAssetText extends StatefulWidget {
   final String assetPath;
   final TextAlign textAlign;
@@ -18,7 +21,7 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
       Expanded(
           child: Container(
               padding: EdgeInsets.all(5),
-              color: Colors.grey,
+              // color: Colors.grey,
               child: Scrollbar(
                   child: SingleChildScrollView(
                       child: Container(
@@ -35,6 +38,41 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
   }
 }
 
+class ReleaseNotes extends StatefulWidget {
+  final bool mostRecentOnly;
+  ReleaseNotes({Key key, this.mostRecentOnly = false}) : super(key: key);
+
+  @override
+  ReleaseNotesState createState() => ReleaseNotesState();
+}
+
+class ReleaseNotesState extends State<ReleaseNotes> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: rootBundle.loadString("CHANGELOG.md"),
+      builder: (context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Markdown(
+            data: widget.mostRecentOnly
+                ? snapshot.data.substring(0, snapshot.data.indexOf("#", 1))
+                : snapshot.data,
+            selectable: true,
+            extensionSet: md.ExtensionSet.commonMark,
+          );
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+
+}
+
+///
+/// Version Text is used to create a Text Widget which specifies the current version of the app
+///
 class VersionText extends StatefulWidget {
   VersionText({Key key}) : super(key: key);
 
@@ -68,14 +106,13 @@ class VersionTextState extends State<VersionText> {
   }
 
   Widget build(BuildContext context) {
-    return Text('App Version: $version+$buildNumber');
+    return Text('AutoCall Version: $version+$buildNumber');
   }
 }
 
 /// Pre-defined Widgets functions for returning specific Scrollable Text widgets
 Widget termsAndConditions() => ScrollableAssetText(assetPath: "assets/text/terms_conditions.txt");
 Widget privacyPolicy() => ScrollableAssetText(assetPath: "assets/text/privacy_policy.txt");
-Widget changelog() => ScrollableAssetText(assetPath: "CHANGELOG.md", textAlign: TextAlign.start);
 
 Widget autoCallCopyright({TextAlign textAlign = TextAlign.center}) =>
     Text("© Copyright 2020-${DateTime.now().year} Brandon Kunkel", textAlign: textAlign);

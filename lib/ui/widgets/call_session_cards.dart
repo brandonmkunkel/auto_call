@@ -65,7 +65,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                       Spacer(flex: 1),
                       RaisedButton(
                         child: Text("Yes"),
-                        color: Colors.greenAccent,
+                        color: Colors.green,
                         onPressed: () async {
                           // Load old call session
                           String path = globalSettingManager.get("activeCallSessionPath") ?? "";

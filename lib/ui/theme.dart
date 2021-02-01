@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 class ThemeProvider with ChangeNotifier {
   bool _isDarkTheme;
@@ -8,13 +9,16 @@ class ThemeProvider with ChangeNotifier {
   ThemeProvider(this._isDarkTheme);
 
   /// Check if it is dark theme
-  isDark() => _isDarkTheme;
+  bool isDark() => _isDarkTheme;
 
-  /// Get the theme
-  getTheme() => _isDarkTheme ? darkTheme : lightTheme;
+  /// Return dark/might mode theme data
+  ThemeData getTheme() => _isDarkTheme ? darkTheme : lightTheme;
+
+  /// Get the themeMode which used for switching between dark
+  ThemeMode themeMode() =>  _isDarkTheme ? ThemeMode.dark : ThemeMode.light;
 
   /// Set the Dark Theme and notify listeners
-  setTheme(bool isDarkTheme) async {
+  void setTheme(bool isDarkTheme) async {
     _isDarkTheme = isDarkTheme;
     notifyListeners();
   }
@@ -26,17 +30,18 @@ final ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     backgroundColor: Colors.grey[100],
     scaffoldBackgroundColor: Colors.grey[100],
-    primarySwatch: Colors.green,
+    primarySwatch: Colors.blue,
+    accentColor: Colors.blue[500],
     disabledColor: Colors.grey[400],
-    fontFamily: "Raleway"
+    fontFamily: "Roboto"
 );
 
 final ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     backgroundColor: Colors.grey[900],
     scaffoldBackgroundColor: Colors.grey[900],
-    primarySwatch: Colors.green,
-    accentColor: Colors.green[600],
+    primarySwatch: Colors.blue,
+    accentColor: Colors.blue[500],
     disabledColor: Colors.grey[700],
-    fontFamily: "Raleway"
+    fontFamily: "Roboto"
 );
