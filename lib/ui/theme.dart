@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 class ThemeProvider with ChangeNotifier {
-  bool _isDarkTheme;
+  bool _isDarkTheme=true;
 
   /// Instantiate the ThemeProvider class with a dark theme setting
   ThemeProvider(this._isDarkTheme);

@@ -34,7 +34,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   List<FocusNode> focusNodes = [];
   List<bool> acceptedColumns = [];
 
-  // Getter fors for file managers/phone list
+  // Getters for file managers/phone list
   FileManager get fileManager => widget.fileManager;
   PhoneList get phoneList => widget.phoneList;
 
@@ -81,8 +81,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     return callState;
   }
 
-  Future<void> makeCall() async {
-//    if (inCall) {
+  Future<void> makeCall(BuildContext context) async {
     managedCall().then((callState) => inCall = callState);
     print("make call - inCall $inCall");
 
@@ -107,10 +106,17 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     });
   }
 
-  Future<void> makeAutoCall() async {
-    while (!phoneList.isComplete() && this.autoCallEnabled) {
-      await makeCall();
+  Future<void> makeAutoCall(BuildContext context) async {
+    if (this.autoCallEnabled) {
+      // Make consecutive calls
+      while (!phoneList.isComplete() && this.autoCallEnabled) {
+        await makeCall(context);
+      }
+    } else {
+      // Make a single call
+      await makeCall(context);
     }
+
   }
 
   // Update the Scroll controller based on the given item offset
@@ -164,7 +170,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
         actions: <Widget>[
           // CallSettingsButton(),
           SaveButton(fileManager: fileManager, phoneList: phoneList),
-          CallCloseButton(),
+          CallCloseButton(fileManager: fileManager, phoneList: phoneList),
           IconButton(
               icon: Icon(Icons.settings),
               onPressed: () async {
@@ -210,11 +216,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
 
-                          if (autoCallEnabled) {
-                            await makeAutoCall();
-                          } else {
-                            await makeCall();
-                          }
+                          await makeAutoCall(context);
                         },
                         heroTag: "btn_call",
                         tooltip: "Call",

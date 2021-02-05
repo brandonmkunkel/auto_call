@@ -35,7 +35,8 @@ class SaveButton extends StatelessWidget {
 
 class CallCloseButton extends StatelessWidget {
   final FileManager fileManager;
-  CallCloseButton({this.fileManager});
+  final PhoneList phoneList;
+  CallCloseButton({@required this.fileManager, @required this.phoneList});
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +50,18 @@ class CallCloseButton extends StatelessWidget {
          bool acceptSave = await showDialog(
              barrierDismissible: false, context: context, builder: (BuildContext context) => SaveAlert());
 
-          globalSettingManager.set("activeCallSession", false);
-          globalSettingManager.set("activeCallSessionPath", "");
+         await fileManager.saveCallSession(phoneList);
+
+         // Find the Scaffold in the widget tree and use it to show a SnackBar which tells the user that the
+         // Call session was saved
+         Scaffold.of(context).showSnackBar(SnackBar(
+             content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
+             backgroundColor: Colors.grey[600],
+             behavior: SnackBarBehavior.floating
+         ));
+
+          globalSettingManager.set("activeCallSession", acceptSave);
+          globalSettingManager.set("activeCallSessionPath", acceptSave ? await FileManager.savedFilePath(fileManager.path) : "");
           Navigator.of(context).pop();
         }
       },
@@ -92,7 +103,7 @@ class SaveAlert extends StatelessWidget {
       title: Text("Save Call Session"),
       content: Text("Do you wish to save your call session?"),
       actions: <Widget>[
-        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
+        FlatButton(child: Text("No"), onPressed: () => {Navigator.of(context).pop(false)}),
         FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
       ],
     );

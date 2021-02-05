@@ -80,19 +80,26 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                                 context: context,
                                 barrierDismissible: true,
                                 builder: (_) => AlertDialog(
-                                  title: Text("Error Loading File"),
-                                  content: Text("We couldn't find a valid old call session file to open. "
-                                      "This file may be corrupted or lost, try searching within ${PastSessionsPage.label} instead"),
-                                  actions: [
-                                    RaisedButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .push(MaterialPageRoute(builder: (_) => PastSessionsPage()));
-                                      },
-                                      child: Text("Go to ${PastSessionsPage.label}"),
-                                    )
-                                  ],
-                                ));
+                                      title: Text("Error Loading File"),
+                                      content: Text("We couldn't find a valid old call session file to open. "
+                                          "This file may be corrupted or lost, try searching within ${PastSessionsPage.label} instead"),
+                                      actions: [
+                                        RaisedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text("Close"),
+                                          color: Colors.red,
+                                        ),
+                                        RaisedButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(builder: (_) => PastSessionsPage()));
+                                          },
+                                          child: Text("Go to ${PastSessionsPage.label}"),
+                                        )
+                                      ],
+                                    ));
                             globalSettingManager.set("activeCallSession", false);
                             globalSettingManager.set("activeCallSessionPath", "");
                           }

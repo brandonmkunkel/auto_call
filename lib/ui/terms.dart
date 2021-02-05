@@ -53,6 +53,14 @@ class ReleaseNotesState extends State<ReleaseNotes> {
       future: rootBundle.loadString("CHANGELOG.md"),
       builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          // return CustomScrollView(shrinkWrap: true, scrollDirection: Axis.vertical, slivers: <Widget>[
+          //   SliverList(
+          //     delegate: SliverChildListDelegate(splitMarkdownText(widget.mostRecentOnly
+          //             ? snapshot.data.substring(0, snapshot.data.indexOf("#", 1))
+          //             : snapshot.data)),
+          //   )
+          // ]);
+
           return Markdown(
             data: widget.mostRecentOnly
                 ? snapshot.data.substring(0, snapshot.data.indexOf("#", 1))
@@ -67,7 +75,33 @@ class ReleaseNotesState extends State<ReleaseNotes> {
     );
   }
 
-
+  // List<Widget> splitMarkdownText(String text) {
+  //   List<String> versionTexts = text.split("#");
+  //   versionTexts.removeAt(0);
+  //
+  //   // versionTexts.forEach((element) {return "#"+element;});
+  //
+  //
+  //   // print(versionTexts);
+  //
+  //   List<Widget> out = [];
+  //   String version;
+  //
+  //   versionTexts.forEach((element) {
+  //     print("#"+element);
+  //
+  //     ExpansionTile(),
+  //
+  //     // out.add(Markdown(
+  //     //         data: "#"+element,
+  //     //         selectable: true,
+  //     //         extensionSet: md.ExtensionSet.commonMark,
+  //     //       ));
+  //   });
+  //
+  //   return out;
+  //
+  // }
 }
 
 ///
@@ -106,7 +140,7 @@ class VersionTextState extends State<VersionText> {
   }
 
   Widget build(BuildContext context) {
-    return Text('AutoCall Version: $version+$buildNumber');
+    return Text('$appName version: $version+$buildNumber');
   }
 }
 

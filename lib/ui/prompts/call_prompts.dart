@@ -8,7 +8,7 @@ class AfterCallPrompt extends StatefulWidget {
   final int callIdx;
   final TextEditingController controller;
 
-  AfterCallPrompt({Key key, @required this.person, @required this.callIdx, this.controller}) : super(key: key);
+  AfterCallPrompt({Key key, @required this.person, @required this.callIdx, @required this.controller}) : super(key: key);
 
   @override
   AfterCallPromptState createState() => new AfterCallPromptState();
@@ -31,8 +31,8 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    bool premium = globalSettingManager.get("is_premium");
-    bool autoCall = globalSettingManager.get("auto_call");
+    bool premium = globalSettingManager.get("isPremium");
+    bool autoCall = globalSettingManager.get("autoCall");
 
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).backgroundColor.withOpacity(0.9)),
@@ -112,16 +112,17 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
                   Row(mainAxisAlignment: premium ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end, children: [
                 premium
                     ? RaisedButton(
-                        child: autoCall ? Text("Pause Auto Call") : Text("Restart Auto Call"),
+                        child: autoCall ? Text("Pause Auto Call") : Text("Enable Auto Call"),
                         onPressed: () {
                           setState(() {
-                            globalSettingManager.set("auto_call", !autoCall);
+                            globalSettingManager.set("autoCall", !autoCall);
                           });
                         },
                         color: autoCall ? Colors.red : Colors.green,
                       )
                     : Container(),
-                RaisedButton(child: Text("Done"), onPressed: () => Navigator.of(context).pop())
+                RaisedButton(child: autoCall ? Text("Next") : Text("Done"),
+                    onPressed: () => Navigator.of(context).pop())
               ]),
             )
           ]),

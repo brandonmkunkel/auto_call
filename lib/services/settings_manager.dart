@@ -47,20 +47,21 @@ class SettingManager {
 
     // Visible Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
+    "userSignedIn": Setting(text: "Has user signed in", type: bool, settingType: SettingType.free),
     "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
-//    SettingPair(key: "tableLoadPrompt", text: "Edit Table after loading", type: bool, settingType: SettingType.free),
-
-    "showNotes": Setting(text: "Show Call Note and Result Columns", type: bool, settingType: SettingType.free),
-    "postCallPrompt": Setting(text: "Prompt on call completion", type: bool, settingType: SettingType.free),
-    "oneTouchCall": Setting(text: "One Touch Call", type: bool, settingType: SettingType.free),
     "isPremium": Setting(text: "Is the user a premium user", type: bool, settingType: SettingType.free),
     // "isEnterprise": Setting(text: "Is the user an enterprise user", type: bool, settingType: SettingType.free),
 
+//   showTableLoadPrompt SettingPair(key: "tableLoadPrompt", text: "Edit Table after loading", type: bool, settingType: SettingType.free),
+    "showNotes": Setting(text: "Show Call Note and Result Columns", type: bool, settingType: SettingType.free),
+    "postCallPrompt": Setting(text: "Prompt on call completion", type: bool, settingType: SettingType.free),
+    "oneTouchCall": Setting(text: "One Touch Call", type: bool, settingType: SettingType.free),
+
     // Premium Settings
+    "autoCall": Setting(text: "Automatically Call Next Person", type: bool, settingType: SettingType.premium),
     "darkMode": Setting(text: "Dark Mode", type: bool, settingType: SettingType.premium),
     "additionalColumns": Setting(text: "Additional Table Columns", type: bool, settingType: SettingType.premium),
     "editColumns": Setting(text: "Edit Additional Table Columns", type: bool, settingType: SettingType.premium),
-    "autoCall": Setting(text: "Automatically Call Next Person", type: bool, settingType: SettingType.premium),
   };
 
   ///

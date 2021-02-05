@@ -1,3 +1,8 @@
+# v1.0.3
+- Release Notes Page accessible via settings
+- App Version accessible via settings
+- Close/Save prompts in Call Session Page work correctly now
+
 # v1.0.2
 - Each call a user makes saves the progress of the session to the file
 - Reduced file duplication, all call files are saved to the same folder

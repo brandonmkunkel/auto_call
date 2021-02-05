@@ -29,7 +29,7 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    bool editColumns = globalSettingManager.isPremium() ? globalSettingManager.get("edit_columns") : false;
+    bool editColumns = globalSettingManager.isPremium() ? globalSettingManager.get("editColumns") : false;
 
     return Container(
         decoration: BoxDecoration(color: Theme.of(context).backgroundColor.withOpacity(0.9)),

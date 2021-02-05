@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:auto_call/ui/terms.dart';
 import 'package:auto_call/ui/theme.dart';
 import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/ui/widgets/settings_widgets.dart';
 
 import 'account.dart';
 
