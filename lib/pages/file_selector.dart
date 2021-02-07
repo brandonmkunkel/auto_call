@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:auto_call/pages/call_page.dart';
 import 'package:auto_call/services/file_manager.dart';
@@ -33,7 +34,8 @@ class FileSelectorState extends State<FileSelectorPage> {
   @override
   void initState() {
     super.initState();
-    _openFileExplorer();
+
+    // _openFileExplorer();
 
     controller1 = TextEditingController();
     controller2 = TextEditingController();
@@ -51,26 +53,35 @@ class FileSelectorState extends State<FileSelectorPage> {
   }
 
   void _openFileExplorer() async {
-    setState(() => _loadingPath = true);
-    try {
-      _directoryPath = null;
-      _result = await FilePicker.platform.pickFiles(
-        type: _pickingType,
-        allowMultiple: _multiPick,
-        allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null,
-      );
-      _paths = _result?.files;
-    } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
-    } catch (ex) {
-      print(ex);
+    // Either the permission was already granted before or the user just granted it.
+    if (await Permission.storage.request().isGranted) {
+
+      setState(() => _loadingPath = true);
+      try {
+        _directoryPath = null;
+        _result = await FilePicker.platform.pickFiles(
+          type: _pickingType,
+          allowMultiple: _multiPick,
+          allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null,
+        );
+        _paths = _result?.files;
+      } on PlatformException catch (e) {
+        print("Unsupported operation" + e.toString());
+      } catch (ex) {
+        print(ex);
+      }
+
+      if (!mounted) return;
+      setState(() {
+        _loadingPath = false;
+        _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
+      });
+
+    } else {
+      print("no storage permissions");
     }
 
-    if (!mounted) return;
-    setState(() {
-      _loadingPath = false;
-      _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
-    });
+
   }
 
   @override

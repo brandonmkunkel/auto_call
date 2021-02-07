@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:auto_call/pages/home.dart';
-import 'package:auto_call/pages/past_sessions.dart';
-import 'package:auto_call/pages/settings.dart';
+
 import 'package:auto_call/pages/onboarding.dart';
 import 'package:auto_call/pages/login.dart';
+
+import 'package:auto_call/pages/past_sessions.dart';
+import 'package:auto_call/pages/contacts.dart';
+import 'package:auto_call/pages/account.dart';
+import 'package:auto_call/pages/settings.dart';
+
 import 'package:auto_call/ui/terms.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -20,24 +24,29 @@ class AppDrawer extends StatelessWidget {
                   decoration: BoxDecoration(color: Theme.of(context).primaryColor),
                 ),
                 ListTile(
-                  leading: Icon(Icons.account_circle),
+                  leading: Icon(Icons.auto_awesome),
                   title: Text('Onboarding', style: Theme.of(context).textTheme.subtitle1),
                   onTap: () => navigatorUpdate(context, OnboardingPage.routeName),
                 ),
                 ListTile(
-                  leading: Icon(Icons.account_circle),
+                  leading: Icon(Icons.login),
                   title: Text('Login', style: Theme.of(context).textTheme.subtitle1),
                   onTap: () => navigatorUpdate(context, LoginPage.routeName),
-                ),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text('Home', style: Theme.of(context).textTheme.subtitle1),
-                  onTap: () => navigatorUpdate(context, HomePage.routeName),
                 ),
                 ListTile(
                   leading: Icon(Icons.history),
                   title: Text('Past Sessions', style: Theme.of(context).textTheme.subtitle1),
                   onTap: () => navigatorUpdate(context, PastSessionsPage.routeName),
+                ),
+                ListTile(
+                  leading: Icon(Icons.contact_page),
+                  title: Text('Contacts', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () => navigatorUpdate(context, ContactsPage.routeName),
+                ),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Text('Account', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () => navigatorUpdate(context, AccountPage.routeName),
                 ),
                 ListTile(
                   leading: Icon(Icons.settings),
@@ -51,16 +60,6 @@ class AppDrawer extends StatelessWidget {
   }
 
   void navigatorUpdate(BuildContext context, String desiredRoute) {
-    if (Navigator.canPop(context)) {
-      print("can pop");
-      Navigator.of(context).pop();
-    }
-
-    // Push the selected route if it is not the current path
-    Navigator.of(context).pushNamedAndRemoveUntil(desiredRoute, (route) {
-      print("selected route: $desiredRoute, route.isCurrent ${route.isCurrent} : route name: ${route.settings.name}");
-      print("condition ${route.isCurrent && route.settings.name == desiredRoute ? false : true}");
-      return route.isCurrent && route.settings.name == desiredRoute ? false : true;
-    });
+    Navigator.of(context).pushNamed(desiredRoute);
   }
 }

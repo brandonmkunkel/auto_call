@@ -14,6 +14,7 @@ import 'package:auto_call/main.dart';
 import 'package:auto_call/pages/onboarding.dart';
 import 'package:auto_call/pages/home.dart';
 import 'package:auto_call/pages/analytics.dart';
+import 'package:auto_call/pages/contacts.dart';
 import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/pages/past_sessions.dart';
 import 'package:auto_call/pages/settings.dart';
@@ -64,6 +65,10 @@ void main() {
     });
 
     testWidgets('AnalyticsPage', (WidgetTester tester) async {
+      await tester.pumpWidget(buildTestableWidget(AnalyticsPage()));
+    });
+
+    testWidgets('ContactsPage', (WidgetTester tester) async {
       await tester.pumpWidget(buildTestableWidget(AnalyticsPage()));
     });
 

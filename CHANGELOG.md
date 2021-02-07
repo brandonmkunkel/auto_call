@@ -1,3 +1,9 @@
+# v1.0.4
+- Added Contacts page
+- Put AccountPage in app drawer
+- Added permission checks for FileSelector, CallSession, Contacts
+- Simplify page routing via AppDrawer
+
 # v1.0.3
 - Release Notes Page accessible via settings
 - App Version accessible via settings

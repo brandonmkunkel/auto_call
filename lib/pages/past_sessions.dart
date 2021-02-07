@@ -26,7 +26,6 @@ class PastSessionsState extends State<PastSessionsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: AppDrawer(),
       appBar: AppBar(title: Text(widget.title)),
       body: FutureBuilder(
             future: FileManager.findOldCalls(),

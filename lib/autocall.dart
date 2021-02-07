@@ -11,8 +11,9 @@ import 'pages/onboarding.dart';
 import 'pages/login.dart';
 import 'pages/home.dart';
 import 'pages/file_selector.dart';
-import 'pages/call_page.dart';
+import 'pages/contacts.dart';
 import 'pages/past_sessions.dart';
+import 'pages/account.dart';
 import 'pages/settings.dart';
 import 'ui/theme.dart';
 
@@ -55,7 +56,9 @@ class _AutoCall extends State<AutoCall> {
             OnboardingPage.routeName: (context) => OnboardingPage(),
             LoginPage.routeName: (context) => LoginPage(),
             FileSelectorPage.routeName: (context) => FileSelectorPage(),
+            ContactsPage.routeName: (context) => ContactsPage(),
             PastSessionsPage.routeName: (context) => PastSessionsPage(),
+            AccountPage.routeName: (context) => AccountPage(),
             SettingsPage.routeName: (context) => SettingsPage(),
           },
           navigatorObservers: <NavigatorObserver>[observer],

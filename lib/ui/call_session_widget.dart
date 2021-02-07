@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:auto_call/pages/settings.dart';
 
 import 'package:auto_call/services/calls_and_messages_service.dart';
@@ -82,28 +84,30 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   }
 
   Future<void> makeCall(BuildContext context) async {
-    managedCall().then((callState) => inCall = callState);
-    print("make call - inCall $inCall");
+    if (await Permission.phone.request().isGranted) {
+      managedCall().then((callState) => inCall = callState);
+      print("make call - inCall $inCall");
 
-    if (this.postCallPromptEnabled) {
-      // Show after call dialog after the call is complete
-      await showDialog(
-          context: context,
-          builder: (BuildContext context) => AfterCallPrompt(
-                person: phoneList.currentPerson(),
-                callIdx: phoneList.iterator,
-                controller: textControllers[phoneList.iterator],
-              ));
+      if (this.postCallPromptEnabled) {
+        // Show after call dialog after the call is complete
+        await showDialog(
+            context: context,
+            builder: (BuildContext context) => AfterCallPrompt(
+                  person: phoneList.currentPerson(),
+                  callIdx: phoneList.iterator,
+                  controller: textControllers[phoneList.iterator],
+                ));
+      }
+
+      // Update the Widgets on this page
+      setState(() {
+        phoneList.currentPerson().called = true;
+        advanceController(forward: true);
+
+        // Async save to log the current progress each call
+        fileManager.saveCallSession(phoneList);
+      });
     }
-
-    // Update the Widgets on this page
-    setState(() {
-      phoneList.currentPerson().called = true;
-      advanceController(forward: true);
-
-      // Async save to log the current progress each call
-      fileManager.saveCallSession(phoneList);
-    });
   }
 
   Future<void> makeAutoCall(BuildContext context) async {

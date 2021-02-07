@@ -21,7 +21,7 @@ class AccountPageState extends State<AccountPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Container(
-          padding: EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(5.0),
           child: SizedBox.expand(
             child: Card(
               child: Center(

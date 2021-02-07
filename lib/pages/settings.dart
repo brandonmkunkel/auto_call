@@ -41,7 +41,7 @@ class SettingsPageState extends State<SettingsPage> {
         children: [
           // Go to user account
           ListTile(
-            title: Text("User Account"),
+            title: Text("Your Account"),
             trailing: IconButton(
               icon: Icon(Icons.settings),
               onPressed: () {

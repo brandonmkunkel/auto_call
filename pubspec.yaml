@@ -11,7 +11,7 @@ description: A virtual secretary
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.3
+version: 1.0.4
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -36,24 +36,28 @@ dependencies:
   google_sign_in: ^4.5.1
 
   # Other stuff
-  introduction_screen:
-  sqflite:
-  shared_preferences:
-  string_similarity:
+  permission_handler:
   provider:
   charts_flutter:
-  flutter_svg:
+  introduction_screen:
+  string_similarity:
   package_info: ^0.4.3+4
+  flutter_svg:
   flutter_markdown: ^0.5.2
 
   # Phone calls
   table_sticky_headers:
+  contacts_service:
   url_launcher:
   flutter_phone_state: ^0.5.9
   flutter_phone_direct_caller : ^1.0.1
 
+  # Data Persistence
+  sqflite:
+  shared_preferences:
+
   #  Files
-  permission_handler:
+
   csv:
   file_picker: ^2.1.0
   path_provider:

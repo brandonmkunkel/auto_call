@@ -54,6 +54,8 @@
        <string>remote-notification</string>
     </array>
 
+    <key>NSContactsUsageDescription</key>
+    <string>Optional, this app can use your contacts to generate call sessions</string>
 
 	<key>UIStatusBarHidden</key>
 	<true/>
