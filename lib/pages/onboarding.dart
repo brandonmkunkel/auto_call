@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
@@ -55,7 +56,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
     return Scaffold(
         primary: true,
-        body: SafeArea(
+        body: Container(
+        color: Theme.of(context).primaryColor,
+        child: SafeArea(
             child: IntroductionScreen(
           key: introKey,
           pages: [
@@ -85,10 +88,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
             ),
             PageViewModel(
                 title: "Terms and Conditions",
-                bodyWidget: termsAndConditions(),
+                bodyWidget: Container(color: Theme.of(context).backgroundColor, child: termsAndConditions()),
                 decoration: pageDecoration,
                 footer: Container(
-                  color: Colors.grey,
+                  color: Theme.of(context).backgroundColor,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -120,10 +123,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             color: Colors.grey,
             activeColor: Colors.white,
             activeSize: Size(22.0, 10.0),
-            // activeShape: RoundedRectangleBorder(
-            //   borderRadius: BorderRadius.all(Radius.circular(25.0)),
-            // ),
           ),
-        )));
+        ))));
   }
 }

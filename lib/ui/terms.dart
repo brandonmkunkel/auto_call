@@ -32,7 +32,7 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
                                 return Text(snapshot.data ?? '',
                                     softWrap: true,
                                     textAlign: widget.textAlign,
-                                    style: TextStyle(fontWeight: FontWeight.w600));
+                                );
                               }))))))
     ]);
   }
