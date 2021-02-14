@@ -87,7 +87,6 @@ class FileSelectorState extends State<FileSelectorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       drawer: AppDrawer(),
       appBar: AppBar(
