@@ -108,8 +108,6 @@ class ReleaseNotesState extends State<ReleaseNotes> {
 /// Version Text is used to create a Text Widget which specifies the current version of the app
 ///
 class VersionText extends StatefulWidget {
-  VersionText({Key key}) : super(key: key);
-
   @override
   VersionTextState createState() => VersionTextState();
 }

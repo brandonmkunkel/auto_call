@@ -8,7 +8,7 @@ import 'package:auto_call/pages/settings.dart';
 class SaveButton extends StatelessWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
-  SaveButton({@required this.fileManager, @required this.phoneList});
+  SaveButton({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class SaveButton extends StatelessWidget {
 class CallCloseButton extends StatelessWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
-  CallCloseButton({@required this.fileManager, @required this.phoneList});
+  CallCloseButton({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

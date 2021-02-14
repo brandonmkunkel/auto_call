@@ -6,8 +6,6 @@ import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/widgets/call_session_cards.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key}) : super(key: key);
-
   static const String routeName = "/home";
   final String title = "Home";
   final String label = "Home";
