@@ -29,9 +29,10 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
                           child: FutureBuilder(
                               future: rootBundle.loadString(widget.assetPath),
                               builder: (context, snapshot) {
-                                return Text(snapshot.data ?? '',
-                                    softWrap: true,
-                                    textAlign: widget.textAlign,
+                                return Text(
+                                  snapshot.data ?? '',
+                                  softWrap: true,
+                                  textAlign: widget.textAlign,
                                 );
                               }))))))
     ]);
@@ -62,9 +63,7 @@ class ReleaseNotesState extends State<ReleaseNotes> {
           // ]);
 
           return Markdown(
-            data: widget.mostRecentOnly
-                ? snapshot.data.substring(0, snapshot.data.indexOf("#", 1))
-                : snapshot.data,
+            data: widget.mostRecentOnly ? snapshot.data.substring(0, snapshot.data.indexOf("#", 1)) : snapshot.data,
             selectable: true,
             extensionSet: md.ExtensionSet.commonMark,
           );
@@ -148,3 +147,9 @@ Widget privacyPolicy() => ScrollableAssetText(assetPath: "assets/text/privacy_po
 
 Widget autoCallCopyright({TextAlign textAlign = TextAlign.center}) =>
     Text("© Copyright 2020-${DateTime.now().year} Brandon Kunkel", textAlign: textAlign);
+
+// Whole page versions of the above
+Widget termsAndConditionsPage() =>
+    Scaffold(appBar: AppBar(title: Text("Terms and Conditions")), body: termsAndConditions());
+Widget privacyPolicyPage() =>
+    Scaffold(appBar: AppBar(title: Text("Privacy Policy")), body: privacyPolicy());

@@ -11,7 +11,7 @@ description: A virtual secretary
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.5
+version: 1.0.6
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -74,7 +74,7 @@ dev_dependencies:
 # Create splash screens by running the following command:
 # flutter pub run flutter_native_splash:create
 flutter_native_splash:
-  color: "4caf50"
+  color: "2196f3"
 
 # Deploys the App icons to Android/IOS locations. Use the following command
 # flutter pub run flutter_launcher_icons:main

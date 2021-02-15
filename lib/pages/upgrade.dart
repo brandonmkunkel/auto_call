@@ -9,7 +9,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 class UpgradePage extends StatefulWidget {
   static const String routeName = "/upgrade";
   final String title = "Upgrade Account";
-  final String label = "Upgrade Account";
 
   @override
   UpgradePageState createState() => new UpgradePageState();
@@ -35,11 +34,11 @@ class UpgradePageState extends State<UpgradePage> {
         children: [
           Card(
               child: Container(
-                padding: EdgeInsets.all(15.0),
+                  padding: EdgeInsets.all(15.0),
                   child: Column(children: [
-            Text("This page will be updated in the future to accept in-app payments. \n\n"
-                "For the time being, enjoy a free upgrade of your choice :)"),
-          ]))),
+                    Text("This page will be updated in the future to accept in-app payments. \n\n"
+                        "For the time being, enjoy a free upgrade of your choice :)"),
+                  ]))),
           RadioListTile<AccountType>(
             title: const Text('Free'),
             value: AccountType.free,
@@ -79,5 +78,55 @@ class UpgradePageState extends State<UpgradePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
+  }
+}
+
+///
+/// Upgrade prompt which normalizes interface for gatekeeping access to different widgets
+///
+class UpgradePromptWidget extends StatefulWidget {
+  final AccountType requiredAccountType;
+  final String featureName;
+  final Widget child;
+
+  UpgradePromptWidget({@required this.requiredAccountType, @required this.featureName, @required this.child});
+
+  @override
+  UpgradePromptWidgetState createState() => new UpgradePromptWidgetState();
+}
+
+class UpgradePromptWidgetState extends State<UpgradePromptWidget> {
+  // Turn the account level into a string
+  String get accountLevelString => widget.requiredAccountType.toString().split(".")[1];
+
+  String get accountLevelDescriptor => "${accountLevelString[0].toUpperCase()}${accountLevelString.substring(1)}";
+
+  @override
+  Widget build(BuildContext context) {
+    return globalSettingManager.accountType.index >= widget.requiredAccountType.index
+        ? widget.child
+        : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Container(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                child: Text(
+                  "Free accounts do not have access to ${widget.featureName.toLowerCase()}",
+                  style: Theme.of(context).textTheme.subtitle1,
+                  textAlign: TextAlign.center,
+                )),
+            Container(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                child: Text(
+                  "Only $accountLevelDescriptor accounts have access to this feature",
+                  style: Theme.of(context).textTheme.subtitle1,
+                  textAlign: TextAlign.center,
+                )),
+            RaisedButton(
+                child: Text("Upgrade Account"),
+                onPressed: () async {
+                  await Navigator.of(context).pushNamed("/upgrade");
+
+                  setState(() {});
+                })
+          ]);
   }
 }

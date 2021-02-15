@@ -11,7 +11,6 @@ import 'package:auto_call/services/settings_manager.dart';
 class CallSessionPage extends StatefulWidget {
   static const String routeName = "/call_session";
   final String title = "Call Session";
-  final String label = "Call Session";
   final FileManager fileManager;
 
   CallSessionPage({Key key, @required this.fileManager}) : super(key: key);

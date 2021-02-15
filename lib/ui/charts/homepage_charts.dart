@@ -4,6 +4,8 @@ import 'package:auto_call/pages/analytics.dart';
 import 'package:auto_call/ui/charts/call_breakdown.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/services/call_database_manager.dart';
+import 'package:auto_call/services/account_database_manager.dart';
 
 
 class HomeStatsCard extends StatefulWidget {
@@ -15,6 +17,7 @@ class HomeStatsCardState extends State<HomeStatsCard> {
   @override
   Widget build(BuildContext context) {
    return Card(
+       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
        child: Container(
            padding: EdgeInsets.all(15.0),
            child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -27,7 +30,7 @@ class HomeStatsCardState extends State<HomeStatsCard> {
              // DonutPieChart.withSampleData(),
              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                OutlineButton(child: Text("Go to Stats Page"), onPressed: (){
-                 // Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnalyticsPage()));
+                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnalyticsPage()));
                },)
              ])
 

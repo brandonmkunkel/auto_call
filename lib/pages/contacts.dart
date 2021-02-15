@@ -1,11 +1,12 @@
+import 'package:auto_call/pages/upgrade.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/ui/widgets/phone_contacts.dart';
+import 'package:auto_call/services/settings_manager.dart';
 
 class ContactsPage extends StatefulWidget {
   static const String routeName = "/contacts";
   final String title = "Contacts";
-  final String label = "Contacts";
 
   @override
   ContactsState createState() => new ContactsState();
@@ -43,12 +44,14 @@ class AppContactsWidget extends StatefulWidget {
 class AppContactsState extends State<AppContactsWidget> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Text(
-      "This app does not save your contacts yet.",
-      style: Theme.of(context).textTheme.subtitle1,
-      textAlign: TextAlign.center,
-    ));
+    return UpgradePromptWidget(
+        requiredAccountType: AccountType.premium,
+        featureName: "contact tracking",
+        child: Center(
+            child: Text(
+          "This app does not save your contacts yet.",
+          style: Theme.of(context).textTheme.subtitle1,
+          textAlign: TextAlign.center,
+        )));
   }
 }
-

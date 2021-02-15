@@ -1,3 +1,11 @@
+# v1.0.6
+- Moved terms and conditions/privacy policy acceptance to registration page
+- Added common widget for gate-keeping access to premium features
+- App Drawer now shows basic account information
+- Minor padding updates to Card widgets.
+- App Drawer now has sign out option
+- Updated splash page color to new Primary Color scheme.
+
 # v1.0.5
 - Integrated user authentication with external auth manager
 - Account Page started and minimally integrated with user auth manager

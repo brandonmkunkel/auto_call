@@ -251,7 +251,8 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                       var result = await showDialog(
                           context: context, builder: (_) => PostSessionPrompt(fileManager: fileManager, phoneList: phoneList));
 
-                      Navigator.of(context).pop();
+                      // Remove all pages in stack and return to home
+                      Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
                     })
             // fill in required params
             ),
