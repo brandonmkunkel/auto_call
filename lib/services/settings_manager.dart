@@ -81,12 +81,9 @@ class SettingManager {
     });
   }
 
-  // Reset the user preferences cache
-  void reset() {
+  // Clear the user preferences cache, this may be used with account deletion
+  void clear() {
     prefs.clear();
-
-    print(settings.map((String key, Setting value) => MapEntry(key, value.type)));
-    // SharedPreferences.setMockInitialValues();
   }
 
   // Return Standard Settings
@@ -119,8 +116,8 @@ class SettingManager {
   }
 
   // Check to see if the user is premium
-  bool isPremium() => prefs.getInt("accountLevel") >= 1;
-  bool isEnterprise() => prefs.getInt("accountLevel") == 2;
+  bool isPremium() => prefs.getInt("accountLevel") ?? 0 >= 1;
+  bool isEnterprise() => prefs.getInt("accountLevel") ?? 0 == 2;
 
   AccountType get accountType => AccountType.values[globalSettingManager.get("accountLevel")];
 
