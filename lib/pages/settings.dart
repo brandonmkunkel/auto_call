@@ -73,7 +73,7 @@ class SettingsPageState extends State<SettingsPage> {
                         children: <Widget>[
                           Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
                           Text(
-                            isPremium ? "Premium Settings" : "Premium Accounts Only",
+                            isPremium ? "Premium Settings" : "Premium Account Settings",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: isPremium ? accentColor : Colors.grey[500],

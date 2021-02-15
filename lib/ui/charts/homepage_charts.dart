@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/analytics.dart';
 import 'package:auto_call/ui/charts/call_breakdown.dart';
 
+import 'package:auto_call/services/settings_manager.dart';
+
 
 class HomeStatsCard extends StatefulWidget {
   @override

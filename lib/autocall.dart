@@ -14,6 +14,7 @@ import 'pages/file_selector.dart';
 import 'pages/contacts.dart';
 import 'pages/past_sessions.dart';
 import 'pages/account.dart';
+import 'pages/upgrade.dart';
 import 'pages/settings.dart';
 import 'ui/theme.dart';
 
@@ -61,6 +62,7 @@ class _AutoCall extends State<AutoCall> {
             ContactsPage.routeName: (context) => ContactsPage(),
             PastSessionsPage.routeName: (context) => PastSessionsPage(),
             AccountPage.routeName: (context) => AccountPage(),
+            UpgradePage.routeName: (context) => UpgradePage(),
             SettingsPage.routeName: (context) => SettingsPage(),
           },
           navigatorObservers: <NavigatorObserver>[observer],

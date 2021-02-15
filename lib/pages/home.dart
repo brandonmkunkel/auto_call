@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/pages/file_selector.dart';
-import 'package:auto_call/ui/charts/homepage_chart.dart';
+import 'package:auto_call/pages/account.dart';
+import 'package:auto_call/ui/charts/homepage_charts.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/widgets/call_session_cards.dart';
 
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              AccountUpgradeCard(),
               ActiveCallSessionCard(),
               HomeStatsCard()
             ],

@@ -1,3 +1,8 @@
+# v1.0.5
+- Integrated user authentication with external auth manager
+- Account Page started and minimally integrated with user auth manager
+- Added page for changing account levels (will be updated with in-app payment in the future)
+
 # v1.0.4
 - Added Contacts page
 - Put AccountPage in app drawer

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/pages/upgrade.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -18,7 +19,7 @@ class AccountPage extends StatefulWidget {
 class AccountPageState extends State<AccountPage> {
   final SettingManager manager = globalSettingManager;
   bool accountChanged = false;
-  AccountType accountType;
+  AccountType get accountType => globalSettingManager.accountType;
 
   // Turn the account levle into a string
   String get accountLevelString => accountType.toString().split(".")[1];
@@ -34,9 +35,6 @@ class AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Store account type
-    accountType = AccountType.values[globalSettingManager.get("accountLevel")];
-
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -73,22 +71,7 @@ class AccountPageState extends State<AccountPage> {
             //         ),
             //       )),
 
-            Card(
-              child: ListTile(
-                title: Text("Account Level: ${this.accountLevelDescriptor}"),
-                trailing: RaisedButton(
-                  child: Text(
-                    "Update",
-                    style: Theme.of(context).primaryTextTheme.button,
-                  ),
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () {
-                    // Navigator.of(context).push()
-                  },
-                ),
-                enabled: true,
-              ),
-            ),
+            AccountUpgradeCard(),
 
             Card(
               child: Column(
@@ -102,18 +85,7 @@ class AccountPageState extends State<AccountPage> {
               ),
             ),
 
-            Card(
-              child: Column(
-                children: [
-                  ListTile(title: Text("Organization")),
-                  ListTile(title: Text("Team ID")),
-                  ListTile(title: Text("Team Role")),
-                  ListTile(
-                    trailing: RaisedButton(child: Text("Leave Organization")),
-                  )
-                ],
-              ),
-            ),
+            OrganizationStatusCard(),
 
             Card(
               child: Column(
@@ -213,6 +185,63 @@ class DeleteAccountState extends State<DeleteAccountDialog> {
             ),
           ])
         ],
+      ),
+    );
+  }
+}
+
+class OrganizationStatusCard extends StatefulWidget {
+  @override
+  OrganizationStatusCardState createState() => OrganizationStatusCardState();
+}
+
+class OrganizationStatusCardState extends State<OrganizationStatusCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          ListTile(title: Text("Organization")),
+          ListTile(title: Text("Team ID")),
+          ListTile(title: Text("Team Role")),
+          ListTile(
+            trailing: RaisedButton(child: Text("Leave Organization")),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AccountUpgradeCard extends StatefulWidget {
+  @override
+  AccountUpgradeCardState createState() => AccountUpgradeCardState();
+}
+
+class AccountUpgradeCardState extends State<AccountUpgradeCard> {
+  AccountType get accountType => globalSettingManager.accountType;
+
+  String get accountLevelString => accountType.toString().split(".")[1];
+
+  String get accountLevelDescriptor => "${accountLevelString[0].toUpperCase()}${accountLevelString.substring(1)}";
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text("Account Level: ${this.accountLevelDescriptor}"),
+        trailing: RaisedButton(
+          child: Text(
+            accountType == AccountType.free ? "Upgrade" : "Change",
+            style: Theme.of(context).primaryTextTheme.button,
+          ),
+          color: Theme.of(context).primaryColor,
+          onPressed: () async {
+            await Navigator.of(context).pushNamed("/upgrade");
+            setState(() {});
+          },
+        ),
+        enabled: true,
       ),
     );
   }
