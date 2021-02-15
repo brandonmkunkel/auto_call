@@ -35,8 +35,6 @@ class FileSelectorState extends State<FileSelectorPage> {
   void initState() {
     super.initState();
 
-    // _openFileExplorer();
-
     controller1 = TextEditingController();
     controller2 = TextEditingController();
     _focusNode1 = FocusNode();

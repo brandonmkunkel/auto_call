@@ -145,8 +145,9 @@ class PastSessionsState extends State<PastSessionsPage> {
             padding: EdgeInsets.all(20.0),
             alignment: Alignment.center,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("No old call sessions found.", style: Theme.of(context).textTheme.subtitle1),
+                Text("No call sessions found.", style: Theme.of(context).textTheme.subtitle1),
                 RaisedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => FileSelectorPage()));

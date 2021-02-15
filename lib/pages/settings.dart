@@ -43,7 +43,7 @@ class SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: Text("Your Account"),
             trailing: IconButton(
-              icon: Icon(Icons.settings),
+              icon: Icon(Icons.account_circle),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
               },
@@ -60,32 +60,38 @@ class SettingsPageState extends State<SettingsPage> {
                 return buildStandardSettingWidget(entry.key, entry.value);
               }).toList())),
 
-          // Setting Divider
-          Divider(),
-
           // Premium Settings Label (changes if the premium user changes)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
-              Text(
-                isPremium ? "Premium Settings" : "Available Only for Premium Accounts",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: isPremium ? accentColor : Colors.grey[500],
-                    fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
-              ),
-              Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
-            ],
-          ),
-
-          // Premium Settings
-          Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+          Card(
+              margin: EdgeInsets.all(5.0),
               child: Column(
-                children: premiumSettings.entries.map((entry) {
-                  return buildPremiumSettingWidget(entry.key, entry.value);
-                }).toList(),
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                      padding: EdgeInsets.only(top: 15.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
+                          Text(
+                            isPremium ? "Premium Settings" : "Premium Accounts Only",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: isPremium ? accentColor : Colors.grey[500],
+                                fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
+                          ),
+                          Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
+                        ],
+                      )),
+
+                  // Premium Settings
+                  Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Column(
+                        children: premiumSettings.entries.map((entry) {
+                          return buildPremiumSettingWidget(entry.key, entry.value);
+                        }).toList(),
+                      )),
+                ],
               )),
 
           Divider(),
@@ -100,7 +106,8 @@ class SettingsPageState extends State<SettingsPage> {
                 title: Text("Terms and Conditions"),
                 onTap: () async {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => Scaffold(appBar: AppBar(title: Text("Terms and Conditions:")), body: termsAndConditions())));
+                      builder: (_) =>
+                          Scaffold(appBar: AppBar(title: Text("Terms and Conditions:")), body: termsAndConditions())));
                 },
               ),
               ListTile(
@@ -134,7 +141,7 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return ListTile(
             title: Text(setting.text),
-            // subtitle: Text(setting.description),
+            subtitle: setting.description != null ? Text(setting.description) : null,
             trailing: Switch(
               value: setting.value,
               activeColor: Theme.of(context).accentColor,
@@ -149,6 +156,24 @@ class SettingsPageState extends State<SettingsPage> {
 
       case int:
         {
+          // return ListTile(
+          //   title: Text(setting.text),
+          //
+          //   // trailing: Text("${setting.value ?? 0}"),
+          //   trailing: ToggleButtons(children: [
+          //     Text("Free"), Text("Premium"), Text("Enterprise")
+          //   ], isSelected: [],),
+          //   // subtitle: Text(setting.description),
+          // trailing: Switch(
+          //   value: setting.value,
+          //   activeColor: Theme.of(context).accentColor,
+          //   onChanged: (bool value) {
+          //     setState(() {
+          //       manager.set(key, value);
+          //     });
+          //   },
+          // ),
+          // );
           return Container();
         }
     }
@@ -163,8 +188,10 @@ class SettingsPageState extends State<SettingsPage> {
           return ListTile(
             title: Text(setting.text,
                 style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
-            // subtitle: Text(setting.description,
-            //     style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
+            subtitle: setting.description != null
+                ? Text(setting.description,
+                    style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor))
+                : null,
             trailing: Switch(
               value: !isPremium ? false : setting.value,
               activeColor: Theme.of(context).accentColor,

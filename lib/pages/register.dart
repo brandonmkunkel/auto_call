@@ -1,3 +1,4 @@
+import 'package:auto_call/services/settings_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/button_builder.dart';
@@ -6,7 +7,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 /// Entrypoint example for registering via Email/Password.
 class RegisterPage extends StatefulWidget {
-  /// The page title.
   final String title = 'Registration';
 
   @override

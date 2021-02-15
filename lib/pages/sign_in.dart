@@ -45,25 +45,38 @@ class _SignInPageState extends State<SignInPage> {
           })
         ],
       ),
-      body: Builder(builder: (BuildContext context) {
-        return ListView(
-          padding: EdgeInsets.all(8),
-          scrollDirection: Axis.vertical,
-          children: <Widget>[
-            _EmailPasswordForm(),
-            _EmailLinkSignInSection(),
-            // _AnonymouslySignInSection(),
-            _PhoneSignInSection(Scaffold.of(context)),
-            // _OtherProvidersSignInSection(),
-          ],
-        );
-      }),
+      body: SignInWidget(),
     );
   }
 
   // Example code for sign out.
   void _signOut() async {
     await _auth.signOut();
+  }
+}
+
+class SignInWidget extends StatefulWidget {
+  @override
+  _SignInWidgetState createState() => _SignInWidgetState();
+}
+
+class _SignInWidgetState extends State<SignInWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Builder(builder: (BuildContext context) {
+      return ListView(
+        padding: EdgeInsets.all(5),
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        children: <Widget>[
+          _EmailPasswordForm(),
+          // _EmailLinkSignInSection(),
+          // _AnonymouslySignInSection(),
+          // _PhoneSignInSection(Scaffold.of(context)),
+          // _OtherProvidersSignInSection(),
+        ],
+      );
+    });
   }
 }
 
@@ -82,15 +95,15 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
     return Form(
         key: _formKey,
         child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  child: const Text(
-                    'Sign in with email and password',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  child: Text(
+                    'Sign in',
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   alignment: Alignment.center,
                 ),
@@ -119,7 +132,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                     text: "Sign In",
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-                        _signInWithEmailAndPassword();
+                        _signInWithEmailAndPassword(context);
                       }
                     },
                   ),
@@ -138,17 +151,16 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   }
 
   // Example code of how to sign in with email and password.
-  void _signInWithEmailAndPassword() async {
+  void _signInWithEmailAndPassword(BuildContext context) async {
     try {
       final User user = (await _auth.signInWithEmailAndPassword(
-        email: _emailController.text,
+        email: _emailController.text.trim(),
         password: _passwordController.text,
       ))
           .user;
 
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("${user.email} signed in"),
-      ));
+      // Pop all routes and then push the login page
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
     } catch (e) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("Failed to sign in with Email & Password"),
@@ -174,38 +186,37 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
         key: _formKey,
         child: Card(
             child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    child: Text('Test sign in with email and link',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    alignment: Alignment.center,
-                  ),
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    validator: (String value) {
-                      if (value.isEmpty) return 'Please enter your email.';
-                      return null;
-                    },
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    alignment: Alignment.center,
-                    child: SignInButtonBuilder(
-                      icon: Icons.insert_link,
-                      text: "Sign In",
-                      backgroundColor: Colors.blueGrey[700],
-                      onPressed: () async {
-                        await _signInWithEmailAndLink();
-                      },
-                    ),
-                  ),
-                ],
+          padding: EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: Text('Test sign in with email and link', style: TextStyle(fontWeight: FontWeight.bold)),
+                alignment: Alignment.center,
               ),
-            )));
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (String value) {
+                  if (value.isEmpty) return 'Please enter your email.';
+                  return null;
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 16.0),
+                alignment: Alignment.center,
+                child: SignInButtonBuilder(
+                  icon: Icons.insert_link,
+                  text: "Sign In",
+                  backgroundColor: Colors.blueGrey[700],
+                  onPressed: () async {
+                    await _signInWithEmailAndLink();
+                  },
+                ),
+              ),
+            ],
+          ),
+        )));
   }
 
   @override
@@ -221,8 +232,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
       await _auth.sendSignInLinkToEmail(
           email: _userEmail,
           actionCodeSettings: ActionCodeSettings(
-              url:
-              'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
+              url: 'https://react-native-firebase-testing.firebaseapp.com/emailSignin',
               handleCodeInApp: true,
               iOSBundleId: 'io.flutter.plugins.firebaseAuthExample',
               androidPackageName: 'io.flutter.plugins.firebaseauthexample'));
@@ -257,8 +267,7 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  child: const Text('Test sign in anonymously',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('Test sign in anonymously', style: TextStyle(fontWeight: FontWeight.bold)),
                   alignment: Alignment.center,
                 ),
                 Container(
@@ -279,11 +288,7 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      _success == null
-                          ? ''
-                          : (_success
-                          ? 'Successfully signed in, uid: ' + _userID
-                          : 'Sign in failed'),
+                      _success == null ? '' : (_success ? 'Successfully signed in, uid: ' + _userID : 'Sign in failed'),
                       style: TextStyle(color: Colors.red),
                     ),
                   ),
@@ -335,12 +340,10 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.only(bottom: 16),
-                  child: const Text('Test sign in with phone number',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text('Test sign in with phone number', style: TextStyle(fontWeight: FontWeight.bold)),
                   alignment: Alignment.center,
                 ),
-                Text(
-                    "Sign In with Phone Number on Web is currently unsupported")
+                Text("Sign In with Phone Number on Web is currently unsupported")
               ],
             )),
       );
@@ -352,14 +355,12 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                child: const Text('Test sign in with phone number',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text('Test sign in with phone number', style: TextStyle(fontWeight: FontWeight.bold)),
                 alignment: Alignment.center,
               ),
               TextFormField(
                 controller: _phoneNumberController,
-                decoration: const InputDecoration(
-                    labelText: 'Phone number (+x xxx-xxx-xxxx)'),
+                decoration: const InputDecoration(labelText: 'Phone number (+x xxx-xxx-xxxx)'),
                 validator: (String value) {
                   if (value.isEmpty) {
                     return 'Phone number (+x xxx-xxx-xxxx)';
@@ -381,8 +382,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
               ),
               TextField(
                 controller: _smsController,
-                decoration:
-                const InputDecoration(labelText: 'Verification code'),
+                decoration: const InputDecoration(labelText: 'Verification code'),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 16.0),
@@ -417,33 +417,27 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
       _message = '';
     });
 
-    PhoneVerificationCompleted verificationCompleted =
-        (PhoneAuthCredential phoneAuthCredential) async {
+    PhoneVerificationCompleted verificationCompleted = (PhoneAuthCredential phoneAuthCredential) async {
       await _auth.signInWithCredential(phoneAuthCredential);
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(
-            "Phone number automatically verified and user signed in: $phoneAuthCredential"),
+        content: Text("Phone number automatically verified and user signed in: $phoneAuthCredential"),
       ));
     };
 
-    PhoneVerificationFailed verificationFailed =
-        (FirebaseAuthException authException) {
+    PhoneVerificationFailed verificationFailed = (FirebaseAuthException authException) {
       setState(() {
-        _message =
-        'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
+        _message = 'Phone number verification failed. Code: ${authException.code}. Message: ${authException.message}';
       });
     };
 
-    PhoneCodeSent codeSent =
-        (String verificationId, [int forceResendingToken]) async {
+    PhoneCodeSent codeSent = (String verificationId, [int forceResendingToken]) async {
       Scaffold.of(context).showSnackBar(const SnackBar(
         content: Text('Please check your phone for the verification code.'),
       ));
       _verificationId = verificationId;
     };
 
-    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-        (String verificationId) {
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout = (String verificationId) {
       _verificationId = verificationId;
     };
 
@@ -490,8 +484,7 @@ class _OtherProvidersSignInSection extends StatefulWidget {
   State<StatefulWidget> createState() => _OtherProvidersSignInSectionState();
 }
 
-class _OtherProvidersSignInSectionState
-    extends State<_OtherProvidersSignInSection> {
+class _OtherProvidersSignInSectionState extends State<_OtherProvidersSignInSection> {
   final TextEditingController _tokenController = TextEditingController();
   final TextEditingController _tokenSecretController = TextEditingController();
 
@@ -509,17 +502,15 @@ class _OtherProvidersSignInSectionState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                child: const Text('Social Authentication',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text('Social Authentication', style: TextStyle(fontWeight: FontWeight.bold)),
                 alignment: Alignment.center,
               ),
               Container(
                 padding: EdgeInsets.only(top: 16),
                 child: kIsWeb
                     ? Text(
-                    'When using Flutter Web, API keys are configured through the Firebase Console. The below providers demonstrate how this works')
-                    : Text(
-                    'We do not provide an API to obtain the token for below providers apart from Google '
+                        'When using Flutter Web, API keys are configured through the Firebase Console. The below providers demonstrate how this works')
+                    : Text('We do not provide an API to obtain the token for below providers apart from Google '
                         'Please use a third party service to obtain token for other providers.'),
                 alignment: Alignment.center,
               ),
@@ -571,16 +562,14 @@ class _OtherProvidersSignInSectionState
                 visible: _showProviderTokenField && !kIsWeb,
                 child: TextField(
                   controller: _tokenController,
-                  decoration: const InputDecoration(
-                      labelText: 'Enter provider\'s token'),
+                  decoration: const InputDecoration(labelText: 'Enter provider\'s token'),
                 ),
               ),
               Visibility(
                 visible: _showAuthSecretTextField && !kIsWeb,
                 child: TextField(
                   controller: _tokenSecretController,
-                  decoration: const InputDecoration(
-                      labelText: 'Enter provider\'s authTokenSecret'),
+                  decoration: const InputDecoration(labelText: 'Enter provider\'s authTokenSecret'),
                 ),
               ),
               Container(
@@ -590,10 +579,8 @@ class _OtherProvidersSignInSectionState
                   _provider == "GitHub"
                       ? Buttons.GitHub
                       : (_provider == "Facebook"
-                      ? Buttons.Facebook
-                      : (_provider == "Twitter"
-                      ? Buttons.Twitter
-                      : Buttons.GoogleDark)),
+                          ? Buttons.Facebook
+                          : (_provider == "Twitter" ? Buttons.Twitter : Buttons.GoogleDark)),
                   text: "Sign In",
                   onPressed: () async {
                     _signInWithOtherProvider();
@@ -715,9 +702,8 @@ class _OtherProvidersSignInSectionState
         TwitterAuthProvider twitterProvider = TwitterAuthProvider();
         await _auth.signInWithPopup(twitterProvider);
       } else {
-        final AuthCredential credential = TwitterAuthProvider.credential(
-            accessToken: _tokenController.text,
-            secret: _tokenSecretController.text);
+        final AuthCredential credential =
+            TwitterAuthProvider.credential(accessToken: _tokenController.text, secret: _tokenSecretController.text);
         userCredential = await _auth.signInWithCredential(credential);
       }
 
@@ -744,10 +730,8 @@ class _OtherProvidersSignInSectionState
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
         final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-        final GoogleAuthCredential googleAuthCredential =
-        GoogleAuthProvider.credential(
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );

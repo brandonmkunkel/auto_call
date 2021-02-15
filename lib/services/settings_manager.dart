@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Enumerator for describing setting access
 enum SettingType { hidden, free, premium, enterprise }
+enum AccountType { free, premium, enterprise }
 
 // Setting class used in Map
 class Setting {
@@ -44,6 +45,7 @@ class SettingManager {
     // Hidden Settings
     "activeCallSession": Setting(type: bool, settingType: SettingType.hidden),
     "activeCallSessionPath": Setting(type: String, settingType: SettingType.hidden),
+    "accountLevel": Setting(text: "User Account Level", type: int, settingType: SettingType.free),
 
     // Visible Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
@@ -81,6 +83,14 @@ class SettingManager {
     });
   }
 
+  // Reset the user preferences cache
+  void reset() {
+    prefs.clear();
+
+    print(settings.map((String key, Setting value) => MapEntry(key, value.type)));
+    // SharedPreferences.setMockInitialValues();
+  }
+
   // Return Standard Settings
   Map<String, Setting> standardSettings() => getSettings(SettingType.free);
 
@@ -113,6 +123,9 @@ class SettingManager {
   // Check to see if the user is premium
   bool isPremium() => prefs.getBool("isPremium") ?? false;
   bool isEnterprise() => prefs.getBool("isEnterprise") ?? false;
+
+  bool isPremium2() => prefs.getInt("accountLevel") == 1;
+  bool isEnterprise2() => prefs.getInt("accountLevel") == 2;
 
   dynamic get(String key) {
     if (!settings.containsKey(key)) {

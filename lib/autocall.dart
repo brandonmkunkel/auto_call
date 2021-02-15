@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'services/settings_manager.dart';
 
@@ -16,6 +16,8 @@ import 'pages/past_sessions.dart';
 import 'pages/account.dart';
 import 'pages/settings.dart';
 import 'ui/theme.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AutoCall extends StatefulWidget {
   final String title = "Auto Call";
@@ -48,7 +50,7 @@ class _AutoCall extends State<AutoCall> {
           // Set apps first page by checking whether or not the user has been onboarded
           home: !globalSettingManager.get("userOnboarded")
               ? OnboardingPage()
-              : HomePage(),
+              : _auth.currentUser != null ? HomePage() : LoginPage(),
 
           // Routes
           routes: {
