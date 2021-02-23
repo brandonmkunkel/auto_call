@@ -139,18 +139,18 @@ class SettingsPageState extends State<SettingsPage> {
     switch (setting.type) {
       case bool:
         {
-          return ListTile(
+          return SwitchListTile.adaptive(
             title: Text(setting.text),
-            subtitle: setting.description != null ? Text(setting.description) : null,
-            trailing: Switch(
-              value: setting.value,
-              activeColor: Theme.of(context).accentColor,
-              onChanged: (bool value) {
-                setState(() {
-                  manager.set(key, value);
-                });
-              },
-            ),
+            subtitle:
+                setting.description != null ? Text(setting.description) : null,
+            controlAffinity: ListTileControlAffinity.trailing,
+            value: setting.value,
+            activeColor: Theme.of(context).accentColor,
+            onChanged: (bool value) {
+              setState(() {
+                manager.set(key, value);
+              });
+            },
           );
         }
 
@@ -185,28 +185,34 @@ class SettingsPageState extends State<SettingsPage> {
     switch (setting.type) {
       case bool:
         {
-          return ListTile(
+          return SwitchListTile.adaptive(
             title: Text(setting.text,
-                style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor)),
+                style: TextStyle(
+                    color: !isPremium
+                        ? Colors.grey[500]
+                        : Theme.of(context).accentColor)),
             subtitle: setting.description != null
                 ? Text(setting.description,
-                    style: TextStyle(color: !isPremium ? Colors.grey[500] : Theme.of(context).accentColor))
+                    style: TextStyle(
+                        color: !isPremium
+                            ? Colors.grey[500]
+                            : Theme.of(context).accentColor))
                 : null,
-            trailing: Switch(
-              value: !isPremium ? false : setting.value,
-              activeColor: Theme.of(context).accentColor,
-              onChanged: !isPremium
-                  ? (bool value) {}
-                  : (bool value) {
-                      setState(() {
-                        manager.set(key, value);
+            controlAffinity: ListTileControlAffinity.trailing,
+            value: !isPremium ? false : setting.value,
+            activeColor: Theme.of(context).accentColor,
+            onChanged: !isPremium
+                ? (bool value) {}
+                : (bool value) {
+                    setState(() {
+                      manager.set(key, value);
 
-                        if (key == "darkMode") {
-                          Provider.of<ThemeProvider>(context, listen: false).setTheme(value);
-                        }
-                      });
-                    },
-            ),
+                      if (key == "darkMode") {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .setTheme(value);
+                      }
+                    });
+                  },
           );
         }
       case int:
