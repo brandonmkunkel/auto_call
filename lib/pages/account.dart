@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/pages/upgrade.dart';
+import 'package:auto_call/pages/login.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -43,7 +44,7 @@ class AccountPageState extends State<AccountPage> {
                 await _auth.signOut();
 
                 // Pop all routes and then push the login page
-                Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (Route<dynamic> route) => false);
               },
               child: Text("Sign Out", style: TextStyle(color: Theme.of(context).primaryTextTheme.button.color)),
             )
@@ -177,7 +178,7 @@ class DeleteAccountState extends State<DeleteAccountDialog> {
                   await _auth.currentUser.delete();
 
                   // Pop all routes and then push the login page
-                  Navigator.of(context).pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (Route<dynamic> route) => false);
                 } catch (e) {
                   print(e);
                   // Scaffold.of(context).showSnackBar(SnackBar(content: Text("Error deleting account ${e.toString()}")));
@@ -240,7 +241,7 @@ class AccountUpgradeCardState extends State<AccountUpgradeCard> {
           ),
           color: Theme.of(context).colorScheme.primary,
           onPressed: () async {
-            await Navigator.of(context).pushNamed("/upgrade");
+            await Navigator.of(context).pushNamed(UpgradePage.routeName);
             setState(() {});
           },
         ),

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-import 'package:auto_call/ui/terms.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
+import 'login.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class OnboardingPage extends StatefulWidget {
   static const String routeName = "/onboarding";
@@ -20,7 +23,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   void _onIntroEnd(context) {
     // Go to the home page (replacing this page)
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => _auth.currentUser != null ? HomePage() : LoginPage()
+    ));
   }
 
   Widget _buildImage(BuildContext context, String assetName) {

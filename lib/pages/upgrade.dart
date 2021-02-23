@@ -123,7 +123,7 @@ class UpgradePromptWidgetState extends State<UpgradePromptWidget> {
             RaisedButton(
                 child: Text("Upgrade Account"),
                 onPressed: () async {
-                  await Navigator.of(context).pushNamed("/upgrade");
+                  await Navigator.of(context).pushNamed(UpgradePage.routeName);
 
                   setState(() {});
                 })
