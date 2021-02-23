@@ -24,6 +24,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
         ? deletedCallSession
             ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Card(
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                     child: Text(
@@ -36,6 +37,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
               ])
             : Container()
         : Card(
+            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
             child: Container(
               padding: const EdgeInsets.all(15.0),
               child: Column(

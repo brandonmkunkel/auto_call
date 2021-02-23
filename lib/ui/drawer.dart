@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/pages/onboarding.dart';
@@ -10,18 +11,41 @@ import 'package:auto_call/pages/settings.dart';
 
 import 'package:auto_call/ui/terms.dart';
 
+FirebaseAuth _auth = FirebaseAuth.instance;
+
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print(Theme.of(context).primaryColor.toString());
+
     return Drawer(
         child: Container(
             decoration: BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                DrawerHeader(
-                  child: Center(child: Text('AutoCall', textScaleFactor: 1.5, style: TextStyle(color: Colors.white))),
-                  decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                UserAccountsDrawerHeader(
+                  // onDetailsPressed: () { Navigator.of(context).pushNamed("/account"); },
+
+                  currentAccountPicture: Container(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                      child: Text("Auto Call", style: Theme.of(context).primaryTextTheme.subtitle1)),
+                  // currentAccountPicture: IconButton(
+                  //   padding: EdgeInsets.all(0),
+                  //   iconSize: 50,
+                  //     icon: Icon(Icons.account_circle, color: Theme.of(context).buttonColor),
+                  // onPressed: () {
+                  //       Navigator.of(context).popAndPushNamed("/account");
+                  // } ,),
+
+                  otherAccountsPictures: [
+                    IconButton(icon: Icon(Icons.settings, color: Theme.of(context).buttonColor,), onPressed: (){
+                      Navigator.of(context).popAndPushNamed("/settings");
+                    },)
+                  ],
+
+                  accountName: Text("User: ${_auth.currentUser.displayName ?? ""}", style: Theme.of(context).primaryTextTheme.bodyText1,),
+                  accountEmail: Text("Email: ${_auth.currentUser.email}", style: Theme.of(context).primaryTextTheme.bodyText2),
                 ),
                 ListTile(
                   leading: Icon(Icons.auto_awesome),
@@ -49,9 +73,12 @@ class AppDrawer extends StatelessWidget {
                   onTap: () => navigatorUpdate(context, AccountPage.routeName),
                 ),
                 ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Settings', style: Theme.of(context).textTheme.subtitle1),
-                  onTap: () => navigatorUpdate(context, SettingsPage.routeName),
+                  leading: Icon(Icons.logout),
+                  title: Text('Sign Out', style: Theme.of(context).textTheme.subtitle1),
+                  onTap: () async {
+                    await _auth.signOut();
+                    Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+                  },
                 ),
                 Divider(),
                 Expanded(child: Align(alignment: Alignment.bottomCenter, child: ListTile(title: autoCallCopyright()))),

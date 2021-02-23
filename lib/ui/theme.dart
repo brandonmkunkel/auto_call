@@ -33,7 +33,7 @@ final ThemeData lightTheme = ThemeData(
     primarySwatch: Colors.blue,
     accentColor: Colors.blue[500],
     disabledColor: Colors.grey[400],
-    fontFamily: "Roboto"
+    fontFamily: "Roboto",
 );
 
 final ThemeData darkTheme = ThemeData(

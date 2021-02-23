@@ -45,12 +45,14 @@ class SettingManager {
     // Hidden Settings
     "activeCallSession": Setting(type: bool, settingType: SettingType.hidden),
     "activeCallSessionPath": Setting(type: String, settingType: SettingType.hidden),
-    "accountLevel": Setting(text: "User Account Level", type: int, settingType: SettingType.free),
+    "accountLevel": Setting(text: "User Account Level", type: int, settingType: SettingType.hidden),
+    "ratedApp": Setting(text: "Has User Given Feedback on App Store", type: bool, settingType: SettingType.hidden),
 
     // Visible Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
     "userSignedIn": Setting(text: "Has user signed in", type: bool, settingType: SettingType.free),
     "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
+    "agreedToPrivacyPolicy": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
 
 //   showTableLoadPrompt SettingPair(key: "tableLoadPrompt", text: "Edit Table after loading", type: bool, settingType: SettingType.free),
     "showNotes": Setting(text: "Show Call Note and Result Columns", type: bool, settingType: SettingType.free),
@@ -64,35 +66,29 @@ class SettingManager {
     "editColumns": Setting(text: "Edit Additional Table Columns", description: "Not implemented yet", type: bool, settingType: SettingType.premium),
   };
 
-  ///
-  /// Start up functions
-  ///
+  /// Start up functions, loads the setting values into the settings map
   void loadSettings() {
-    settings.forEach((key, setting) {
-      if (setting.type == bool) {
-        setting.value = prefs.getBool(key) ?? false;
-      } else if (setting.type == int) {
-        setting.value = prefs.getInt(key);
-      } else if (setting.type == String) {
-        setting.value = prefs.getString(key) ?? "";
-      } else {
-        ArgumentError("SettingManager.loadSettings(), something went wrong when loading $key");
-      }
-    });
+    settings.forEach((key, setting) => setting.value = get(key));
   }
 
-  // Clear the user preferences cache, this may be used with account deletion
+  /// Clear the user preferences cache, this may be used with account deletion
   void clear() {
     prefs.clear();
   }
 
-  // Return Standard Settings
+  // Check to see if the user is premium
+  bool isPremium() => (prefs.getInt("accountLevel") ?? 0) >= 1;
+  bool isEnterprise() => (prefs.getInt("accountLevel") ?? 0) == 2;
+
+  AccountType get accountType => AccountType.values[globalSettingManager.get("accountLevel")];
+
+  /// Return Standard Settings
   Map<String, Setting> standardSettings() => getSettings(SettingType.free);
 
-  // Return Premium Settings
+  /// Return Premium Settings
   Map<String, Setting> premiumSettings() => getSettings(SettingType.premium);
 
-  // Return Enterprise Settings
+  /// Return Enterprise Settings
   Map<String, Setting> enterpriseSettings() => getSettings(SettingType.enterprise);
 
   // Return settings with given enumerator
@@ -114,12 +110,6 @@ class SettingManager {
   List<Setting> getSettingList(SettingType settingType) {
     return getSettings(settingType).entries.map((e) => e.value).toList();
   }
-
-  // Check to see if the user is premium
-  bool isPremium() => prefs.getInt("accountLevel") ?? 0 >= 1;
-  bool isEnterprise() => prefs.getInt("accountLevel") ?? 0 == 2;
-
-  AccountType get accountType => AccountType.values[globalSettingManager.get("accountLevel")];
 
   dynamic get(String key) {
     if (!settings.containsKey(key)) {

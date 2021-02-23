@@ -23,7 +23,8 @@ class PhoneContactsState extends State<PhoneContactsWidget> {
   @override
   Widget build(BuildContext context) {
     // Show the contact information
-    return PermissionsWidget(requestedPermission: Permission.contacts,
+    return PermissionsWidget(
+      requestedPermission: Permission.contacts,
       child: FutureBuilder(
         future: futureContacts,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -31,33 +32,31 @@ class PhoneContactsState extends State<PhoneContactsWidget> {
             List<Contact> contacts = snapshot.data.where((Contact c) => c.phones.isNotEmpty).toList();
 
             return contacts.isEmpty
-                ? Center(
-              child: Text("No contacts found!", style: Theme.of(context).textTheme.subtitle1),
-            )
+                ? Center(child: Text("No contacts found!", style: Theme.of(context).textTheme.subtitle1))
                 : ListView.builder(
-              itemCount: contacts.length ?? 0,
-              itemBuilder: (BuildContext context, int index) {
-                Contact c = contacts.elementAt(index);
-                return ListTile(
-                  onTap: () {
-                    // Navigator.of(context).push(MaterialPageRoute(
-                    //     builder: (BuildContext context) => ContactDetailsPage(
-                    //       c,
-                    //       onContactDeviceSave:
-                    //       contactOnDeviceHasBeenUpdated,
-                    //     )));
-                  },
-                  onLongPress: () {
-                    selected[index] = true;
-                  },
-                  leading: (c.avatar != null && c.avatar.length > 0)
-                      ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
-                      : CircleAvatar(child: Text(c.initials())),
-                  trailing: Text(c.phones.elementAt(0).value),
-                  title: Text(c.displayName ?? ""),
-                );
-              },
-            );
+                    itemCount: contacts.length ?? 0,
+                    itemBuilder: (BuildContext context, int index) {
+                      Contact c = contacts.elementAt(index);
+                      return ListTile(
+                        onTap: () {
+                          // Navigator.of(context).push(MaterialPageRoute(
+                          //     builder: (BuildContext context) => ContactDetailsPage(
+                          //       c,
+                          //       onContactDeviceSave:
+                          //       contactOnDeviceHasBeenUpdated,
+                          //     )));
+                        },
+                        onLongPress: () {
+                          selected[index] = true;
+                        },
+                        leading: (c.avatar != null && c.avatar.length > 0)
+                            ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
+                            : CircleAvatar(child: Text(c.initials())),
+                        trailing: Text(c.phones.elementAt(0).value),
+                        title: Text(c.displayName ?? ""),
+                      );
+                    },
+                  );
           }
 
           // If the contacts haven't been loaded yet

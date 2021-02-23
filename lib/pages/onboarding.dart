@@ -18,18 +18,9 @@ class OnboardingPage extends StatefulWidget {
 class _OnboardingPageState extends State<OnboardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  // Custom getter for pulling from the shared preferences cache
-  bool get agreedToTerms => globalSettingManager.get("agreedToTerms");
-
   void _onIntroEnd(context) {
-    // Verify that the user has indeed agreed to the user's terms and conditions
-    if (this.agreedToTerms) {
-      // Log that the User has completed onboarding and accepting terms and conditions
-      globalSettingManager.set("userOnboarded", true);
-
-      // Go to the home page (replacing this page)
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
-    }
+    // Go to the home page (replacing this page)
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => HomePage()));
   }
 
   Widget _buildImage(BuildContext context, String assetName) {
@@ -80,44 +71,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
               image: _buildSVG(context, 'onboarding3'),
               decoration: pageDecoration,
             ),
-            PageViewModel(
-              title: "Accept Terms and Conditions",
-              body: "Before we continue, let's take care of some paperwork",
-              image: _buildSVG(context, 'onboarding2'),
-              decoration: pageDecoration,
-            ),
-            PageViewModel(
-                title: "Terms and Conditions",
-                bodyWidget: Container(color: Theme.of(context).backgroundColor, child: termsAndConditions()),
-                decoration: pageDecoration,
-                footer: Container(
-                  color: Theme.of(context).backgroundColor,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text("I AGREE TO APP THE TERMS AND CONDITIONS"),
-                      Checkbox(
-                          value: this.agreedToTerms,
-                          onChanged: (value) {
-                            setState(() {
-                              // Store the agreement to the terms and conditions within the app
-                              globalSettingManager.set("agreedToTerms", value);
-                            });
-                          })
-                    ],
-                  ),
-                )),
           ],
           onDone: () => _onIntroEnd(context),
           onSkip: () => _onIntroEnd(context),
-          showSkipButton: this.agreedToTerms,
+          showSkipButton: true,
           skipFlex: 0,
           nextFlex: 0,
           skip: const Text('Skip', style: TextStyle(color: Colors.white)),
           next: const Icon(Icons.arrow_forward, color: Colors.white),
-          done: agreedToTerms
-              ? Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
-              : Container(),
+          done: Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
           dotsDecorator: const DotsDecorator(
             size: Size(10.0, 10.0),
             color: Colors.grey,

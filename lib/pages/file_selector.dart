@@ -18,7 +18,6 @@ class FileSelectorPage extends StatefulWidget {
 
 class FileSelectorState extends State<FileSelectorPage> {
   String _fileName;
-  String _directoryPath;
   FilePickerResult _result;
   List<PlatformFile> _paths;
   String _extension = "txt,csv,xls,xlsx";
@@ -30,6 +29,9 @@ class FileSelectorState extends State<FileSelectorPage> {
   TextEditingController controller2 = TextEditingController();
   FocusNode _focusNode1 = FocusNode();
   FocusNode _focusNode2 = FocusNode();
+
+  /// Multiple paths selected
+  bool get isMultiPath => _paths != null && _paths.isNotEmpty;
 
   @override
   void initState() {
@@ -56,7 +58,6 @@ class FileSelectorState extends State<FileSelectorPage> {
 
       setState(() => _loadingPath = true);
       try {
-        _directoryPath = null;
         _result = await FilePicker.platform.pickFiles(
           type: _pickingType,
           allowMultiple: _multiPick,
@@ -70,6 +71,7 @@ class FileSelectorState extends State<FileSelectorPage> {
       }
 
       if (!mounted) return;
+
       setState(() {
         _loadingPath = false;
         _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
@@ -86,7 +88,7 @@ class FileSelectorState extends State<FileSelectorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: AppDrawer(),
+      // drawer: AppDrawer(),
       appBar: AppBar(
         title: const Text('File Selection'),
       ),
@@ -120,7 +122,6 @@ class FileSelectorState extends State<FileSelectorPage> {
                                             shrinkWrap: true,
                                             itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
                                             itemBuilder: (BuildContext context, int index) {
-                                              final bool isMultiPath = _paths != null && _paths.isNotEmpty;
                                               final String name = (isMultiPath
                                                   ? _paths.map((e) => e.name).toList()[index]
                                                   : _fileName ?? '...');

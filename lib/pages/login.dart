@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,8 +7,9 @@ import 'package:flutter_signin_button/button_builder.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/pages/home.dart';
 
-import 'register.dart';
-import 'sign_in.dart';
+import 'package:auto_call/pages/register.dart';
+import 'package:auto_call/pages/sign_in.dart';
+import 'package:auto_call/ui/terms.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -33,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Theme.of(context).primaryColor,
         body: SafeArea(
           child: Column(
@@ -45,36 +48,55 @@ class _LoginPageState extends State<LoginPage> {
               //       width: MediaQuery.of(context).size.shortestSide / 3.0, child: Image.asset("assets/images/logo.png")),
               // ),
 
-              // Login In Card
-              // Card(
-              //     margin: EdgeInsets.all(10),
-              //     child: Container(
-              //       child: SignInButtonBuilder(
-              //         icon: Icons.verified_user,
-              //         backgroundColor: Colors.orange,
-              //         text: 'Sign In',
-              //         onPressed: () => _pushPage(context, SignInPage()),
-              //       ),
-              //       padding: const EdgeInsets.all(5),
-              //       alignment: Alignment.center,
-              //     )),
-
               SignInWidget(),
 
               // Text("Don't have an account? "),
               Card(
-                margin: EdgeInsets.all(10),
-                child: Container(
-                  child: SignInButtonBuilder(
-                    icon: Icons.person_add,
-                    backgroundColor: Colors.indigo,
-                    text: 'Create Account',
-                    onPressed: () => _pushPage(context, RegisterPage()),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  alignment: Alignment.center,
-                ),
-              ),
+                  margin: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Container(
+                        child: SignInButtonBuilder(
+                          icon: Icons.person_add,
+                          backgroundColor: Colors.indigo,
+                          text: 'Create Account',
+                          onPressed: () => _pushPage(context, RegisterPage()),
+                        ),
+                        padding: const EdgeInsets.only(top: 10),
+                        alignment: Alignment.center,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            style: Theme.of(context).textTheme.bodyText2,
+                            children: <TextSpan>[
+                              TextSpan(text: 'By clicking Create Account, you agree to our '),
+                              TextSpan(
+                                  text: 'Terms of Service',
+                                  style: TextStyle(color: Theme.of(context).accentColor),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(builder: (context) => termsAndConditionsPage()));
+                                    }),
+                              TextSpan(text: ' and that you have read our '),
+                              TextSpan(
+                                text: 'Privacy Policy',
+                                style: TextStyle(color: Theme.of(context).accentColor),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(builder: (context) => privacyPolicyPage()));
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  )),
             ],
           ),
         ));

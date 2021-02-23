@@ -101,31 +101,37 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
+                  padding: EdgeInsets.only(bottom: 20),
                   child: Text(
                     'Sign in',
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                   alignment: Alignment.center,
                 ),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (String value) {
-                    if (value.isEmpty) return 'Please enter some text';
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  validator: (String value) {
-                    if (value.isEmpty) return 'Please enter some text';
-                    return null;
-                  },
-                  obscureText: true,
-                ),
                 Container(
-                  padding: const EdgeInsets.only(top: 16.0),
+                    padding: EdgeInsets.all(10),
+                    child: TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
+                      validator: (String value) {
+                        if (value.isEmpty) return 'Please enter some text';
+                        return null;
+                      },
+                    )),
+                Container(
+                    padding: EdgeInsets.all(10),
+                    child: TextFormField(
+                      expands: false,
+                      controller: _passwordController,
+                      decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
+                      validator: (String value) {
+                        if (value.isEmpty) return 'Please enter some text';
+                        return null;
+                      },
+                      obscureText: true,
+                    )),
+                Container(
+                  padding: const EdgeInsets.only(top: 10.0),
                   alignment: Alignment.center,
                   child: SignInButton(
                     Buttons.Email,

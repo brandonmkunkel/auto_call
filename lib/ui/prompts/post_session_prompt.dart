@@ -35,15 +35,13 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
             titlePadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             title: GestureDetector(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[Text("Call Session Completed"), Divider()],
-            )),
+                child: Text("Call Session Completed"),
+            ),
             children: [
               Column(children: <Widget>[
                 GestureDetector(
                   child: Column(children: <Widget>[
+                    Divider(),
                     Text("Some stuff will go here eventually\n"),
                     Align(
                       alignment: Alignment.centerRight,

@@ -9,7 +9,6 @@ import 'package:auto_call/ui/widgets/call_session_cards.dart';
 class HomePage extends StatefulWidget {
   static const String routeName = "/home";
   final String title = "Home";
-  final String label = "Home";
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -26,7 +25,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: Container(
-        padding: EdgeInsets.all(15.0),
+        // padding: EdgeInsets.all(15.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

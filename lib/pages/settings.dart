@@ -11,7 +11,6 @@ import 'account.dart';
 class SettingsPage extends StatefulWidget {
   static const String routeName = "/settings";
   final String title = "Settings";
-  final String label = "Settings";
 
   @override
   SettingsPageState createState() => new SettingsPageState();
@@ -42,12 +41,10 @@ class SettingsPageState extends State<SettingsPage> {
           // Go to user account
           ListTile(
             title: Text("Your Account"),
-            trailing: IconButton(
-              icon: Icon(Icons.account_circle),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
-              },
-            ),
+            trailing: Icon(Icons.account_circle),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
+            },
           ),
 
           Divider(),
@@ -105,17 +102,14 @@ class SettingsPageState extends State<SettingsPage> {
                 dense: true,
                 title: Text("Terms and Conditions"),
                 onTap: () async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) =>
-                          Scaffold(appBar: AppBar(title: Text("Terms and Conditions:")), body: termsAndConditions())));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => termsAndConditionsPage()));
                 },
               ),
               ListTile(
                 dense: true,
                 title: Text("Privacy Policy"),
                 onTap: () async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => Scaffold(appBar: AppBar(title: Text("Privacy Policy:")), body: privacyPolicy())));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => privacyPolicyPage()));
                 },
               ),
               ListTile(

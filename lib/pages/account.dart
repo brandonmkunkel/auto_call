@@ -10,7 +10,6 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 class AccountPage extends StatefulWidget {
   static const String routeName = "/account";
   final String title = "Account Page";
-  final String label = "Account Page";
 
   @override
   AccountPageState createState() => new AccountPageState();
@@ -74,6 +73,7 @@ class AccountPageState extends State<AccountPage> {
             AccountUpgradeCard(),
 
             Card(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
               child: Column(
                 children: [
                   ListTile(title: Text("User ID: "), trailing: Text("${_auth.currentUser.uid}")),
@@ -88,6 +88,7 @@ class AccountPageState extends State<AccountPage> {
             OrganizationStatusCard(),
 
             Card(
+              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
               child: Column(
                 children: [
                   ListTile(
@@ -199,6 +200,7 @@ class OrganizationStatusCardState extends State<OrganizationStatusCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
       child: Column(
         children: [
           ListTile(title: Text("Organization")),
@@ -228,6 +230,7 @@ class AccountUpgradeCardState extends State<AccountUpgradeCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
       child: ListTile(
         title: Text("Account Level: ${this.accountLevelDescriptor}"),
         trailing: RaisedButton(
@@ -235,7 +238,7 @@ class AccountUpgradeCardState extends State<AccountUpgradeCard> {
             accountType == AccountType.free ? "Upgrade" : "Change",
             style: Theme.of(context).primaryTextTheme.button,
           ),
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
           onPressed: () async {
             await Navigator.of(context).pushNamed("/upgrade");
             setState(() {});
