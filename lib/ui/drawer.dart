@@ -16,7 +16,6 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(Theme.of(context).primaryColor.toString());
 
     return Drawer(
         child: Container(
@@ -39,7 +38,8 @@ class AppDrawer extends StatelessWidget {
                   // } ,),
 
                   otherAccountsPictures: [
-                    IconButton(icon: Icon(Icons.settings, color: Theme.of(context).buttonColor,), onPressed: (){
+                    Divider(),
+                    IconButton(icon: Icon(Icons.settings, color: Theme.of(context).primaryTextTheme.bodyText1.color), onPressed: (){
                       Navigator.of(context).popAndPushNamed("/settings");
                     },)
                   ],

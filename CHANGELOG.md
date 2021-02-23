@@ -1,3 +1,7 @@
+# v1.0.7
+- Settings page buttons now adaptive to platform
+- App drawer settings widget from blue to grey
+
 # v1.0.6
 - Moved terms and conditions/privacy policy acceptance to registration page
 - Added common widget for gate-keeping access to premium features
