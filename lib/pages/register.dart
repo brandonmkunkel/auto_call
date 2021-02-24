@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/terms.dart';
+import 'package:auto_call/services/regex.dart';
+import 'package:auto_call/pages/home.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -23,13 +26,17 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _success;
+  FirebaseAuthException exception;
+
+  String _failureString = "";
   String _userEmail = '';
 
   bool get agreedToTerms => globalSettingManager.get("agreedToTerms");
-  bool get agreedToPrivacyPolicy => globalSettingManager.get("agreedToPrivacyPolicy");
+  bool get agreedToPrivacyPolicy =>
+      globalSettingManager.get("agreedToPrivacyPolicy");
 
-  bool get allowRegistration => this.agreedToTerms && this.agreedToPrivacyPolicy;
+  bool get allowRegistration =>
+      this.agreedToTerms && this.agreedToPrivacyPolicy;
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +45,28 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Form(
           key: _formKey,
           child: Card(
+            margin: EdgeInsets.all(10.0),
             child: Padding(
               padding: EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
                       padding: EdgeInsets.all(10),
                       child: TextFormField(
                         controller: _emailController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))
+                        ],
                         decoration: InputDecoration(
                             labelText: 'Email', border: OutlineInputBorder()),
                         validator: (String value) {
                           if (value.isEmpty) {
-                            return 'Please enter some text';
+                            return 'Please enter a valid email address';
+                          } else if (!MagicRegex.isEmail(value)) {
+                            return 'Invalid email format';
                           }
                           return null;
                         },
@@ -65,47 +80,68 @@ class _RegisterPageState extends State<RegisterPage> {
                             border: OutlineInputBorder()),
                         validator: (String value) {
                           if (value.isEmpty) {
-                            return 'Please enter some text';
+                            return 'Please enter a valid password';
                           }
                           return null;
                         },
                         obscureText: true,
                       )),
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: _failureString.isEmpty
+                          ? null
+                          : Text("$_failureString",
+                              style: TextStyle(color: Colors.red))),
+                  Divider(),
                   ListTile(
-                      trailing: Checkbox(onChanged: (value) {
-                        setState(() {
-                          globalSettingManager.set("agreedToTerms", value);
-                        });
-
-                      }, value: this.agreedToTerms),
+                      trailing: Checkbox(
+                          onChanged: (value) {
+                            setState(() {
+                              globalSettingManager.set("agreedToTerms", value);
+                            });
+                          },
+                          value: this.agreedToTerms),
                       leading: RichText(
-                          text: TextSpan(style: Theme.of(context).textTheme.bodyText2, children: <TextSpan>[
-                        TextSpan(text: 'I agree to the '),
-                        TextSpan(
-                            text: 'Terms of Service',
-                            style: TextStyle(color: Theme.of(context).accentColor),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (context) => termsAndConditionsPage()));
-                              })
-                      ]))),
+                          text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyText2,
+                              children: <TextSpan>[
+                            TextSpan(text: 'I agree to the '),
+                            TextSpan(
+                                text: 'Terms of Service',
+                                style: TextStyle(
+                                    color: Theme.of(context).accentColor),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                termsAndConditionsPage()));
+                                  })
+                          ]))),
                   ListTile(
-                      trailing: Checkbox(onChanged: (value) {
-                        setState(() {
-                          globalSettingManager.set("agreedToPrivacyPolicy", value);
-                        });
-                      }, value: this.agreedToPrivacyPolicy),
+                      trailing: Checkbox(
+                          onChanged: (value) {
+                            setState(() {
+                              globalSettingManager.set(
+                                  "agreedToPrivacyPolicy", value);
+                            });
+                          },
+                          value: this.agreedToPrivacyPolicy),
                       leading: RichText(
-                          text: TextSpan(style: Theme.of(context).textTheme.bodyText2, children: <TextSpan>[
+                          text: TextSpan(
+                              style: Theme.of(context).textTheme.bodyText2,
+                              children: <TextSpan>[
                             TextSpan(text: 'I have read and understand the '),
                             TextSpan(
                                 text: 'Privacy Policy',
-                                style: TextStyle(color: Theme.of(context).accentColor),
+                                style: TextStyle(
+                                    color: Theme.of(context).accentColor),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(builder: (context) => termsAndConditionsPage()));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                termsAndConditionsPage()));
                                   })
                           ]))),
                   Container(
@@ -119,19 +155,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             backgroundColor: Theme.of(context).buttonColor,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
-                                _register();
+                                _register(context);
+                              } else {
+                                setState(() {
+                                  _failureString = "";
+                                });
                               }
                             },
                           ),
                   ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(_success == null
-                        ? ''
-                        : (_success
-                            ? 'Successfully registered ' + _userEmail
-                            : 'Registration failed')),
-                  )
                 ],
               ),
             ),
@@ -148,19 +180,27 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   // Example code for registration.
-  void _register() async {
-    final User user = (await _auth.createUserWithEmailAndPassword(
-      email: _emailController.text,
-      password: _passwordController.text,
-    ))
-        .user;
-    if (user != null) {
+  void _register(BuildContext context) async {
+    try {
+      final User user = (await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      ))
+          .user;
+
       setState(() {
-        _success = true;
         _userEmail = user.email;
+
+        // Go to the home page on successful log-in
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil(HomePage.routeName, (route) => false);
       });
-    } else {
-      _success = false;
+    } catch (e) {
+      setState(() {
+        _failureString = e.message;
+      });
+
+      // Scaffold.of(context).showSnackBar(SnackBar(content: Text("Registration Failure: ${e.code}")));
     }
   }
 }

@@ -101,7 +101,6 @@ class AccountPageState extends State<AccountPage> {
                     onTap: () async {
                       await showDialog(context: context, builder: (context) => DeleteAccountDialog());
                     },
-                    onLongPress: () {},
                   )
                 ],
               ),

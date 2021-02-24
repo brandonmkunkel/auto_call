@@ -24,8 +24,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void _onIntroEnd(context) {
     // Go to the home page (replacing this page)
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => _auth.currentUser != null ? HomePage() : LoginPage()
-    ));
+        MaterialPageRoute(builder: (_) => _auth.currentUser != null ? HomePage() : LoginPage())
+    );
   }
 
   Widget _buildImage(BuildContext context, String assetName) {
