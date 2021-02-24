@@ -1,3 +1,9 @@
+# v1.0.8
+- User Login/Onboarding flow correctly prompts for login after onboarding.
+- User cannot enter app without logging in.
+- Registration page redirects to home on successful account registration
+- Registration page better communicates errors with registration.
+
 # v1.0.7
 - Settings page buttons now adaptive to platform
 - App drawer settings widget from blue to grey
