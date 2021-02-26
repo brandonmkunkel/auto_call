@@ -29,7 +29,7 @@ class AppDrawer extends StatelessWidget {
 
                   currentAccountPicture: Container(
                     padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Text("Auto Call", style: textStyle)),
+                      child: Text("Auto Call", style: Theme.of(context).primaryTextTheme.subtitle1)),
                   // currentAccountPicture: IconButton(
                   //   padding: EdgeInsets.all(0),
                   //   iconSize: 50,

@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'package:auto_call/services/settings_manager.dart';
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 /// Entrypoint example for various sign-in flows with Firebase.
@@ -139,6 +141,8 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                     text: "Sign In",
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
+                        globalSettingManager.set("agreedToTerms", true);
+                        globalSettingManager.set("agreedToPrivacyPolicy", true);
                         _signInWithEmailAndPassword(context);
                       }
                     },

@@ -50,7 +50,6 @@ class SettingManager {
 
     // Visible Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
-    "userSignedIn": Setting(text: "Has user signed in", type: bool, settingType: SettingType.free),
     "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
     "agreedToPrivacyPolicy": Setting(text: "Has user agreed to privacy policy", type: bool, settingType: SettingType.free),
 

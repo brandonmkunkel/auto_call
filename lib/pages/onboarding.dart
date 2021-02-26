@@ -22,6 +22,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
   void _onIntroEnd(context) {
+    // Say that the user has onboarded
+    globalSettingManager.set("userOnboarded", true);
+
     // Go to the home page (replacing this page)
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => _auth.currentUser != null ? HomePage() : LoginPage())
