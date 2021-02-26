@@ -1,4 +1,4 @@
-package com.automatotech.auto_call
+package com.brandonKunkel.autoCall
 
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity

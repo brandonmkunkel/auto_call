@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:327979162240:android:0d81fa7ecff3c3d05fe465",
+        "mobilesdk_app_id": "1:327979162240:android:0bf1bfdf5c34d2245fe465",
         "android_client_info": {
-          "package_name": "com.automatotech.auto_call"
+          "package_name": "com.brandonKunkel.autoCall"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "327979162240-onpdub9mmnuntfk1sb13qbm5ppb3tadf.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.automatotech.auto_call",
-            "certificate_hash": "f3b120a7cb74120f743204093e256f686112e759"
-          }
-        },
         {
           "client_id": "327979162240-r6g2uuvdnb6kab7eq0kf5blshn7vp4ml.apps.googleusercontent.com",
           "client_type": 3
@@ -37,6 +29,13 @@
             {
               "client_id": "327979162240-r6g2uuvdnb6kab7eq0kf5blshn7vp4ml.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "327979162240-5nbfua28qfdtnqt3lr7uavmbi6cj03l9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.automatotech.autoCall"
+              }
             }
           ]
         }

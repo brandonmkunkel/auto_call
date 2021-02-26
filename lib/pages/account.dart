@@ -207,7 +207,7 @@ class OrganizationStatusCardState extends State<OrganizationStatusCard> {
           ListTile(title: Text("Team ID")),
           ListTile(title: Text("Team Role")),
           ListTile(
-            trailing: RaisedButton(child: Text("Leave Organization")),
+            trailing: RaisedButton(child: Text("Leave Organization"), onPressed: null),
           )
         ],
       ),
