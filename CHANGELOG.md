@@ -1,3 +1,8 @@
+# v1.1.0
+- Updated the user on-boarding/sign-in flow to correctly acknowledge the users
+- Updated the app logo to match new color palette
+- Updated app identifier, users will need to uninstall the old app manually before installing this version.
+
 # v1.0.8
 - User Login/Onboarding flow correctly prompts for login after onboarding.
 - User cannot enter app without logging in.
