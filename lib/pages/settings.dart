@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
 import 'package:auto_call/ui/terms.dart';
@@ -26,6 +27,7 @@ class SettingsPageState extends State<SettingsPage> {
     Color accentColor = Theme.of(context).accentColor;
     // Color accentColor = Theme.of(context).floatingActionButtonTheme.backgroundColor;
 
+    Map<String, Setting> hiddenSettings = globalSettingManager.hiddenSettings();
     Map<String, Setting> standardSettings = globalSettingManager.standardSettings();
     Map<String, Setting> premiumSettings = globalSettingManager.premiumSettings();
     Map<String, Setting> enterpriseSettings = globalSettingManager.enterpriseSettings();
@@ -42,8 +44,9 @@ class SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: Text("Your Account"),
             trailing: Icon(Icons.account_circle),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
+            onTap: () async {
+              await Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
+              setState(() {});
             },
           ),
 
@@ -51,11 +54,11 @@ class SettingsPageState extends State<SettingsPage> {
 
           // Standard settings
           Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Column(
                   children: standardSettings.entries.map((entry) {
-                return buildStandardSettingWidget(entry.key, entry.value);
-              }).toList())),
+            // return buildStandardSettingWidget(entry.key, entry.value);
+            return SettingWidget(name: entry.key, setting: entry.value);
+          }).toList())),
 
           // Premium Settings Label (changes if the premium user changes)
           Card(
@@ -68,15 +71,15 @@ class SettingsPageState extends State<SettingsPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
+                          Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
                           Text(
                             isPremium ? "Premium Settings" : "Premium Account Settings",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                color: isPremium ? accentColor : Colors.grey[500],
+                                color: isPremium ? accentColor : Theme.of(context).disabledColor,
                                 fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
                           ),
-                          Icon(Icons.stars, color: isPremium ? accentColor : Colors.grey[500]),
+                          Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
                         ],
                       )),
 
@@ -85,11 +88,16 @@ class SettingsPageState extends State<SettingsPage> {
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Column(
                         children: premiumSettings.entries.map((entry) {
-                          return buildPremiumSettingWidget(entry.key, entry.value);
+                          // return buildPremiumSettingWidget(entry.key, entry.value);
+                          return SettingWidget(name: entry.key, setting: entry.value);
                         }).toList(),
                       )),
                 ],
               )),
+
+          HiddenSettings(
+              children:
+                  hiddenSettings.entries.map((entry) => buildStandardSettingWidget(entry.key, entry.value)).toList()),
 
           Divider(),
 
@@ -135,8 +143,7 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return SwitchListTile.adaptive(
             title: Text(setting.text),
-            subtitle:
-                setting.description != null ? Text(setting.description) : null,
+            subtitle: setting.description != null ? Text(setting.description) : null,
             controlAffinity: ListTileControlAffinity.trailing,
             value: setting.value,
             activeColor: Theme.of(context).accentColor,
@@ -148,6 +155,79 @@ class SettingsPageState extends State<SettingsPage> {
           );
         }
 
+      case int:
+        {
+
+          return Container();
+        }
+
+      case String:
+        {
+          return ListTile(
+              title: Text(setting.text),
+              subtitle: setting.description != null ? Text(setting.description) : null,
+              trailing: Text(setting.value.isNotEmpty ? setting.value : "None"));
+        }
+    }
+
+    return Container();
+  }
+}
+
+///
+/// Setting Widget Class
+///
+///
+class SettingWidget extends StatefulWidget {
+  final Setting setting;
+  final String name;
+  const SettingWidget({@required this.name, @required this.setting});
+
+  @override
+  SettingWidgetState createState() => new SettingWidgetState();
+}
+
+class SettingWidgetState extends State<SettingWidget> {
+  Setting get setting => widget.setting;
+
+  bool get isPremiumSetting =>
+      setting.settingType == SettingType.premium || setting.settingType == SettingType.enterprise;
+
+  @override
+  Widget build(BuildContext context) {
+    bool premiumUser = globalSettingManager.isPremium();
+
+    switch (widget.setting.type) {
+      case bool:
+        {
+          return SwitchListTile.adaptive(
+            title: Text(setting.text,
+                style: !isPremiumSetting
+                    ? null
+                    : TextStyle(color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor)),
+            subtitle: setting.description != null
+                ? Text(setting.description,
+                    style: !isPremiumSetting
+                        ? null
+                        : TextStyle(
+                            color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor))
+                : null,
+            controlAffinity: ListTileControlAffinity.trailing,
+            value: isPremiumSetting && !premiumUser ? false : widget.setting.value,
+            activeColor: Theme.of(context).accentColor,
+            onChanged: isPremiumSetting && ! premiumUser
+                    ? null
+                    : (bool value) {
+                        setState(() {
+                          globalSettingManager.set(widget.name, value);
+
+                          if (widget.name == "darkMode") {
+                            Provider.of<ThemeProvider>(context, listen: false).setTheme(value);
+                          }
+                        });
+                      },
+          );
+        }
       case int:
         {
           // return ListTile(
@@ -170,51 +250,50 @@ class SettingsPageState extends State<SettingsPage> {
           // );
           return Container();
         }
+      case String:
+        {
+          return ListTile(
+              title: Text(setting.text,
+                  style: !isPremiumSetting
+                      ? null
+                      : TextStyle(
+                          color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor)),
+              subtitle: setting.description != null
+                  ? Text(setting.description,
+                      style: !isPremiumSetting
+                          ? null
+                          : TextStyle(
+                              color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor))
+                  : null,
+              trailing: Text(setting.value,
+                  style: !isPremiumSetting
+                      ? null
+                      : TextStyle(
+                          color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor)));
+        }
     }
 
     return Container();
   }
+}
 
-  Widget buildPremiumSettingWidget(String key, Setting setting) {
-    switch (setting.type) {
-      case bool:
-        {
-          return SwitchListTile.adaptive(
-            title: Text(setting.text,
-                style: TextStyle(
-                    color: !isPremium
-                        ? Colors.grey[500]
-                        : Theme.of(context).accentColor)),
-            subtitle: setting.description != null
-                ? Text(setting.description,
-                    style: TextStyle(
-                        color: !isPremium
-                            ? Colors.grey[500]
-                            : Theme.of(context).accentColor))
-                : null,
-            controlAffinity: ListTileControlAffinity.trailing,
-            value: !isPremium ? false : setting.value,
-            activeColor: Theme.of(context).accentColor,
-            onChanged: !isPremium
-                ? (bool value) {}
-                : (bool value) {
-                    setState(() {
-                      manager.set(key, value);
+///
+/// Widget to show hidden settings
+///
+class HiddenSettings extends StatefulWidget {
+  final List<Widget> children;
+  const HiddenSettings({@required this.children});
 
-                      if (key == "darkMode") {
-                        Provider.of<ThemeProvider>(context, listen: false)
-                            .setTheme(value);
-                      }
-                    });
-                  },
-          );
-        }
-      case int:
-        {
-          return Container();
-        }
-    }
+  @override
+  HiddenSettingsState createState() => new HiddenSettingsState();
+}
 
-    return Container();
+class HiddenSettingsState extends State<HiddenSettings> {
+  @override
+  Widget build(BuildContext context) {
+    return !kReleaseMode
+        ? ExpansionTile(
+            title: Text("Hidden Settings", style: Theme.of(context).textTheme.subtitle1), children: widget.children)
+        : Divider();
   }
 }

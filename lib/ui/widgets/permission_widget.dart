@@ -64,6 +64,16 @@ class PermissionsState extends State<PermissionsWidget> {
                 ]);
         }
 
+        if (snapshot.hasError) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("An error occurred while requesting ${widget.requestedPermission.toString()}"),
+              Text("${snapshot.error}")
+            ],);
+        }
+
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           CircularProgressIndicator(),
           Container(

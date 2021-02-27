@@ -147,18 +147,17 @@ class DeleteAccountState extends State<DeleteAccountDialog> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              child:
-                  Text("This will permanently delete your account and cannot be undone.", textAlign: TextAlign.left)),
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text("This will permanently delete your account and cannot be undone.")),
           // Container(
-          //     padding: EdgeInsets.symmetric(vertical: 15),
-          //     child: Column(
-          //       children: [
-          //         Text("Re-enter password"),
-          //         TextField(
-          //           obscureText: true,
-          //         )
-          //       ],
+          //   padding: EdgeInsets.symmetric(vertical: 10),
+          //   child: Text("Please enter your account password to confirm", style: TextStyle(color: Colors.red)),
+          // ),
+          // Container(
+          //     padding: EdgeInsets.symmetric(vertical: 10),
+          //     child: TextField(
+          //       obscureText: true,
+          //       decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
           //     )),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
             FlatButton(
@@ -203,9 +202,9 @@ class OrganizationStatusCardState extends State<OrganizationStatusCard> {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
       child: Column(
         children: [
-          ListTile(title: Text("Organization")),
-          ListTile(title: Text("Team ID")),
-          ListTile(title: Text("Team Role")),
+          ListTile(title: Text("Organization"), trailing: Text("None")),
+          ListTile(title: Text("Team ID"), trailing: Text("None")),
+          ListTile(title: Text("Team Role"), trailing: Text("None")),
           ListTile(
             trailing: RaisedButton(child: Text("Leave Organization"), onPressed: null),
           )

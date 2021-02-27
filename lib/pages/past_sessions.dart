@@ -2,7 +2,6 @@ import 'package:auto_call/pages/file_selector.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/pages/call_page.dart';
 
 enum oldCallEnum { load, delete }
@@ -51,8 +50,8 @@ class PastSessionsState extends State<PastSessionsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton.extended(
-                    icon: Icon(Icons.close_rounded),
-                    backgroundColor: Colors.grey,
+                    icon: Icon(Icons.close),
+                    backgroundColor: Theme.of(context).primaryColor,
                     label: Text("Cancel"),
                     onPressed: () async {
                       setState(() {

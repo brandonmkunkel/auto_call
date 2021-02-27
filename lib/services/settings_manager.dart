@@ -43,24 +43,23 @@ class SettingManager {
 
   static final Map<String, Setting> settings = {
     // Hidden Settings
-    "activeCallSession": Setting(type: bool, settingType: SettingType.hidden),
-    "activeCallSessionPath": Setting(type: String, settingType: SettingType.hidden),
-    "accountLevel": Setting(text: "User Account Level", type: int, settingType: SettingType.hidden),
+    "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.hidden),
+    "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.hidden),
+    "agreedToPrivacyPolicy": Setting(text: "Has user agreed to privacy policy", type: bool, settingType: SettingType.hidden),
     "ratedApp": Setting(text: "Has User Given Feedback on App Store", type: bool, settingType: SettingType.hidden),
+    "activeCallSession": Setting(text: "Active Call Session", type: bool, settingType: SettingType.hidden),
+    "activeCallSessionPath": Setting(text: "Active Call Session File", type: String, settingType: SettingType.hidden),
+    "accountLevel": Setting(text: "User Account Level", type: int, settingType: SettingType.hidden),
 
-    // Visible Settings
-    "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.free),
-    "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.free),
-    "agreedToPrivacyPolicy": Setting(text: "Has user agreed to privacy policy", type: bool, settingType: SettingType.free),
-
+    // Visible Free Settings
 //   showTableLoadPrompt SettingPair(key: "tableLoadPrompt", text: "Edit Table after loading", type: bool, settingType: SettingType.free),
     "showNotes": Setting(text: "Show Call Note and Result Columns", type: bool, settingType: SettingType.free),
     "postCallPrompt": Setting(text: "Prompt on call completion", type: bool, settingType: SettingType.free),
     "oneTouchCall": Setting(text: "One Touch Call", type: bool, settingType: SettingType.free),
 
     // Premium Settings
-    "autoCall": Setting(text: "Automatically Call Next Person", type: bool, settingType: SettingType.premium),
     "darkMode": Setting(text: "Dark Mode", type: bool, settingType: SettingType.premium),
+    "autoCall": Setting(text: "Automatically Call Next Person", type: bool, settingType: SettingType.premium),
     "additionalColumns": Setting(text: "Additional Table Columns", type: bool, settingType: SettingType.premium),
     "editColumns": Setting(text: "Edit Additional Table Columns", description: "Not implemented yet", type: bool, settingType: SettingType.premium),
   };
@@ -80,6 +79,9 @@ class SettingManager {
   bool isEnterprise() => (prefs.getInt("accountLevel") ?? 0) == 2;
 
   AccountType get accountType => AccountType.values[globalSettingManager.get("accountLevel")];
+
+  /// Return Standard Settings
+  Map<String, Setting> hiddenSettings() => getSettings(SettingType.hidden);
 
   /// Return Standard Settings
   Map<String, Setting> standardSettings() => getSettings(SettingType.free);

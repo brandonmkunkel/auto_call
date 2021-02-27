@@ -74,7 +74,11 @@ class UpgradePageState extends State<UpgradePage> {
       floatingActionButton: FloatingActionButton.extended(
         label: Text("Complete"),
         icon: Icon(Icons.monetization_on),
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            Navigator.pop(context);
+          });
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -82,7 +86,7 @@ class UpgradePageState extends State<UpgradePage> {
 }
 
 ///
-/// Upgrade prompt which normalizes interface for gatekeeping access to different widgets
+/// Upgrade prompt which normalizes interface for gate-keeping access to different widgets
 ///
 class UpgradePromptWidget extends StatefulWidget {
   final AccountType requiredAccountType;
