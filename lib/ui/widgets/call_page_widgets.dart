@@ -103,7 +103,7 @@ class SaveAlert extends StatelessWidget {
       title: Text("Save Call Session"),
       content: Text("Do you wish to save your call session?"),
       actions: <Widget>[
-        FlatButton(child: Text("No"), onPressed: () => {Navigator.of(context).pop(false)}),
+        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
         FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
       ],
     );

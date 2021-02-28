@@ -69,7 +69,7 @@ void main() {
     });
 
     testWidgets('ContactsPage', (WidgetTester tester) async {
-      await tester.pumpWidget(buildTestableWidget(AnalyticsPage()));
+      await tester.pumpWidget(buildTestableWidget(ContactsPage()));
     });
 
     testWidgets('FileSelectorPage', (WidgetTester tester) async {

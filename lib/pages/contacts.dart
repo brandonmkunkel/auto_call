@@ -1,8 +1,11 @@
-import 'package:auto_call/pages/upgrade.dart';
 import 'package:flutter/material.dart';
 
-import 'package:auto_call/ui/widgets/phone_contacts.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/pages/upgrade.dart';
+import 'package:auto_call/ui/widgets/permission_widget.dart';
+import 'package:auto_call/ui/widgets/phone_contacts.dart';
 
 class ContactsPage extends StatefulWidget {
   static const String routeName = "/contacts";
@@ -27,7 +30,10 @@ class ContactsState extends State<ContactsPage> {
             ],
           ),
         ),
-        body: TabBarView(children: [AppContactsWidget(), PhoneContactsWidget()]),
+        body: TabBarView(children: [
+          AppContactsWidget(),
+          PermissionsWidget(requestedPermission: Permission.contacts, child: PhoneContactsWidget())
+        ]),
       ),
     );
   }
@@ -48,10 +54,6 @@ class AppContactsState extends State<AppContactsWidget> {
         requiredAccountType: AccountType.premium,
         featureName: "contact tracking",
         child: Center(
-            child: Text(
-          "This app does not save your contacts yet.",
-          style: Theme.of(context).textTheme.subtitle1,
-          textAlign: TextAlign.center,
-        )));
+            child: Text("This app does not save your contacts yet.", style: Theme.of(context).textTheme.subtitle1)));
   }
 }

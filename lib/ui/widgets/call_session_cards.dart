@@ -4,7 +4,6 @@ import 'package:auto_call/pages/call_page.dart';
 import 'package:auto_call/pages/past_sessions.dart';
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/services/regex.dart';
 
 class ActiveCallSessionCard extends StatefulWidget {
   @override

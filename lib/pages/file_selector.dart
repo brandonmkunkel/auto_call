@@ -5,7 +5,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:auto_call/pages/call_page.dart';
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/ui/drawer.dart';
 
 class FileSelectorPage extends StatefulWidget {
   static const String routeName = "/file_selector";
@@ -55,7 +54,6 @@ class FileSelectorState extends State<FileSelectorPage> {
   void _openFileExplorer() async {
     // Either the permission was already granted before or the user just granted it.
     if (await Permission.storage.request().isGranted) {
-
       setState(() => _loadingPath = true);
       try {
         _result = await FilePicker.platform.pickFiles(
@@ -76,12 +74,9 @@ class FileSelectorState extends State<FileSelectorPage> {
         _loadingPath = false;
         _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
       });
-
     } else {
       print("no storage permissions");
     }
-
-
   }
 
   @override
@@ -109,7 +104,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                         child: Column(
                           children: [
                             Text(_paths != null ? "Selected File:" : "No File Selected:",
-                                style: Theme.of(context).textTheme.headline6),
+                                style: Theme.of(context).textTheme.subtitle1),
                             Divider(),
                             Builder(
                               builder: (BuildContext context) => _loadingPath
@@ -164,25 +159,29 @@ class FileSelectorState extends State<FileSelectorPage> {
                             Divider(),
                             Container(padding: EdgeInsets.all(15.0), child: Text("Coming soon!")),
                             ListTile(
-                                leading: Text("Title:"),
-                                title: TextFormField(
-                                  controller: controller1,
-                                  focusNode: _focusNode1,
-                                  decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                      border: OutlineInputBorder(),
-                                      hintText: 'Title'),
-                                ), onTap: () => FocusScope.of(context).requestFocus(_focusNode1),),
+                              leading: Text("Title:"),
+                              title: TextFormField(
+                                controller: controller1,
+                                focusNode: _focusNode1,
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Title'),
+                              ),
+                              onTap: () => FocusScope.of(context).requestFocus(_focusNode1),
+                            ),
                             ListTile(
-                                leading: Text("Stuff:"),
-                                title: TextFormField(
-                                  controller: controller2,
-                                  focusNode: _focusNode2,
-                                  decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-                                      border: OutlineInputBorder(),
-                                      hintText: '..........'),
-                                ), onTap: () => FocusScope.of(context).requestFocus(_focusNode2), ),
+                              leading: Text("Stuff:"),
+                              title: TextFormField(
+                                controller: controller2,
+                                focusNode: _focusNode2,
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                    border: OutlineInputBorder(),
+                                    hintText: '..........'),
+                              ),
+                              onTap: () => FocusScope.of(context).requestFocus(_focusNode2),
+                            ),
                           ],
                         ),
                       )),
