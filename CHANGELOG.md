@@ -1,4 +1,6 @@
 # v1.1.0
+- Fixed crash when fetching permissions on the Contacts Page (for Phone Contacts)
+- Fixed crash when fetching Past Sessions when none have been completed so far
 - Updated the user on-boarding/sign-in flow to correctly acknowledge the users
 - Updated the app logo to match new color palette
 - Updated app identifier, users will need to uninstall the old app manually before installing this version.
