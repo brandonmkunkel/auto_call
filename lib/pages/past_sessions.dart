@@ -30,8 +30,8 @@ class PastSessionsState extends State<PastSessionsPage> {
             future: FileManager.findOldCalls(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                files = snapshot.data;
-                return showPastSessions(context, snapshot.data);
+                files = snapshot.data ?? [];
+                return showPastSessions(context, files);
               }
 
               if (snapshot.hasError) {
