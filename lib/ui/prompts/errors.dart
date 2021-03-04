@@ -9,7 +9,7 @@ void showFileEmptyError(BuildContext context) {
         title: Text("File Load Error"),
         content: Text("No data could be found in the selected file. Trying picking a properly formatted file."),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             child: Text("OK"),
             onPressed: () {
               Navigator.of(context).pop();

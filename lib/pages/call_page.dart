@@ -42,9 +42,15 @@ class CallSessionPageState extends State<CallSessionPage> {
         future: readFile(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return Column(children: <Widget>[
+            return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               Icon(Icons.error_outline, color: Colors.red, size: 50.0),
-              Padding(padding: const EdgeInsets.only(top: 16), child: Text('Error: ${snapshot.error}'))
+              Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headline6,
+                  ))
             ]);
           }
 

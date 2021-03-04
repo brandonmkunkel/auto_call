@@ -200,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
         _failureString = e.message;
       });
 
-      // Scaffold.of(context).showSnackBar(SnackBar(content: Text("Registration Failure: ${e.code}")));
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Failure: ${e.code}")));
     }
   }
 }

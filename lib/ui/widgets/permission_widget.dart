@@ -31,7 +31,7 @@ class PermissionsState extends State<PermissionsWidget> {
                       child: Center(
                           child:
                               Text("The app does not have access to your ${widget.requestedPermission.toString().split(".")[1]}", style: Theme.of(context).textTheme.subtitle1, textAlign: TextAlign.center,))),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text("Change App Permissions"),
                     onPressed: () async {
                       // The user has not accepted the permission request for this

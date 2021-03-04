@@ -22,7 +22,7 @@ class SaveButton extends StatelessWidget {
 
           // Find the Scaffold in the widget tree and use it to show a SnackBar which tells the user that the
           // Call session was saved
-          Scaffold.of(context).showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
             backgroundColor: Colors.grey[600],
             behavior: SnackBarBehavior.floating
@@ -54,7 +54,7 @@ class CallCloseButton extends StatelessWidget {
 
          // Find the Scaffold in the widget tree and use it to show a SnackBar which tells the user that the
          // Call session was saved
-         Scaffold.of(context).showSnackBar(SnackBar(
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
              content: Text("File saved to " + await FileManager.savedFilePath(fileManager.path)),
              backgroundColor: Colors.grey[600],
              behavior: SnackBarBehavior.floating
@@ -89,8 +89,13 @@ class CloseAlert extends StatelessWidget {
       title: Text("Call Session Close Alert"),
       content: Text("Are you sure you want end your call session?"),
       actions: <Widget>[
-        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
-        FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false), style: TextButton.styleFrom(
+          primary: Theme.of(context).textTheme.bodyText1.color, // foreground
+        )
+        ),
+        TextButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true), style: TextButton.styleFrom(
+          primary: Theme.of(context).textTheme.bodyText1.color, // foreground
+        ))
       ],
     );
   }
@@ -103,8 +108,12 @@ class SaveAlert extends StatelessWidget {
       title: Text("Save Call Session"),
       content: Text("Do you wish to save your call session?"),
       actions: <Widget>[
-        FlatButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false)),
-        FlatButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true))
+        TextButton(child: Text("No"), onPressed: () => Navigator.of(context).pop(false), style: TextButton.styleFrom(
+          primary: Theme.of(context).textTheme.bodyText1.color, // foreground
+        )),
+        TextButton(child: Text("Yes"), onPressed: () => Navigator.of(context).pop(true), style: TextButton.styleFrom(
+          primary: Theme.of(context).textTheme.bodyText1.color, // foreground
+        ))
       ],
     );
   }

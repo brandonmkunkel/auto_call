@@ -39,14 +39,15 @@ class AccountPageState extends State<AccountPage> {
         appBar: AppBar(
           title: Text(widget.title),
           actions: [
-            FlatButton(
+            TextButton(
+              child: Text("Sign Out"),
+              style: TextButton.styleFrom(primary: Theme.of(context).primaryTextTheme.button.color),
               onPressed: () async {
                 await _auth.signOut();
 
                 // Pop all routes and then push the login page
                 Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (Route<dynamic> route) => false);
               },
-              child: Text("Sign Out", style: TextStyle(color: Theme.of(context).primaryTextTheme.button.color)),
             )
           ],
         ),
@@ -63,7 +64,7 @@ class AccountPageState extends State<AccountPage> {
             //     : Card(
             //         child: ListTile(
             //         title: Text("Email Verification incomplete"),
-            //         trailing: RaisedButton(
+            //         trailing: ElevatedButton(
             //           child: Text("Resend Verification Email"),
             //           onPressed: () {
             //             _auth.currentUser.sendEmailVerification();
@@ -160,17 +161,17 @@ class DeleteAccountState extends State<DeleteAccountDialog> {
           //       decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
           //     )),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
-            FlatButton(
-              child: Text("Cancel", style: Theme.of(context).primaryTextTheme.button),
-              color: Colors.grey,
+            TextButton(
+              child: Text("Cancel"),
+              style: TextButton.styleFrom(primary: Colors.white),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             // Spacer(),
-            FlatButton(
-              child: Text("Delete My Account", style: Theme.of(context).primaryTextTheme.button),
-              color: Colors.red,
+            TextButton(
+              child: Text("Delete My Account"),
+              style: TextButton.styleFrom(primary: Colors.red),
               onPressed: () async {
                 try {
                   await _auth.currentUser.delete();
@@ -179,7 +180,7 @@ class DeleteAccountState extends State<DeleteAccountDialog> {
                   Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (Route<dynamic> route) => false);
                 } catch (e) {
                   print(e);
-                  // Scaffold.of(context).showSnackBar(SnackBar(content: Text("Error deleting account ${e.toString()}")));
+                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error deleting account ${e.toString()}")));
                 }
               },
             ),
@@ -206,7 +207,7 @@ class OrganizationStatusCardState extends State<OrganizationStatusCard> {
           ListTile(title: Text("Team ID"), trailing: Text("None")),
           ListTile(title: Text("Team Role"), trailing: Text("None")),
           ListTile(
-            trailing: RaisedButton(child: Text("Leave Organization"), onPressed: null),
+            trailing: ElevatedButton(child: Text("Leave Organization"), onPressed: null),
           )
         ],
       ),
@@ -232,12 +233,14 @@ class AccountUpgradeCardState extends State<AccountUpgradeCard> {
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
       child: ListTile(
         title: Text("Account Level: ${this.accountLevelDescriptor}"),
-        trailing: RaisedButton(
+        trailing: ElevatedButton(
           child: Text(
             accountType == AccountType.free ? "Upgrade" : "Change",
             style: Theme.of(context).primaryTextTheme.button,
           ),
-          color: Theme.of(context).colorScheme.primary,
+          style: ElevatedButton.styleFrom(
+            primary: Theme.of(context).colorScheme.primary,
+          ),
           onPressed: () async {
             await Navigator.of(context).pushNamed(UpgradePage.routeName);
             setState(() {});

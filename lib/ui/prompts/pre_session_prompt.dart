@@ -60,7 +60,7 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
                     }),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: RaisedButton(
+                      child: ElevatedButton(
                           child: Text("Done"),
                           onPressed: () {
                             // Pop the Dialog off of the screen

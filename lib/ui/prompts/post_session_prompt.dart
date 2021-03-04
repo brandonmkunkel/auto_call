@@ -45,7 +45,7 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
                     Text("Some stuff will go here eventually\n"),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: RaisedButton(child: Text("Done"), onPressed: () {
+                      child: ElevatedButton(child: Text("Done"), onPressed: () {
                         globalSettingManager.set("activeCallSession", false);
                         globalSettingManager.set("activeCallSessionPath", "");
 

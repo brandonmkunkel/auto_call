@@ -51,9 +51,11 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                   Row(
                     children: [
                       Spacer(flex: 3),
-                      RaisedButton(
+                      ElevatedButton(
                           child: Text("No"),
-                          color: Colors.red,
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                          ),
                           onPressed: () {
                             setState(() {
                               deletedCallSession = true;
@@ -64,9 +66,11 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                             });
                           }),
                       Spacer(flex: 1),
-                      RaisedButton(
+                      ElevatedButton(
                         child: Text("Yes"),
-                        color: Colors.green,
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.green,
+                        ),
                         onPressed: () async {
                           // Load old call session
                           String path = globalSettingManager.get("activeCallSessionPath") ?? "";
@@ -85,14 +89,16 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                                       content: Text("We couldn't find a valid old call session file to open. "
                                           "This file may be corrupted or lost, try searching within ${PastSessionsPage.label} instead"),
                                       actions: [
-                                        RaisedButton(
+                                        ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
                                           child: Text("Close"),
-                                          color: Colors.red,
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.red,
+                                          ),
                                         ),
-                                        RaisedButton(
+                                        ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context)
                                                 .push(MaterialPageRoute(builder: (_) => PastSessionsPage()));

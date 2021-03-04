@@ -124,7 +124,7 @@ class UpgradePromptWidgetState extends State<UpgradePromptWidget> {
                   style: Theme.of(context).textTheme.subtitle1,
                   textAlign: TextAlign.center,
                 )),
-            RaisedButton(
+            ElevatedButton(
                 child: Text("Upgrade Account"),
                 onPressed: () async {
                   await Navigator.of(context).pushNamed(UpgradePage.routeName);

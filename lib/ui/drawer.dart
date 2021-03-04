@@ -39,7 +39,7 @@ class AppDrawer extends StatelessWidget {
                   // } ,),
 
                   otherAccountsPictures: [
-                    // FlatButton.icon(
+                    // TextButton.icon(
                     //   icon: Icon(Icons.logout),
                     //   label: Text('Sign Out', style: Theme.of(context).textTheme.subtitle1),
                     //   onPressed: () async {
@@ -47,7 +47,7 @@ class AppDrawer extends StatelessWidget {
                     //     Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false);
                     //   },
                     // ),
-                    // FlatButton(child: Text('Sign Out', style: Theme.of(context).textTheme.subtitle1), onPressed: () async {
+                    // TextButton(child: Text('Sign Out', style: Theme.of(context).textTheme.subtitle1), onPressed: () async {
                     //   await _auth.signOut();
                     //   Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false);
                     // },),

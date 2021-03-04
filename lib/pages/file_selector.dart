@@ -83,7 +83,6 @@ class FileSelectorState extends State<FileSelectorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // drawer: AppDrawer(),
       appBar: AppBar(
         title: const Text('File Selection'),
       ),
@@ -139,11 +138,13 @@ class FileSelectorState extends State<FileSelectorPage> {
                             Container(
                                 padding: EdgeInsets.all(5.0),
                                 alignment: Alignment.bottomRight,
-                                child: RaisedButton.icon(
+                                child: ElevatedButton.icon(
                                   icon: Icon(Icons.upload_file, color: Theme.of(context).primaryTextTheme.button.color),
                                   label: Text(_paths != null ? "Reselect File" : "Select File",
                                       style: Theme.of(context).primaryTextTheme.button),
-                                  color: Colors.red,
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                  ),
                                   onPressed: () => _openFileExplorer(),
                                 ))
                           ],

@@ -188,11 +188,12 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
       ),
 
       // Body of Call Session Page
-      body: CallTableLight(
+      body: CallTable(
           fileManager: fileManager,
           phoneList: phoneList,
           scrollController: _controller,
-          textControllers: textControllers),
+          textControllers: textControllers,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Align(
         alignment: Alignment.bottomCenter,

@@ -8,7 +8,8 @@ class AfterCallPrompt extends StatefulWidget {
   final int callIdx;
   final TextEditingController controller;
 
-  AfterCallPrompt({Key key, @required this.person, @required this.callIdx, @required this.controller}) : super(key: key);
+  AfterCallPrompt({Key key, @required this.person, @required this.callIdx, @required this.controller})
+      : super(key: key);
 
   @override
   AfterCallPromptState createState() => new AfterCallPromptState();
@@ -31,7 +32,7 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
 
   @override
   Widget build(BuildContext context) {
-    bool premium = globalSettingManager.get("isPremium");
+    bool premium = globalSettingManager.isPremium();
     bool autoCall = globalSettingManager.get("autoCall");
 
     return Container(
@@ -111,18 +112,20 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
               child:
                   Row(mainAxisAlignment: premium ? MainAxisAlignment.spaceBetween : MainAxisAlignment.end, children: [
                 premium
-                    ? RaisedButton(
+                    ? ElevatedButton(
                         child: autoCall ? Text("Pause Auto Call") : Text("Enable Auto Call"),
                         onPressed: () {
                           setState(() {
                             globalSettingManager.set("autoCall", !autoCall);
                           });
                         },
-                        color: autoCall ? Colors.red : Colors.green,
+                        style: ElevatedButton.styleFrom(
+                          primary: autoCall ? Colors.red : Colors.green,
+                        ),
                       )
                     : Container(),
-                RaisedButton(child: autoCall ? Text("Next") : Text("Done"),
-                    onPressed: () => Navigator.of(context).pop())
+                ElevatedButton(
+                    child: autoCall ? Text("Next") : Text("Done"), onPressed: () => Navigator.of(context).pop())
               ]),
             )
           ]),
