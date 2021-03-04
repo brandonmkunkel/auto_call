@@ -25,11 +25,11 @@ dependencies:
   cupertino_icons:
 
   # Firebase dependencies
-  firebase_core: ^0.5.3
-  firebase_analytics: ^6.3.0
-  firebase_auth: ^0.18.4+1
-  firebase_crashlytics: ^0.2.4
-  firebase_performance: ^0.4.3
+  firebase_core: ^0.7.0
+  firebase_analytics: ^7.0.1
+  firebase_auth: ^0.20.1
+  firebase_crashlytics: ^0.4.0+1
+  firebase_performance: ^0.5.0+1
 
   # Authentication packages
   flutter_signin_button: ^1.0.0
@@ -41,9 +41,9 @@ dependencies:
   charts_flutter:
   introduction_screen:
   string_similarity:
-  package_info: ^0.4.3+4
+  package_info:
   flutter_svg:
-  flutter_markdown: ^0.5.2
+  flutter_markdown:
 
   # Phone calls
   table_sticky_headers:
@@ -59,7 +59,7 @@ dependencies:
   #  Files
 
   csv:
-  file_picker: ^2.1.0
+  file_picker:
   path_provider:
   spreadsheet_decoder:
 
@@ -67,7 +67,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_native_splash: ^0.1.9
+  flutter_native_splash: ^0.3.1+1
   flutter_launcher_icons: ^0.8.1
   test:
 
