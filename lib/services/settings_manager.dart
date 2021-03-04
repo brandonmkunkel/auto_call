@@ -144,6 +144,9 @@ class SettingManager {
       await prefs.setInt(key, value);
     } else if (setting.type == String) {
       await prefs.setString(key, value);
+    } else {
+      print("SettingManaer.set($key, $value), receiving some no registered type ( ${value.runtimeType} )");
+      await prefs.setString(key, value.toString());
     }
   }
 }

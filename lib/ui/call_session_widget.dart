@@ -9,6 +9,7 @@ import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_table.dart';
+import 'package:auto_call/ui/call_table_light.dart';
 import 'package:auto_call/ui/call_table_new.dart';
 import 'package:auto_call/ui/call_table_sticky.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
@@ -187,7 +188,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
       ),
 
       // Body of Call Session Page
-      body: CallTable(
+      body: CallTableLight(
           fileManager: fileManager,
           phoneList: phoneList,
           scrollController: _controller,
