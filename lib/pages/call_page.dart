@@ -1,3 +1,4 @@
+import 'package:auto_call/ui/prompts/errors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
@@ -20,6 +21,8 @@ class CallSessionPage extends StatefulWidget {
 }
 
 class CallSessionPageState extends State<CallSessionPage> {
+  Future<PhoneList> phoneListFuture;
+
   // Getter for file manager from widget parent
   FileManager get fileManager => widget.fileManager;
 
@@ -42,18 +45,9 @@ class CallSessionPageState extends State<CallSessionPage> {
         future: readFile(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-              Icon(Icons.error_outline, color: Colors.red, size: 50.0),
-              Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: Text(
-                    'Error: ${snapshot.error}',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline6,
-                  ))
-            ]);
+            return GeneralErrorWidget(errorText: "Error loading Call Page with file: ${fileManager.path}", error: snapshot.error);
           }
-
+          
           return snapshot.connectionState == ConnectionState.done
               ? CallSessionWidget(fileManager: widget.fileManager, phoneList: snapshot.data)
               : Scaffold(

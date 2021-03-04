@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/pages/call_page.dart';
+import 'package:auto_call/ui/prompts/errors.dart';
 
 enum oldCallEnum { load, delete }
 
@@ -16,6 +17,8 @@ class PastSessionsPage extends StatefulWidget {
 }
 
 class PastSessionsState extends State<PastSessionsPage> {
+  Future<List<String>> oldCallsFuture = FileManager.findOldCalls();
+
   Map<int, bool> selected = Map<int, bool>();
   List<String> files;
 
@@ -27,18 +30,16 @@ class PastSessionsState extends State<PastSessionsPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: FutureBuilder(
-            future: FileManager.findOldCalls(),
+            future: oldCallsFuture,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 files = snapshot.data ?? [];
+                print("redoing");
                 return showPastSessions(context, files);
               }
 
               if (snapshot.hasError) {
-                return Column(children: <Widget>[
-                  Icon(Icons.error_outline, color: Colors.red, size: 50.0),
-                  Padding(padding: const EdgeInsets.only(top: 16), child: Text('Error: ${snapshot.error}'))
-                ]);
+                return GeneralErrorWidget(errorText: "Error loading old calls", error: snapshot.error);
               }
 
               // Loading Screen
@@ -53,6 +54,7 @@ class PastSessionsState extends State<PastSessionsPage> {
                     icon: Icon(Icons.close),
                     backgroundColor: Theme.of(context).primaryColor,
                     label: Text("Cancel"),
+                    heroTag: "cancel_selected",
                     onPressed: () async {
                       setState(() {
                         selected.clear();
@@ -62,6 +64,7 @@ class PastSessionsState extends State<PastSessionsPage> {
                     icon: Icon(Icons.delete),
                     backgroundColor: Colors.red,
                     label: Text("Delete"),
+                    heroTag: "delete_selected",
                     onPressed: () async {
                       selected.forEach((key, value) async {
                         if (value) {

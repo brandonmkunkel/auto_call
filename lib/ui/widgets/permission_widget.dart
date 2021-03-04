@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:auto_call/ui/prompts/errors.dart';
 
 ///
 /// The [PermissionsWidget] Widget is used to interact with the user's local contacts
@@ -45,14 +46,7 @@ class PermissionsState extends State<PermissionsWidget> {
         }
 
         if (snapshot.hasError) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text("An error occurred while requesting ${widget.requestedPermission.toString()}"),
-              Text("${snapshot.error}")
-            ],
-          );
+          return GeneralErrorWidget(errorText: "Error loading permissions ${snapshot.error}", error: snapshot.error);
         }
 
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [

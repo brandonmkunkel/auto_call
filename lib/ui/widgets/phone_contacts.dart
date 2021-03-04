@@ -11,6 +11,8 @@ class PhoneContactsWidget extends StatefulWidget {
 }
 
 class PhoneContactsState extends State<PhoneContactsWidget> {
+  Future<Iterable<Contact>> contactsFuture = ContactsService.getContacts(withThumbnails: true);
+
   // Map of selected contacts, used for various operations
   Map<int, bool> selected = Map<int, bool>();
 
@@ -25,7 +27,7 @@ class PhoneContactsState extends State<PhoneContactsWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: ContactsService.getContacts(withThumbnails: true),
+      future: contactsFuture,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           List<Contact> contacts = snapshot.data.where((Contact c) => c.phones.isNotEmpty).toList();
