@@ -152,7 +152,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         : SignInButtonBuilder(
                             text: 'Register',
                             icon: Icons.person_add,
-                            backgroundColor: Theme.of(context).buttonColor,
+                            backgroundColor: Colors.indigo,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
                                 _register(context);

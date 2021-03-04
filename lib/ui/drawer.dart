@@ -97,13 +97,11 @@ class AppDrawer extends StatelessWidget {
                     Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false);
                   },
                 ),
-                Divider(),
-                Expanded(child: Align(alignment: Alignment.bottomCenter, child: ListTile(title: autoCallCopyright()))),
               ],
             )));
   }
 
   void navigateTo(BuildContext context, String desiredRoute) {
-    Navigator.of(context).pushNamed(desiredRoute);
+    Navigator.of(context).popAndPushNamed(desiredRoute);
   }
 }
