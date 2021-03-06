@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 // Import firebase plugins
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'services/settings_manager.dart';
 
@@ -40,7 +39,12 @@ class App extends StatelessWidget {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          showDialog(context: context, barrierDismissible: true, builder: (_) => AlertDialog(title: Text("Something Went Wrong With Loading the App"),));
+          showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) => AlertDialog(
+                    title: Text("Something Went Wrong With Loading the App"),
+                  ));
         }
 
         // Once complete, show your application
