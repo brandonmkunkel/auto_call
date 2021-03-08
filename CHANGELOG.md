@@ -1,3 +1,8 @@
+# v1.1.1
+- Fixed some loading issues with contacts/files
+- Updated to newest version of app framework
+- Improved responsiveness to errors (better communication/resolution)
+
 # v1.1.0
 - Fixed crash when fetching permissions on the Contacts Page (for Phone Contacts)
 - Fixed crash when fetching Past Sessions when none have been completed so far
