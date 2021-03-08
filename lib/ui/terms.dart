@@ -119,6 +119,7 @@ class VersionTextState extends State<VersionText> {
   @override
   void initState() {
     super.initState();
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Executes after build is done
       getVersion();

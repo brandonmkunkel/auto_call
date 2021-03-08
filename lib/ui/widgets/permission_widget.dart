@@ -30,8 +30,11 @@ class PermissionsState extends State<PermissionsWidget> {
                   Padding(
                       padding: EdgeInsets.all(40.0),
                       child: Center(
-                          child:
-                              Text("The app does not have access to your ${widget.requestedPermission.toString().split(".")[1]}", style: Theme.of(context).textTheme.subtitle1, textAlign: TextAlign.center,))),
+                          child: Text(
+                        "The app does not have access to your ${widget.requestedPermission.toString().split(".")[1]}",
+                        style: Theme.of(context).textTheme.subtitle1,
+                        textAlign: TextAlign.center,
+                      ))),
                   ElevatedButton(
                     child: Text("Change App Permissions"),
                     onPressed: () async {
@@ -46,7 +49,9 @@ class PermissionsState extends State<PermissionsWidget> {
         }
 
         if (snapshot.hasError) {
-          return GeneralErrorWidget(errorText: "Error loading permissions ${snapshot.error}", error: snapshot.error);
+          return GeneralErrorWidget(
+              errorText: "Error loading ${widget.requestedPermission.toString().split(".")[1]} permission:",
+              error: snapshot.error);
         }
 
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [

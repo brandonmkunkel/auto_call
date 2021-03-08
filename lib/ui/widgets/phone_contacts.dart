@@ -20,11 +20,6 @@ class PhoneContactsState extends State<PhoneContactsWidget> {
   bool get multiSelect => selected.containsValue(true);
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: contactsFuture,

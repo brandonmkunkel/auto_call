@@ -18,16 +18,6 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
   List<bool> columns;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     bool editColumns = globalSettingManager.isPremium() ? globalSettingManager.get("editColumns") : false;
 

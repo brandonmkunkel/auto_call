@@ -17,16 +17,6 @@ class PostSessionPrompt extends StatefulWidget {
 
 class PostSessionPromptState extends State<PostSessionPrompt> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(color: Theme.of(context).backgroundColor.withOpacity(0.9)),
