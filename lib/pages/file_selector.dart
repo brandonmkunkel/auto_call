@@ -19,15 +19,14 @@ class FileSelectorState extends State<FileSelectorPage> {
   String _fileName;
   FilePickerResult _result;
   List<PlatformFile> _paths;
-  String _extension = "txt,csv,xls,xlsx";
+  List<String> _extension = ["txt", "csv", "xls", "xlsx"];
   bool _loadingPath = false;
   bool _multiPick = false;
-  FileType _pickingType = FileType.custom;
 
-  TextEditingController controller1 = TextEditingController();
-  TextEditingController controller2 = TextEditingController();
-  FocusNode _focusNode1 = FocusNode();
-  FocusNode _focusNode2 = FocusNode();
+  TextEditingController controller1;
+  TextEditingController controller2;
+  FocusNode _focusNode1;
+  FocusNode _focusNode2;
 
   /// Multiple paths selected
   bool get isMultiPath => _paths != null && _paths.isNotEmpty;
@@ -56,11 +55,22 @@ class FileSelectorState extends State<FileSelectorPage> {
     if (await Permission.storage.request().isGranted) {
       setState(() => _loadingPath = true);
       try {
-        _result = await FilePicker.platform.pickFiles(
-          type: _pickingType,
-          allowMultiple: _multiPick,
-          allowedExtensions: (_extension?.isNotEmpty ?? false) ? _extension?.replaceAll(' ', '')?.split(',') : null,
-        );
+
+        // Currently the file picker crashes in iOS on FileType.custom
+        if (Platform.isIOS) {
+
+          _result = await FilePicker.platform.pickFiles(
+            type: FileType.any,
+            allowMultiple: _multiPick,
+          );
+        } else {
+          _result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowMultiple: _multiPick,
+            allowedExtensions: _extension,
+          );
+        }
+
         _paths = _result?.files;
       } on PlatformException catch (e) {
         print("Unsupported operation" + e.toString());
@@ -202,8 +212,10 @@ class FileSelectorState extends State<FileSelectorPage> {
                 // Navigator.of(context).pushReplacement(MaterialPageRoute(
                 //     builder: (context) => CallSessionPage(fileManager: FileManager(_paths[0].path))));
 
-                Navigator.of(context).push(MaterialPageRoute(
+                await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CallSessionPage(fileManager: FileManager.fromFile(_paths[0].path))));
+
+                setState((){});
               }),
     );
   }

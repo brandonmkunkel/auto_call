@@ -169,7 +169,6 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     // }
 
     return Scaffold(
-      drawer: AppDrawer(),
       appBar: AppBar(
         title: Text(widget.title),
         actions: <Widget>[

@@ -22,20 +22,42 @@ void showFileEmptyError(BuildContext context) {
 
 class GeneralErrorWidget extends StatelessWidget {
   final String errorText;
-  final Exception error;
+  final dynamic error;
   const GeneralErrorWidget({this.errorText, this.error});
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      Icon(Icons.error_outline, color: Colors.red, size: 50),
-      Padding(
-          padding: const EdgeInsets.all(30),
-          child: SelectableText(
-            '${this.errorText}:\n\n${this.error}',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6,
-          ))
-    ]);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("App Error"),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.arrow_back),
+        label: Text("Go Back"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      body: SafeArea(
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(30),
+              child: Icon(Icons.error_outline, color: Colors.red, size: 50),
+            ),
+            SelectableText(
+              '${this.errorText}:\n',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+            SelectableText(
+              '${this.error}',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ])),
+    );
   }
 }

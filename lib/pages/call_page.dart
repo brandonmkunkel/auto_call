@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_session_widget.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
@@ -27,12 +26,16 @@ class CallSessionPageState extends State<CallSessionPage> {
   FileManager get fileManager => widget.fileManager;
 
   // Helpful Settings Getters
-  bool get editColumnsEnabled => globalSettingManager.isPremium() ? globalSettingManager.get("editColumns") : false;
+  bool get editColumnsEnabled => globalSettingManager.isPremium()
+      ? globalSettingManager.get("editColumns")
+      : false;
 
   @override
   void initState() {
     // Get settings for this page from the SettingsManager
     super.initState();
+
+    phoneListFuture = readFile();
   }
 
   Future<PhoneList> readFile() async {
@@ -42,23 +45,35 @@ class CallSessionPageState extends State<CallSessionPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: readFile(),
+        future: phoneListFuture,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return GeneralErrorWidget(errorText: "Error loading Call Page with file: ${fileManager.path}", error: snapshot.error);
+            return GeneralErrorWidget(
+                errorText: "Error loading Call Page with file",
+                error: snapshot.error);
           }
-          
-          return snapshot.connectionState == ConnectionState.done
-              ? CallSessionWidget(fileManager: widget.fileManager, phoneList: snapshot.data)
-              : Scaffold(
-                  drawer: AppDrawer(),
-                  appBar: AppBar(title: Text(widget.title), automaticallyImplyLeading: true),
-                  body: Center(
-                    child: Column(children: [
-                      Text("Processing Call Table", style: Theme.of(context).textTheme.headline6),
-                      SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator())
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            print("call page snapshot data ${snapshot.data}");
+            print("snapshot people ${snapshot.data.people}");
+            return CallSessionWidget(
+                fileManager: widget.fileManager, phoneList: snapshot.data);
+          }
+
+          return Scaffold(
+              appBar: AppBar(title: Text(widget.title)),
+              body: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Processing Call Table",
+                          style: Theme.of(context).textTheme.headline6),
+                      SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: const CircularProgressIndicator())
                     ]),
-                  ));
+              ));
         });
   }
 }
