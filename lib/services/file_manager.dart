@@ -1,33 +1,25 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:convert';
+
 import 'package:csv/csv.dart';
 import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/regex.dart';
 
-///
-/// Raw text
-///
-List<List<dynamic>> readTextAsCSV(String data) {
-  return const CsvToListConverter().convert(data);
-}
-
-String saveTextAsCSV(List<List<dynamic>> data) {
-  return const ListToCsvConverter().convert(data);
-}
 
 ///
 /// CSV FILES
 ///
 class CSVWrapper {
   Future<List<List<dynamic>>> read(String path) async {
-    final input = File(path).openRead().transform(utf8.decoder);
+    Stream input = File(path).openRead().transform(utf8.decoder);
     return await input.transform(new CsvToListConverter()).toList();
   }
 
@@ -42,10 +34,17 @@ class CSVWrapper {
 /// Excel Files
 ///
 class ExcelWrapper {
-  SpreadsheetDecoder decoder;
+  static SpreadsheetDecoder decoder;
+
+  Future<List<List<dynamic>>> readBytes(Uint8List bytes) async {
+    decoder = SpreadsheetDecoder.decodeBytes(bytes, update: true);
+    return List.generate(decoder.tables[decoder.tables.keys.first].maxRows, (int idx) {
+      return decoder.tables[decoder.tables.keys.first].rows[idx];
+    });
+  }
 
   Future<List<List<dynamic>>> read(String path) async {
-    var bytes = File(path).readAsBytesSync();
+    Uint8List bytes = File(path).readAsBytesSync();
     decoder = SpreadsheetDecoder.decodeBytes(bytes, update: true);
     return List.generate(decoder.tables[decoder.tables.keys.first].maxRows, (int idx) {
       return decoder.tables[decoder.tables.keys.first].rows[idx];
@@ -109,6 +108,9 @@ class FileManager {
 
   /// Check to see if the given file is one of the approved file types
   bool checkValidExtension() => registeredInterfaces.containsKey(extension);
+
+  // Get the file interface based off of the chosen file extension
+  dynamic get interface => registeredInterfaces[extension];
 
   ///
   /// Futures based file interaction with instances of FileManager
@@ -218,8 +220,7 @@ class FileManager {
 
   static Future<void> deleteFile(String path) async {
     File file = File(path);
-    bool isThere = file.existsSync();
-    if (isThere) {
+    if (file.existsSync()) {
       file.deleteSync(recursive: false);
     }
   }

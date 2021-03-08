@@ -11,8 +11,6 @@ import 'package:auto_call/pages/register.dart';
 import 'package:auto_call/pages/sign_in.dart';
 import 'package:auto_call/ui/terms.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
 class LoginPage extends StatefulWidget {
   static const String routeName = "/login";
 

@@ -102,6 +102,13 @@ class PhoneList {
   int firstUncalled = 0;
   int lastUncalled = 0;
 
+
+  static Future<PhoneList> fromString(String inputData) async {
+    List<String> stringData = inputData.split("\n");
+    List<List<dynamic>> data = stringData.map((e) => e.split(",")).toList();
+    return fromData(data);
+  }
+
   /// Static asynchronous constructor used for testing
   static Future<PhoneList> fromData(List<List<dynamic>> inputData) async {
     PhoneList phoneList = PhoneList();
