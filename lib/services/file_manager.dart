@@ -20,7 +20,7 @@ import 'package:auto_call/services/regex.dart';
 class CSVWrapper {
   Future<List<List<dynamic>>> read(String path) async {
     Stream input = File(path).openRead().transform(utf8.decoder);
-    return await input.transform(new CsvToListConverter()).toList();
+    return await input.transform(LineSplitter()).map((String s) => s.split(",")).toList();
   }
 
   Future<void> save(String path, List<List<dynamic>> data) async {
@@ -34,7 +34,7 @@ class CSVWrapper {
 /// Excel Files
 ///
 class ExcelWrapper {
-  static SpreadsheetDecoder decoder;
+  SpreadsheetDecoder decoder;
 
   Future<List<List<dynamic>>> readBytes(Uint8List bytes) async {
     decoder = SpreadsheetDecoder.decodeBytes(bytes, update: true);

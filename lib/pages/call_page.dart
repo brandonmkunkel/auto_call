@@ -54,8 +54,6 @@ class CallSessionPageState extends State<CallSessionPage> {
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            print("call page snapshot data ${snapshot.data}");
-            print("snapshot people ${snapshot.data.people}");
             return CallSessionWidget(
                 fileManager: widget.fileManager, phoneList: snapshot.data);
           }

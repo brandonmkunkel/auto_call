@@ -112,7 +112,7 @@ class PhoneList {
   /// Static asynchronous constructor used for testing
   static Future<PhoneList> fromData(List<List<dynamic>> inputData) async {
     PhoneList phoneList = PhoneList();
-    phoneList.processData(inputData);
+    await phoneList.processData(inputData);
     return phoneList;
   }
 
