@@ -1,3 +1,4 @@
+import 'package:auto_call/ui/widgets/permission_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
@@ -186,12 +187,11 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
         ],
       ),
 
-      // Body of Call Session Page
       body: CallTable(
-          fileManager: fileManager,
-          phoneList: phoneList,
-          scrollController: _controller,
-          textControllers: textControllers,
+        fileManager: fileManager,
+        phoneList: phoneList,
+        scrollController: _controller,
+        textControllers: textControllers,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Align(
