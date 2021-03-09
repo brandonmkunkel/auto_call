@@ -100,8 +100,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               globalSettingManager.set("agreedToTerms", value);
                             });
                           },
-                          value: this.agreedToTerms),
-                      leading: RichText(
+                          value: this.agreedToTerms,
+                        activeColor: Theme.of(context).buttonColor,
+
+                      ),
+                      title: RichText(
                           text: TextSpan(
                               style: Theme.of(context).textTheme.bodyText2,
                               children: <TextSpan>[
@@ -126,8 +129,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   "agreedToPrivacyPolicy", value);
                             });
                           },
-                          value: this.agreedToPrivacyPolicy),
-                      leading: RichText(
+                          value: this.agreedToPrivacyPolicy,
+                        activeColor: Theme.of(context).buttonColor,
+                      ),
+                      title: RichText(
                           text: TextSpan(
                               style: Theme.of(context).textTheme.bodyText2,
                               children: <TextSpan>[

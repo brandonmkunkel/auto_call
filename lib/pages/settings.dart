@@ -294,6 +294,6 @@ class HiddenSettingsState extends State<HiddenSettings> {
     return !kReleaseMode
         ? ExpansionTile(
             title: Text("Hidden Settings", style: Theme.of(context).textTheme.subtitle1), children: widget.children)
-        : Divider();
+        : Container();
   }
 }
