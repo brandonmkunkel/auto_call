@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:permission_handler/permission_handler.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/pages/upgrade.dart';
@@ -16,6 +17,9 @@ class ContactsPage extends StatefulWidget {
 }
 
 class ContactsState extends State<ContactsPage> {
+  Map<int, bool> selected = {};
+  List<Contact> contacts = [];
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -32,7 +36,7 @@ class ContactsState extends State<ContactsPage> {
         ),
         body: TabBarView(children: [
           AppContactsWidget(),
-          PermissionsWidget(requestedPermission: Permission.contacts, child: PhoneContactsWidget())
+          PermissionsWidget(requestedPermission: Permission.contacts, child: PhoneContactsPage())
         ]),
       ),
     );

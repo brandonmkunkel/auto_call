@@ -8,7 +8,6 @@ import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class CallTableLight extends StatefulWidget {
-  final FileManager fileManager;
   final PhoneList phoneList;
   final ScrollController scrollController;
   final List<TextEditingController> textControllers;
@@ -16,7 +15,6 @@ class CallTableLight extends StatefulWidget {
 
   CallTableLight(
       {Key key,
-      @required this.fileManager,
       @required this.phoneList,
       @required this.scrollController,
       @required this.textControllers,
@@ -30,9 +28,6 @@ class CallTableLight extends StatefulWidget {
 class _CallTableState extends State<CallTableLight> {
   double rowSize = kMinInteractiveDimension;
   List<FocusNode> focusNodes = [];
-
-  // Getter for the FileManager
-  FileManager get fileManager => widget.fileManager;
 
   // Getters for global settings
   bool get showCallNotes => globalSettingManager.get("showNotes");

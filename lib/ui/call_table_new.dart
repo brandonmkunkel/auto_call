@@ -90,7 +90,6 @@ class TableCell extends StatelessWidget {
 }
 
 class NewCallTable extends StatefulWidget {
-  final FileManager fileManager;
   final PhoneList phoneList;
   final ScrollController scrollController;
   final List<TextEditingController> textControllers;
@@ -98,7 +97,6 @@ class NewCallTable extends StatefulWidget {
 
   NewCallTable(
       {Key key,
-      @required this.fileManager,
       @required this.phoneList,
       @required this.scrollController,
       @required this.textControllers,
@@ -114,9 +112,6 @@ class _NewCallTableState extends State<NewCallTable> {
   List<bool> acceptedColumns = [];
   double rowSize = kMinInteractiveDimension;
   List<FocusNode> focusNodes = [];
-
-  // Getter for widget file Manager
-  FileManager get fileManager => widget.fileManager;
 
   /// Getter for widget phone list
   PhoneList get phoneList => widget.phoneList;

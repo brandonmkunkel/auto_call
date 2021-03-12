@@ -24,7 +24,9 @@ class CallSessionWidget extends StatefulWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
 
-  CallSessionWidget({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
+  CallSessionWidget(
+      {Key key, @required this.phoneList, @required this.fileManager})
+      : super(key: key);
 
   @override
   CallSessionWidgetState createState() => new CallSessionWidgetState();
@@ -44,9 +46,14 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
 
   // Helpful Settings Getters
   bool get postCallPromptEnabled => globalSettingManager.get("postCallPrompt");
-  bool get autoCallEnabled => globalSettingManager.isPremium() ? globalSettingManager.get("autoCall") : false;
+  bool get autoCallEnabled => globalSettingManager.isPremium()
+      ? globalSettingManager.get("autoCall")
+      : false;
   bool get oneTouchCallEnabled => globalSettingManager.get("oneTouchCall");
-  bool get editColumnsEnabled => globalSettingManager.isPremium() ? globalSettingManager.get("editColumns") : false;
+  bool get editColumnsEnabled => globalSettingManager.isPremium()
+      ? globalSettingManager.get("editColumns")
+      : false;
+  bool get showNotes => globalSettingManager.get("showNotes");
 
   @override
   void initState() {
@@ -56,7 +63,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     // Set a setting to show that there is an active call session
     globalSettingManager.set("activeCallSession", true);
 
-    fileManager.outputFilePath().then((String path) {
+    fileManager?.outputFilePath()?.then((String path) {
       globalSettingManager.set("activeCallSessionPath", path);
     });
 
@@ -77,7 +84,8 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   Future<bool> managedCall() async {
     bool callState = false;
 
-    PhoneManager.call(phoneList.currentPerson().phone, this.oneTouchCallEnabled);
+    PhoneManager.call(
+        phoneList.currentPerson().phone, this.oneTouchCallEnabled);
 
 //    await waitForCallCompletion(phoneList.currentPerson().phone);
 
@@ -86,7 +94,6 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   }
 
   Future<void> makeCall(BuildContext context) async {
-    if (await Permission.phone.request().isGranted) {
       managedCall().then((callState) => inCall = callState);
       print("make call - inCall $inCall");
 
@@ -109,7 +116,6 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
         // Async save to log the current progress each call
         fileManager.saveCallSession(phoneList);
       });
-    }
   }
 
   Future<void> makeAutoCall(BuildContext context) async {
@@ -122,7 +128,6 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
       // Make a single call
       await makeCall(context);
     }
-
   }
 
   // Update the Scroll controller based on the given item offset
@@ -180,19 +185,23 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
               icon: Icon(Icons.settings),
               onPressed: () async {
                 // Trigger a Widget redraw after pulling form settings
-                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage()));
+                await Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SettingsPage()));
 
                 setState(() {});
               })
         ],
       ),
-
-      body: CallTable(
-        fileManager: fileManager,
+      body: showNotes
+          ? CallTable(
         phoneList: phoneList,
         scrollController: _controller,
         textControllers: textControllers,
-      ),
+      ) : CallTableLight(
+              phoneList: phoneList,
+              scrollController: _controller,
+              textControllers: textControllers,
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Align(
         alignment: Alignment.bottomCenter,
@@ -200,10 +209,13 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
             padding: EdgeInsets.symmetric(vertical: 10.0),
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
-                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
-              ]),
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
+                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
+                  ]),
             ),
             child: !isComplete()
                 ? Row(
@@ -226,7 +238,8 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                         heroTag: "btn_call",
                         tooltip: "Call",
                         child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                        backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
+                        backgroundColor:
+                            inCall ? Colors.red : Theme.of(context).accentColor,
                       ),
                       FloatingActionButton.extended(
                         label: Text('Next'),
@@ -250,10 +263,13 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
 
                       // Store information from the user prompt
                       var result = await showDialog(
-                          context: context, builder: (_) => PostSessionPrompt(fileManager: fileManager, phoneList: phoneList));
+                          context: context,
+                          builder: (_) => PostSessionPrompt(
+                              fileManager: fileManager, phoneList: phoneList));
 
                       // Remove all pages in stack and return to home
-                      Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil("/home", (route) => false);
                     })
             // fill in required params
             ),

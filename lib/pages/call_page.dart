@@ -6,7 +6,9 @@ import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/ui/call_session_widget.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
+import 'package:auto_call/ui/widgets/permission_widget.dart';
 import 'package:auto_call/services/settings_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CallSessionPage extends StatefulWidget {
   static const String routeName = "/call_session";
@@ -54,8 +56,10 @@ class CallSessionPageState extends State<CallSessionPage> {
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            return CallSessionWidget(
-                fileManager: widget.fileManager, phoneList: snapshot.data);
+            return PermissionsWidget(
+                requestedPermission: Permission.phone,
+                child: CallSessionWidget(
+                    fileManager: widget.fileManager, phoneList: snapshot.data));
           }
 
           return Scaffold(

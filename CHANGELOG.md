@@ -1,3 +1,6 @@
+# v1.1.2
+- Added the ability to create a call session from contacts (via ContactsPage)
+
 # v1.1.1
 - Fixed some loading issues with contacts/files
 - Updated to newest version of app framework

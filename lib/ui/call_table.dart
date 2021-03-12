@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class CallTable extends StatefulWidget {
-  final FileManager fileManager;
   final PhoneList phoneList;
   final ScrollController scrollController;
   final List<TextEditingController> textControllers;
@@ -16,7 +14,6 @@ class CallTable extends StatefulWidget {
 
   CallTable(
       {Key key,
-      @required this.fileManager,
       @required this.phoneList,
       @required this.scrollController,
       @required this.textControllers,
@@ -32,9 +29,6 @@ class _CallTableState extends State<CallTable> {
   List<bool> acceptedColumns = [];
   double rowSize = kMinInteractiveDimension;
   List<FocusNode> focusNodes = [];
-
-  // Getter for the FileManager
-  FileManager get fileManager => widget.fileManager;
 
   // Getters for global settings
   bool get showCallNotes => globalSettingManager.get("showNotes");

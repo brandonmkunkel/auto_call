@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:string_similarity/string_similarity.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 import 'package:auto_call/services/regex.dart';
 import 'package:auto_call/services/file_manager.dart';
@@ -61,6 +62,12 @@ class Person {
     this.additionalLabels = additionalLabels != null ? additionalData.cast<String>() : [];
   }
 
+  static Person fromContact(int id, Contact contact) {
+    return Person(id: id,
+        name: "${contact.givenName} ${contact.familyName}",
+        phone: contact.phones.elementAt(0).value);
+  }
+
   Map<String, dynamic> toMap() {
     Map<String, dynamic> out = {
       "name": name,
@@ -116,15 +123,11 @@ class PhoneList {
     return phoneList;
   }
 
-  /// Static asynchronous constructor
-  // static Future<PhoneList> fromFile(String path) async {
-  //   PhoneList phoneList = await FileManager.readFile();
-  //   return await FileManager.readFile();
-  // }
-  //
-  // static Future<PhoneList> fromDB(String path) async {
-  //   return await
-  // }
+  static PhoneList fromContacts(List<Contact> contacts) {
+    PhoneList phoneList = PhoneList();
+    phoneList.people = contacts.asMap().entries.map((e) => Person.fromContact(e.key, e.value)).toList();
+    return phoneList;
+  }
 
   ///
   /// Methods for interacting with the final class

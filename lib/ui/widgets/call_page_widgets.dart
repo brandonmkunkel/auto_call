@@ -12,7 +12,9 @@ class SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
+    return fileManager == null
+      ? Container()
+      : IconButton(
       icon: Icon(Icons.save),
       onPressed: () async {
         bool acceptSave = await showDialog(barrierDismissible: false, context: context, builder: (_) => SaveAlert());
