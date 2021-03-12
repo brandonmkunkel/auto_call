@@ -1,6 +1,7 @@
-import 'package:auto_call/pages/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/pages/call_page.dart';
 import 'package:auto_call/ui/prompts/errors.dart';
@@ -17,7 +18,7 @@ class PastSessionsPage extends StatefulWidget {
 }
 
 class PastSessionsState extends State<PastSessionsPage> {
-  Future<List<String>> oldCallsFuture = FileManager.findOldCalls();
+  Future<List<String>> oldCallsFuture = FileManager.findOldCalls(recentFirst: true);
 
   Map<int, bool> selected = Map<int, bool>();
   List<String> files;
@@ -117,6 +118,7 @@ class PastSessionsState extends State<PastSessionsPage> {
                     leading: selected.containsValue(true)
                         ? Checkbox(
                             value: selected[index] ?? false,
+                            activeColor: Theme.of(context).buttonColor,
                             onChanged: (bool value) {
                               setState(() {
                                 selected[index] = value;

@@ -212,9 +212,15 @@ class FileManager {
   }
 
   // Look through the old calls directory and look for saved old calls
-  static Future<List<String>> findOldCalls() async {
+  static Future<List<String>> findOldCalls({bool recentFirst=false}) async {
     Directory _oldCallsDir = Directory(await callsDirectory());
-    List _files = _oldCallsDir.listSync(recursive: false);
+    List<FileSystemEntity> _files = _oldCallsDir.listSync(recursive: false);
+    _files.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
+
+    if (!recentFirst) {
+      _files = _files.reversed;
+    }
+
     return List.generate(_files.length, (int idx) => _files[idx].path);
   }
 
