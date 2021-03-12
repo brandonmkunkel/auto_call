@@ -30,22 +30,24 @@ class PastSessionsState extends State<PastSessionsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
-      body: FutureBuilder(
-            future: oldCallsFuture,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                files = snapshot.data ?? [];
-                print("redoing");
-                return showPastSessions(context, files);
-              }
+      body: SafeArea(
+        child: FutureBuilder(
+              future: oldCallsFuture,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  files = snapshot.data ?? [];
+                  print("redoing");
+                  return showPastSessions(context, files);
+                }
 
-              if (snapshot.hasError) {
-                return GeneralErrorWidget(errorText: "Error loading old calls", error: snapshot.error);
-              }
+                if (snapshot.hasError) {
+                  return GeneralErrorWidget(errorText: "Error loading old calls", error: snapshot.error);
+                }
 
-              // Loading Screen
-              return Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
-            },
+                // Loading Screen
+                return Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
+              },
+        ),
       ),
       floatingActionButton: multiSelect
           ? Row(

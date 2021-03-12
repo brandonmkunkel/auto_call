@@ -24,16 +24,18 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Container(
-        // padding: EdgeInsets.all(15.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              AccountUpgradeCard(),
-              ActiveCallSessionCard(),
-              HomeStatsCard()
-            ],
+      body: SafeArea(
+        child: Container(
+          // padding: EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                AccountUpgradeCard(),
+                ActiveCallSessionCard(),
+                HomeStatsCard()
+              ],
+            ),
           ),
         ),
       ),

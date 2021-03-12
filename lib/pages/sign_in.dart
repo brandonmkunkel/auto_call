@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
           })
         ],
       ),
-      body: SignInWidget(),
+      body: SafeArea(child: SignInWidget()),
     );
   }
 

@@ -30,46 +30,48 @@ class UpgradePageState extends State<UpgradePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        children: [
-          Card(
-              child: Container(
-                  padding: EdgeInsets.all(15.0),
-                  child: Column(children: [
-                    Text("This page will be updated in the future to accept in-app payments. \n\n"
-                        "For the time being, enjoy a free upgrade of your choice :)"),
-                  ]))),
-          RadioListTile<AccountType>(
-            title: const Text('Free'),
-            value: AccountType.free,
-            groupValue: accountType,
-            onChanged: (AccountType value) {
-              setState(() {
-                globalSettingManager.set("accountLevel", value.index);
-              });
-            },
-          ),
-          RadioListTile<AccountType>(
-            title: const Text('Premium'),
-            value: AccountType.premium,
-            groupValue: accountType,
-            onChanged: (AccountType value) {
-              setState(() {
-                globalSettingManager.set("accountLevel", value.index);
-              });
-            },
-          ),
-          RadioListTile<AccountType>(
-            title: const Text('Enterprise'),
-            value: AccountType.enterprise,
-            groupValue: accountType,
-            onChanged: (AccountType value) {
-              setState(() {
-                globalSettingManager.set("accountLevel", value.index);
-              });
-            },
-          ),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Card(
+                child: Container(
+                    padding: EdgeInsets.all(15.0),
+                    child: Column(children: [
+                      Text("This page will be updated in the future to accept in-app payments. \n\n"
+                          "For the time being, enjoy a free upgrade of your choice :)"),
+                    ]))),
+            RadioListTile<AccountType>(
+              title: const Text('Free'),
+              value: AccountType.free,
+              groupValue: accountType,
+              onChanged: (AccountType value) {
+                setState(() {
+                  globalSettingManager.set("accountLevel", value.index);
+                });
+              },
+            ),
+            RadioListTile<AccountType>(
+              title: const Text('Premium'),
+              value: AccountType.premium,
+              groupValue: accountType,
+              onChanged: (AccountType value) {
+                setState(() {
+                  globalSettingManager.set("accountLevel", value.index);
+                });
+              },
+            ),
+            RadioListTile<AccountType>(
+              title: const Text('Enterprise'),
+              value: AccountType.enterprise,
+              groupValue: accountType,
+              onChanged: (AccountType value) {
+                setState(() {
+                  globalSettingManager.set("accountLevel", value.index);
+                });
+              },
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("Complete"),

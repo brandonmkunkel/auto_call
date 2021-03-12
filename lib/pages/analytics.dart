@@ -19,16 +19,18 @@ class AnalyticsState extends State<AnalyticsPage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: UpgradePromptWidget(
-            requiredAccountType: AccountType.premium,
-            featureName: "contact tracking",
-            child: Card(
-              margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
-              child: ListTile(
-                  title: Text(
-                "Analytics coming soon!",
-                textAlign: TextAlign.center,
+        body: SafeArea(
+          child: UpgradePromptWidget(
+              requiredAccountType: AccountType.premium,
+              featureName: "contact tracking",
+              child: Card(
+                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10),
+                child: ListTile(
+                    title: Text(
+                  "Analytics coming soon!",
+                  textAlign: TextAlign.center,
+                )),
               )),
-            )));
+        ));
   }
 }

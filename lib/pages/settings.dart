@@ -36,104 +36,106 @@ class SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Scrollbar(
-          child: SingleChildScrollView(
-              child: Column(
-        children: [
-          // Go to user account
-          ListTile(
-            title: Text("Your Account"),
-            trailing: Icon(Icons.account_circle),
-            onTap: () async {
-              await Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
-              setState(() {});
-            },
-          ),
+      body: SafeArea(
+        child: Scrollbar(
+            child: SingleChildScrollView(
+                child: Column(
+          children: [
+            // Go to user account
+            ListTile(
+              title: Text("Your Account"),
+              trailing: Icon(Icons.account_circle),
+              onTap: () async {
+                await Navigator.of(context).push(MaterialPageRoute(builder: (_) => AccountPage()));
+                setState(() {});
+              },
+            ),
 
-          Divider(),
+            Divider(),
 
-          // Standard settings
-          Container(
-              child: Column(
-                  children: standardSettings.entries.map((entry) {
-            // return buildStandardSettingWidget(entry.key, entry.value);
-            return SettingWidget(name: entry.key, setting: entry.value);
-          }).toList())),
+            // Standard settings
+            Container(
+                child: Column(
+                    children: standardSettings.entries.map((entry) {
+              // return buildStandardSettingWidget(entry.key, entry.value);
+              return SettingWidget(name: entry.key, setting: entry.value);
+            }).toList())),
 
-          // Premium Settings Label (changes if the premium user changes)
-          Card(
-              margin: EdgeInsets.all(5.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                      padding: EdgeInsets.only(top: 15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
-                          Text(
-                            isPremium ? "Premium Settings" : "Premium Account Settings",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: isPremium ? accentColor : Theme.of(context).disabledColor,
-                                fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
-                          ),
-                          Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
-                        ],
-                      )),
+            // Premium Settings Label (changes if the premium user changes)
+            Card(
+                margin: EdgeInsets.all(5.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                        padding: EdgeInsets.only(top: 15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
+                            Text(
+                              isPremium ? "Premium Settings" : "Premium Account Settings",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: isPremium ? accentColor : Theme.of(context).disabledColor,
+                                  fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
+                            ),
+                            Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
+                          ],
+                        )),
 
-                  // Premium Settings
-                  Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.0),
-                      child: Column(
-                        children: premiumSettings.entries.map((entry) {
-                          // return buildPremiumSettingWidget(entry.key, entry.value);
-                          return SettingWidget(name: entry.key, setting: entry.value);
-                        }).toList(),
-                      )),
-                ],
-              )),
+                    // Premium Settings
+                    Container(
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        child: Column(
+                          children: premiumSettings.entries.map((entry) {
+                            // return buildPremiumSettingWidget(entry.key, entry.value);
+                            return SettingWidget(name: entry.key, setting: entry.value);
+                          }).toList(),
+                        )),
+                  ],
+                )),
 
-          HiddenSettings(
-              children:
-                  hiddenSettings.entries.map((entry) => buildStandardSettingWidget(entry.key, entry.value)).toList()),
+            HiddenSettings(
+                children:
+                    hiddenSettings.entries.map((entry) => buildStandardSettingWidget(entry.key, entry.value)).toList()),
 
-          Divider(),
+            Divider(),
 
-          Column(
-              children: ListTile.divideTiles(
-            context: context,
-            tiles: [
-              // ListTile(title: Text("Contact Support: ")),
-              ListTile(
-                dense: true,
-                title: Text("Terms and Conditions"),
-                onTap: () async {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => termsAndConditionsPage()));
-                },
-              ),
-              ListTile(
-                dense: true,
-                title: Text("Privacy Policy"),
-                onTap: () async {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => privacyPolicyPage()));
-                },
-              ),
-              ListTile(
-                dense: true,
-                title: Text("Release Notes"),
-                onTap: () async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => Scaffold(appBar: AppBar(title: Text("Release Notes")), body: ReleaseNotes())));
-                },
-              ),
-              ListTile(dense: true, title: VersionText()),
-              ListTile(dense: true, title: autoCallCopyright(textAlign: TextAlign.start)),
-            ],
-          ).toList()),
-        ],
-      ))),
+            Column(
+                children: ListTile.divideTiles(
+              context: context,
+              tiles: [
+                // ListTile(title: Text("Contact Support: ")),
+                ListTile(
+                  dense: true,
+                  title: Text("Terms and Conditions"),
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => termsAndConditionsPage()));
+                  },
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text("Privacy Policy"),
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => privacyPolicyPage()));
+                  },
+                ),
+                ListTile(
+                  dense: true,
+                  title: Text("Release Notes"),
+                  onTap: () async {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) => Scaffold(appBar: AppBar(title: Text("Release Notes")), body: ReleaseNotes())));
+                  },
+                ),
+                ListTile(dense: true, title: VersionText()),
+                ListTile(dense: true, title: autoCallCopyright(textAlign: TextAlign.start)),
+              ],
+            ).toList()),
+          ],
+        ))),
+      ),
     );
   }
 

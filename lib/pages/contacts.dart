@@ -34,10 +34,12 @@ class ContactsState extends State<ContactsPage> {
             ],
           ),
         ),
-        body: TabBarView(children: [
-          AppContactsWidget(),
-          PermissionsWidget(requestedPermission: Permission.contacts, child: PhoneContactsPage())
-        ]),
+        body: SafeArea(
+          child: TabBarView(children: [
+            AppContactsWidget(),
+            PermissionsWidget(requestedPermission: Permission.contacts, child: PhoneContactsPage())
+          ]),
+        ),
       ),
     );
   }

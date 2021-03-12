@@ -38,26 +38,25 @@ class GeneralErrorWidget extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
-      body: SafeArea(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(30),
-              child: Icon(Icons.error_outline, color: Colors.red, size: 50),
-            ),
-            SelectableText(
-              '${this.errorText}:\n',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline5,
-            ),
-            SelectableText(
-              '${this.error}',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-          ])),
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+        Container(
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(30),
+          child: Icon(Icons.error_outline, color: Colors.red, size: 50),
+        ),
+        SelectableText(
+          '${this.errorText}:\n',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline5,
+        ),
+        SelectableText(
+          '${this.error}',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ]),
     );
   }
 }

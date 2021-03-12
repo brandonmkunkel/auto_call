@@ -81,8 +81,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Stack(
+    return Stack(
       children: [
         ListView.builder(
           itemCount: widget.contacts.length ?? 0,
@@ -143,13 +142,14 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
                                 .removeWhere((key, value) => value == false);
 
                             // Start a call session
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) => CallSessionWidget(
-                                      fileManager: FileManager.fromFile("from_calls.csv"),
-                                        phoneList: PhoneList.fromContacts(
-                                            selected.entries.map((e) =>
-                                                widget.contacts[e.key]).toList()))));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CallSessionWidget(
+                                    fileManager:
+                                        FileManager.fromFile("from_calls.csv"),
+                                    phoneList: PhoneList.fromContacts(selected
+                                        .entries
+                                        .map((e) => widget.contacts[e.key])
+                                        .toList()))));
                           },
                           heroTag: "start a call session",
                           label: Text("Start a Call Session"),
@@ -157,7 +157,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
                     ]))
             : Container(),
       ],
-    ));
+    );
   }
 
   void select(int index) {
@@ -231,54 +231,52 @@ class ContactDetailsPage extends StatelessWidget {
               onPressed: () => _openExistingContactOnDevice(context)),
         ],
       ),
-      body: SafeArea(
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text("First Name"),
-              trailing: Text(_contact.givenName ?? ""),
-            ),
-            ListTile(
-              title: Text("Middle name"),
-              trailing: Text(_contact.middleName ?? ""),
-            ),
-            ListTile(
-              title: Text("Last name"),
-              trailing: Text(_contact.familyName ?? ""),
-            ),
-            ListTile(
-              title: Text("Prefix"),
-              trailing: Text(_contact.prefix ?? ""),
-            ),
-            ListTile(
-              title: Text("Suffix"),
-              trailing: Text(_contact.suffix ?? ""),
-            ),
-            ListTile(
-              title: Text("Birthday"),
-              trailing: Text(_contact.birthday != null
-                  ? DateFormat('dd-MM-yyyy').format(_contact.birthday)
-                  : ""),
-            ),
-            ListTile(
-              title: Text("Company"),
-              trailing: Text(_contact.company ?? ""),
-            ),
-            ListTile(
-              title: Text("Job"),
-              trailing: Text(_contact.jobTitle ?? ""),
-            ),
-            ListTile(
-              title: Text("Account Type"),
-              trailing: Text((_contact.androidAccountType != null)
-                  ? _contact.androidAccountType.toString()
-                  : ""),
-            ),
-            AddressesTile(_contact.postalAddresses),
-            ItemsTile("Phones", _contact.phones),
-            ItemsTile("Emails", _contact.emails)
-          ],
-        ),
+      body: ListView(
+        children: <Widget>[
+          ListTile(
+            title: Text("First Name"),
+            trailing: Text(_contact.givenName ?? ""),
+          ),
+          ListTile(
+            title: Text("Middle name"),
+            trailing: Text(_contact.middleName ?? ""),
+          ),
+          ListTile(
+            title: Text("Last name"),
+            trailing: Text(_contact.familyName ?? ""),
+          ),
+          ListTile(
+            title: Text("Prefix"),
+            trailing: Text(_contact.prefix ?? ""),
+          ),
+          ListTile(
+            title: Text("Suffix"),
+            trailing: Text(_contact.suffix ?? ""),
+          ),
+          ListTile(
+            title: Text("Birthday"),
+            trailing: Text(_contact.birthday != null
+                ? DateFormat('dd-MM-yyyy').format(_contact.birthday)
+                : ""),
+          ),
+          ListTile(
+            title: Text("Company"),
+            trailing: Text(_contact.company ?? ""),
+          ),
+          ListTile(
+            title: Text("Job"),
+            trailing: Text(_contact.jobTitle ?? ""),
+          ),
+          ListTile(
+            title: Text("Account Type"),
+            trailing: Text((_contact.androidAccountType != null)
+                ? _contact.androidAccountType.toString()
+                : ""),
+          ),
+          AddressesTile(_contact.postalAddresses),
+          ItemsTile("Phones", _contact.phones),
+          ItemsTile("Emails", _contact.emails)
+        ],
       ),
     );
   }

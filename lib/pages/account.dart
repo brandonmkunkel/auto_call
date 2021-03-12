@@ -51,63 +51,65 @@ class AccountPageState extends State<AccountPage> {
             )
           ],
         ),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            // _auth.currentUser.emailVerified
-            //     ? Card(
-            //         child: ListTile(
-            //           title: Text("Email Verified"),
-            //           trailing: Icon(Icons.check),
-            //         ),
-            //       )
-            //     : Card(
-            //         child: ListTile(
-            //         title: Text("Email Verification incomplete"),
-            //         trailing: ElevatedButton(
-            //           child: Text("Resend Verification Email"),
-            //           onPressed: () {
-            //             _auth.currentUser.sendEmailVerification();
-            //           },
-            //         ),
-            //       )),
-
-            AccountUpgradeCard(),
-
-            Card(
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+        body: SafeArea(
+          child: SingleChildScrollView(
               child: Column(
-                children: [
-                  ListTile(title: Text("User ID: "), trailing: Text("${_auth.currentUser.uid}")),
-                  ListTile(title: Text("Username: "), trailing: Text("${_auth.currentUser.displayName ?? ""}")),
-                  ListTile(title: Text("Email"), trailing: Text("${_auth.currentUser.email}")),
-                  ListTile(title: Text("Password"), trailing: Text("*" * 8)),
-                  ListTile(title: Text("Phone Number"), trailing: Text("${_auth.currentUser.phoneNumber ?? ""}")),
-                ],
-              ),
-            ),
+            children: [
+              // _auth.currentUser.emailVerified
+              //     ? Card(
+              //         child: ListTile(
+              //           title: Text("Email Verified"),
+              //           trailing: Icon(Icons.check),
+              //         ),
+              //       )
+              //     : Card(
+              //         child: ListTile(
+              //         title: Text("Email Verification incomplete"),
+              //         trailing: ElevatedButton(
+              //           child: Text("Resend Verification Email"),
+              //           onPressed: () {
+              //             _auth.currentUser.sendEmailVerification();
+              //           },
+              //         ),
+              //       )),
 
-            OrganizationStatusCard(),
+              AccountUpgradeCard(),
 
-            Card(
-              margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text(
-                      "Delete Account",
-                      style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () async {
-                      await showDialog(context: context, builder: (context) => DeleteAccountDialog());
-                    },
-                  )
-                ],
+              Card(
+                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+                child: Column(
+                  children: [
+                    ListTile(title: Text("User ID: "), trailing: Text("${_auth.currentUser.uid}")),
+                    ListTile(title: Text("Username: "), trailing: Text("${_auth.currentUser.displayName ?? ""}")),
+                    ListTile(title: Text("Email"), trailing: Text("${_auth.currentUser.email}")),
+                    ListTile(title: Text("Password"), trailing: Text("*" * 8)),
+                    ListTile(title: Text("Phone Number"), trailing: Text("${_auth.currentUser.phoneNumber ?? ""}")),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ))
+
+              OrganizationStatusCard(),
+
+              Card(
+                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(
+                        "Delete Account",
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () async {
+                        await showDialog(context: context, builder: (context) => DeleteAccountDialog());
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )),
+        )
 
         // floatingActionButton: FloatingActionButton.extended(
         //   label: Text(accountChanged ? "Save Changes" : "Exit"),
