@@ -25,15 +25,15 @@ dependencies:
   cupertino_icons:
 
   # Firebase dependencies
-  firebase_core: ^0.7.0
-  firebase_analytics: ^7.0.1
-  firebase_auth: ^0.20.1
-  firebase_crashlytics: ^0.4.0+1
-  firebase_performance: ^0.5.0
+  firebase_core: ^1.0.1
+  firebase_analytics: ^7.1.1
+  firebase_auth: ^1.0.1
+  firebase_crashlytics: ^1.0.0
+  firebase_performance: ^0.6.0
 
   # Authentication packages
   flutter_signin_button: ^1.0.0
-  google_sign_in: ^4.5.1
+  google_sign_in: ^4.5.9
 
   # Other stuff
   permission_handler:
@@ -46,10 +46,9 @@ dependencies:
   flutter_markdown:
 
   # Phone calls
-  table_sticky_headers:
-  contacts_service:
+  table_sticky_headers: ^2.0.0
+  contacts_service: ^0.4.6
   url_launcher:
-  flutter_phone_state: ^0.5.9
   flutter_phone_direct_caller: ^1.0.1
 
   # Data Persistence
@@ -59,15 +58,15 @@ dependencies:
   #  Files
   csv:
   file_picker:
-  path_provider:
+  path_provider: ^2.0.1
   spreadsheet_decoder:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_native_splash: ^0.3.1+1
-  flutter_launcher_icons: ^0.8.1
+  flutter_native_splash: ^1.1.4+1
+  flutter_launcher_icons: ^0.9.0
   test:
 
 # Create splash screens by running the following command:

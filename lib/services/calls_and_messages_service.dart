@@ -1,5 +1,4 @@
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_phone_state/flutter_phone_state.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class PhoneManager {
@@ -14,7 +13,11 @@ class PhoneManager {
   /// Two touch call requires the user to complete the call
   static void twoTouchCall(String phoneNumber) async {
     print("two touch call start");
-    FlutterPhoneState.startPhoneCall(phoneNumber);
+    if (await canLaunch('tel: $phoneNumber')) {
+      await launch('tel: $phoneNumber');
+    } else {
+      throw 'Could not call $phoneNumber';
+    }
     print("two touch call start");
   }
 
