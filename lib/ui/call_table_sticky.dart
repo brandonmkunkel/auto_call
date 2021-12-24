@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:auto_call/services/phone_list.dart';
@@ -199,8 +198,9 @@ class _StickyCallTableState extends State<StickyCallTable> {
             : IconButton(
                 padding: const EdgeInsets.all(5.0),
                 icon: Icon(Icons.check_circle,
-                    color:
-                        phoneList.people[i].called ? Theme.of(context).accentColor : Theme.of(context).disabledColor),
+                    color: phoneList.people[i].called
+                        ? Theme.of(context).colorScheme.secondary
+                        : Theme.of(context).disabledColor),
                 onPressed: () {
                   setState(() {
                     phoneList.people[i].called = !phoneList.people[i].called;

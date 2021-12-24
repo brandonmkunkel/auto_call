@@ -221,7 +221,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                         heroTag: "btn_call",
                         tooltip: "Call",
                         child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                        backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
+                        backgroundColor: inCall ? Colors.red : Theme.of(context).colorScheme.secondary,
                       ),
                       FloatingActionButton.extended(
                         label: Text('Next'),

@@ -3,7 +3,6 @@ import 'package:string_similarity/string_similarity.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 import 'package:auto_call/services/regex.dart';
-import 'package:auto_call/services/file_manager.dart';
 
 enum Result {
   Empty,
@@ -40,8 +39,8 @@ class Person {
     "Success": Result.Success,
   };
 
-  Person({
-      @required int id,
+  Person(
+      {@required int id,
       @required String name,
       @required String phone,
       String email = "",
@@ -63,9 +62,7 @@ class Person {
   }
 
   static Person fromContact(int id, Contact contact) {
-    return Person(id: id,
-        name: "${contact.givenName} ${contact.familyName}",
-        phone: contact.phones.elementAt(0).value);
+    return Person(id: id, name: "${contact.givenName} ${contact.familyName}", phone: contact.phones.elementAt(0).value);
   }
 
   Map<String, dynamic> toMap() {
@@ -108,7 +105,6 @@ class PhoneList {
   int iterator = 0;
   int firstUncalled = 0;
   int lastUncalled = 0;
-
 
   static Future<PhoneList> fromString(String inputData) async {
     List<String> stringData = inputData.split("\n");

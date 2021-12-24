@@ -36,7 +36,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
               ])
             : Container()
         : Card(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+            margin: EdgeInsets.symmetric(vertical: 5),
             child: Container(
               padding: const EdgeInsets.all(15.0),
               child: Column(

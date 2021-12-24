@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/phone_list.dart';
@@ -25,7 +24,7 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
             titlePadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             title: GestureDetector(
-                child: Text("Call Session Completed"),
+              child: Text("Call Session Completed"),
             ),
             children: [
               Column(children: <Widget>[
@@ -35,12 +34,14 @@ class PostSessionPromptState extends State<PostSessionPrompt> {
                     Text("Some stuff will go here eventually\n"),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: ElevatedButton(child: Text("Done"), onPressed: () {
-                        globalSettingManager.set("activeCallSession", false);
-                        globalSettingManager.set("activeCallSessionPath", "");
+                      child: ElevatedButton(
+                          child: Text("Done"),
+                          onPressed: () {
+                            globalSettingManager.set("activeCallSession", false);
+                            globalSettingManager.set("activeCallSessionPath", "");
 
-                        Navigator.of(context).pop();
-                      }),
+                            Navigator.of(context).pop();
+                          }),
                     )
                   ]),
                 )

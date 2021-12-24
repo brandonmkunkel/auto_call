@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'package:auto_call/services/phone_list.dart';
@@ -196,13 +195,13 @@ class _NewCallTableState extends State<NewCallTable> {
                       ? IconButton(
                           padding: const EdgeInsets.all(0.0),
                           icon: Icon(Icons.forward, color: Theme.of(context).iconTheme.color),
-                    onPressed: (){},
-                  )
+                          onPressed: () {},
+                        )
                       : IconButton(
                           padding: const EdgeInsets.all(0.0),
                           icon: Icon(Icons.check_circle,
                               color: widget.phoneList.people[i].called
-                                  ? Theme.of(context).accentColor
+                                  ? Theme.of(context).colorScheme.secondary
                                   : Theme.of(context).disabledColor),
                           onPressed: () {
                             setState(() {
@@ -239,7 +238,7 @@ class _NewCallTableState extends State<NewCallTable> {
           //             padding: const EdgeInsets.all(5.0),
           //             icon: Icon(Icons.check_circle,
           //                 color: phoneList.people[i].called
-          //                     ? Theme.of(context).accentColor
+          //                     ? Theme.of(context).colorScheme.secondary
           //                     : Theme.of(context).disabledColor),
           //             onPressed: () {
           //               setState(() {

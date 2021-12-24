@@ -95,14 +95,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
                               },
                               value: this.agreedToTerms,
-                              activeColor: Theme.of(context).buttonColor,
+                              activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
                             ),
                             title: RichText(
                                 text: TextSpan(style: Theme.of(context).textTheme.bodyText2, children: <TextSpan>[
                               TextSpan(text: 'I agree to the '),
                               TextSpan(
                                   text: 'Terms of Service',
-                                  style: TextStyle(color: Theme.of(context).accentColor),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.of(context)
@@ -117,14 +117,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
                               },
                               value: this.agreedToPrivacyPolicy,
-                              activeColor: Theme.of(context).buttonColor,
+                              activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
                             ),
                             title: RichText(
                                 text: TextSpan(style: Theme.of(context).textTheme.bodyText2, children: <TextSpan>[
                               TextSpan(text: 'I have read and understand the '),
                               TextSpan(
                                   text: 'Privacy Policy',
-                                  style: TextStyle(color: Theme.of(context).accentColor),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.of(context)

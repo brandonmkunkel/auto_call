@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                               TextSpan(text: 'By clicking Create Account, you agree to our '),
                               TextSpan(
                                   text: 'Terms of Service',
-                                  style: TextStyle(color: Theme.of(context).accentColor),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.of(context)
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                               TextSpan(text: ' and that you have read our '),
                               TextSpan(
                                 text: 'Privacy Policy',
-                                style: TextStyle(color: Theme.of(context).accentColor),
+                                style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     Navigator.of(context)

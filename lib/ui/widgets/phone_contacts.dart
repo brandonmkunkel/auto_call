@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:contacts_service/contacts_service.dart';
 import 'package:intl/intl.dart';
@@ -22,8 +21,7 @@ class PhoneContactsPage extends StatefulWidget {
 }
 
 class PhoneContactsPageState extends State<PhoneContactsPage> {
-  Future<Iterable<Contact>> contactsFuture =
-      ContactsService.getContacts(withThumbnails: true);
+  Future<Iterable<Contact>> contactsFuture = ContactsService.getContacts(withThumbnails: true);
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +29,14 @@ class PhoneContactsPageState extends State<PhoneContactsPage> {
       future: contactsFuture,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
-          return GeneralErrorWidget(
-              errorText: "Error loading phone contacts", error: snapshot.error);
+          return GeneralErrorWidget(errorText: "Error loading phone contacts", error: snapshot.error);
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          List<Contact> contacts =
-              snapshot.data.where((Contact c) => c.phones.isNotEmpty).toList();
+          List<Contact> contacts = snapshot.data.where((Contact c) => c.phones.isNotEmpty).toList();
 
           return contacts.isEmpty
-              ? Center(
-                  child: Text("No contacts found!",
-                      style: Theme.of(context).textTheme.subtitle1))
+              ? Center(child: Text("No contacts found!", style: Theme.of(context).textTheme.subtitle1))
               : PhoneContactsWidget(contacts: contacts);
         }
 
@@ -100,8 +94,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
               },
               leading: IconButton(
                 icon: multiSelect && selected[index] == true
-                    ? Icon(Icons.check_circle,
-                        color: Theme.of(context).buttonColor)
+                    ? Icon(Icons.check_circle, color: Theme.of(context).buttonTheme.colorScheme.primary)
                     : (c.avatar != null && c.avatar.length > 0)
                         ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
                         : CircleAvatar(child: Text(c.initials())),
@@ -122,39 +115,33 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
         selected.length >= 2
             ? Align(
                 alignment: Alignment.bottomCenter,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      FloatingActionButton.extended(
-                          onPressed: () {
-                            setState(() {
-                              selected.clear();
-                            });
-                          },
-                          backgroundColor: Colors.grey,
-                          heroTag: "cancel",
-                          label: Text("Cancel"),
-                          icon: Icon(Icons.cancel)),
-                      FloatingActionButton.extended(
-                          onPressed: () {
-                            // Remove all "false" entries in the map
-                            selected
-                                .removeWhere((key, value) => value == false);
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                  FloatingActionButton.extended(
+                      onPressed: () {
+                        setState(() {
+                          selected.clear();
+                        });
+                      },
+                      backgroundColor: Colors.grey,
+                      heroTag: "cancel",
+                      label: Text("Cancel"),
+                      icon: Icon(Icons.cancel)),
+                  FloatingActionButton.extended(
+                      onPressed: () {
+                        // Remove all "false" entries in the map
+                        selected.removeWhere((key, value) => value == false);
 
-                            // Start a call session
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CallSessionWidget(
-                                    fileManager:
-                                        FileManager.fromFile("from_calls.csv"),
-                                    phoneList: PhoneList.fromContacts(selected
-                                        .entries
-                                        .map((e) => widget.contacts[e.key])
-                                        .toList()))));
-                          },
-                          heroTag: "start a call session",
-                          label: Text("Start a Call Session"),
-                          icon: Icon(Icons.phone)),
-                    ]))
+                        // Start a call session
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CallSessionWidget(
+                                fileManager: FileManager.fromFile("from_calls.csv"),
+                                phoneList: PhoneList.fromContacts(
+                                    selected.entries.map((e) => widget.contacts[e.key]).toList()))));
+                      },
+                      heroTag: "start a call session",
+                      label: Text("Start a Call Session"),
+                      icon: Icon(Icons.phone)),
+                ]))
             : Container(),
       ],
     );
@@ -170,8 +157,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
 
   void contactOnDeviceHasBeenUpdated(Contact contact) {
     this.setState(() {
-      var id =
-          widget.contacts.indexWhere((c) => c.identifier == contact.identifier);
+      var id = widget.contacts.indexWhere((c) => c.identifier == contact.identifier);
       widget.contacts[id] = contact;
     });
   }
@@ -185,8 +171,7 @@ class ContactDetailsPage extends StatelessWidget {
 
   _openExistingContactOnDevice(BuildContext context) async {
     try {
-      var contact = await ContactsService.openExistingContact(_contact,
-          iOSLocalizedLabels: iOSLocalizedLabels);
+      var contact = await ContactsService.openExistingContact(_contact, iOSLocalizedLabels: iOSLocalizedLabels);
       if (onContactDeviceSave != null) {
         onContactDeviceSave(contact);
       }
@@ -226,9 +211,7 @@ class ContactDetailsPage extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () => _openExistingContactOnDevice(context)),
+          IconButton(icon: Icon(Icons.edit), onPressed: () => _openExistingContactOnDevice(context)),
         ],
       ),
       body: ListView(
@@ -255,9 +238,7 @@ class ContactDetailsPage extends StatelessWidget {
           ),
           ListTile(
             title: Text("Birthday"),
-            trailing: Text(_contact.birthday != null
-                ? DateFormat('dd-MM-yyyy').format(_contact.birthday)
-                : ""),
+            trailing: Text(_contact.birthday != null ? DateFormat('dd-MM-yyyy').format(_contact.birthday) : ""),
           ),
           ListTile(
             title: Text("Company"),
@@ -269,9 +250,7 @@ class ContactDetailsPage extends StatelessWidget {
           ),
           ListTile(
             title: Text("Account Type"),
-            trailing: Text((_contact.androidAccountType != null)
-                ? _contact.androidAccountType.toString()
-                : ""),
+            trailing: Text((_contact.androidAccountType != null) ? _contact.androidAccountType.toString() : ""),
           ),
           AddressesTile(_contact.postalAddresses),
           ItemsTile("Phones", _contact.phones),
@@ -374,7 +353,7 @@ class _AddContactPageState extends State<AddContactPage> {
       appBar: AppBar(
         title: Text("Add a contact"),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             onPressed: () {
               _formKey.currentState.save();
               contact.postalAddresses = [address];
@@ -413,14 +392,12 @@ class _AddContactPageState extends State<AddContactPage> {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone'),
-                onSaved: (v) =>
-                    contact.phones = [Item(label: "mobile", value: v)],
+                onSaved: (v) => contact.phones = [Item(label: "mobile", value: v)],
                 keyboardType: TextInputType.phone,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'E-mail'),
-                onSaved: (v) =>
-                    contact.emails = [Item(label: "work", value: v)],
+                onSaved: (v) => contact.emails = [Item(label: "work", value: v)],
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(
@@ -534,14 +511,12 @@ class _UpdateContactsPageState extends State<UpdateContactsPage> {
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Phone'),
-                onSaved: (v) =>
-                    contact.phones = [Item(label: "mobile", value: v)],
+                onSaved: (v) => contact.phones = [Item(label: "mobile", value: v)],
                 keyboardType: TextInputType.phone,
               ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'E-mail'),
-                onSaved: (v) =>
-                    contact.emails = [Item(label: "work", value: v)],
+                onSaved: (v) => contact.emails = [Item(label: "work", value: v)],
                 keyboardType: TextInputType.emailAddress,
               ),
               TextFormField(

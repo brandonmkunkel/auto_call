@@ -57,10 +57,8 @@ class FileSelectorState extends State<FileSelectorPage> {
     if (await Permission.storage.request().isGranted) {
       setState(() => _loadingPath = true);
       try {
-
         // Currently the file picker crashes in iOS on FileType.custom
         if (Platform.isIOS) {
-
           _result = await FilePicker.platform.pickFiles(
             type: FileType.any,
             allowMultiple: _multiPick,
@@ -121,8 +119,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                               Builder(
                                 builder: (BuildContext context) => _loadingPath
                                     ? Center(
-                                        child:
-                                            SizedBox(height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
+                                        child: SizedBox(
+                                            height: 50.0, width: 50.0, child: const CircularProgressIndicator()))
                                     : _paths != null
                                         ? Container(
                                             child: ListView.separated(
@@ -132,7 +130,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                                                 final String name = (isMultiPath
                                                     ? _paths.map((e) => e.name).toList()[index]
                                                     : _fileName ?? '...');
-                                                final String path = _paths.map((e) => e.path).toList()[index].toString();
+                                                final String path =
+                                                    _paths.map((e) => e.path).toList()[index].toString();
 
                                                 return ListTile(
                                                   title: Text('File Name: $name'),
@@ -152,7 +151,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                                   padding: EdgeInsets.all(5.0),
                                   alignment: Alignment.bottomRight,
                                   child: ElevatedButton.icon(
-                                    icon: Icon(Icons.upload_file, color: Theme.of(context).primaryTextTheme.button.color),
+                                    icon:
+                                        Icon(Icons.upload_file, color: Theme.of(context).primaryTextTheme.button.color),
                                     label: Text(_paths != null ? "Reselect File" : "Select File",
                                         style: Theme.of(context).primaryTextTheme.button),
                                     style: ElevatedButton.styleFrom(
@@ -211,7 +211,7 @@ class FileSelectorState extends State<FileSelectorPage> {
               heroTag: "accept_file",
               icon: Icon(Icons.check),
               label: Text("Continue"),
-              backgroundColor: Theme.of(context).accentColor,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               onPressed: () async {
                 // Navigator.of(context).pushReplacement(MaterialPageRoute(
                 //     builder: (context) => CallSessionPage(fileManager: FileManager(_paths[0].path))));
@@ -219,7 +219,7 @@ class FileSelectorState extends State<FileSelectorPage> {
                 await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => CallSessionPage(fileManager: FileManager.fromFile(_paths[0].path))));
 
-                setState((){});
+                setState(() {});
               }),
     );
   }

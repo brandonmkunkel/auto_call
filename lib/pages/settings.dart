@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +25,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Color accentColor = Theme.of(context).accentColor;
+    Color accentColor = Theme.of(context).colorScheme.secondary;
     // Color accentColor = Theme.of(context).floatingActionButtonTheme.backgroundColor;
 
     Map<String, Setting> hiddenSettings = globalSettingManager.hiddenSettings();
@@ -154,7 +153,7 @@ class SettingsPageState extends State<SettingsPage> {
             subtitle: setting.description != null ? Text(setting.description) : null,
             controlAffinity: ListTileControlAffinity.trailing,
             value: setting.value,
-            activeColor: Theme.of(context).accentColor,
+            activeColor: Theme.of(context).colorScheme.secondary,
             onChanged: (bool value) {
               setState(() {
                 manager.set(key, value);
@@ -211,17 +210,21 @@ class SettingWidgetState extends State<SettingWidget> {
             title: Text(setting.text,
                 style: !isPremiumSetting
                     ? null
-                    : TextStyle(color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor)),
+                    : TextStyle(
+                        color:
+                            !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.secondary)),
             subtitle: setting.description != null
                 ? Text(setting.description,
                     style: !isPremiumSetting
                         ? null
                         : TextStyle(
-                            color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor))
+                            color: !premiumUser
+                                ? Theme.of(context).disabledColor
+                                : Theme.of(context).colorScheme.secondary))
                 : null,
             controlAffinity: ListTileControlAffinity.trailing,
             value: isPremiumSetting && !premiumUser ? false : widget.setting.value,
-            activeColor: Theme.of(context).accentColor,
+            activeColor: Theme.of(context).colorScheme.secondary,
             onChanged: isPremiumSetting && !premiumUser
                 ? null
                 : (bool value) {
@@ -247,7 +250,7 @@ class SettingWidgetState extends State<SettingWidget> {
           //   // subtitle: Text(setting.description),
           // trailing: Switch(
           //   value: setting.value,
-          //   activeColor: Theme.of(context).accentColor,
+          //   activeColor: Theme.of(context).colorScheme.secondary,
           //   onChanged: (bool value) {
           //     setState(() {
           //       manager.set(key, value);
@@ -264,19 +267,25 @@ class SettingWidgetState extends State<SettingWidget> {
                   style: !isPremiumSetting
                       ? null
                       : TextStyle(
-                          color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor)),
+                          color: !premiumUser
+                              ? Theme.of(context).disabledColor
+                              : Theme.of(context).colorScheme.secondary)),
               subtitle: setting.description != null
                   ? Text(setting.description,
                       style: !isPremiumSetting
                           ? null
                           : TextStyle(
-                              color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor))
+                              color: !premiumUser
+                                  ? Theme.of(context).disabledColor
+                                  : Theme.of(context).colorScheme.secondary))
                   : null,
               trailing: Text(setting.value,
                   style: !isPremiumSetting
                       ? null
                       : TextStyle(
-                          color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).accentColor)));
+                          color: !premiumUser
+                              ? Theme.of(context).disabledColor
+                              : Theme.of(context).colorScheme.secondary)));
         }
     }
 

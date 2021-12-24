@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:convert';
 
 import 'package:csv/csv.dart';
 import 'package:spreadsheet_decoder/spreadsheet_decoder.dart';
@@ -11,8 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/services/regex.dart';
-
 
 ///
 /// CSV FILES
@@ -212,7 +209,7 @@ class FileManager {
   }
 
   // Look through the old calls directory and look for saved old calls
-  static Future<List<String>> findOldCalls({bool recentFirst=false}) async {
+  static Future<List<String>> findOldCalls({bool recentFirst = false}) async {
     Directory _oldCallsDir = Directory(await callsDirectory());
     List<FileSystemEntity> _files = _oldCallsDir.listSync(recursive: false);
     _files.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));

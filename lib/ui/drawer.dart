@@ -28,12 +28,12 @@ class AppDrawer extends StatelessWidget {
                   // onDetailsPressed: () { Navigator.of(context).pushNamed(AccountPage.routeName); },
 
                   currentAccountPicture: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15),
+                      padding: EdgeInsets.symmetric(vertical: 15),
                       child: Text("Auto Call", style: Theme.of(context).primaryTextTheme.subtitle1)),
                   // currentAccountPicture: IconButton(
                   //   padding: EdgeInsets.all(0),
                   //   iconSize: 50,
-                  //     icon: Icon(Icons.account_circle, color: Theme.of(context).buttonColor),
+                  //     icon: Icon(Icons.account_circle, color: Theme.of(context).buttonTheme.colorScheme.primary),
                   // onPressed: () {
                   //       Navigator.of(context).popAndPushNamed(AccountPage.routeName);
                   // } ,),
@@ -51,13 +51,20 @@ class AppDrawer extends StatelessWidget {
                     //   await _auth.signOut();
                     //   Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false);
                     // },),
-                    IconButton(icon: Icon(Icons.settings, color: Theme.of(context).primaryTextTheme.bodyText1.color), onPressed: (){
-                      Navigator.of(context).popAndPushNamed(SettingsPage.routeName);
-                    },)
+                    IconButton(
+                      icon: Icon(Icons.settings, color: Theme.of(context).primaryTextTheme.bodyText1.color),
+                      onPressed: () {
+                        Navigator.of(context).popAndPushNamed(SettingsPage.routeName);
+                      },
+                    )
                   ],
 
-                  accountName: Text("User: ${_auth.currentUser.displayName ?? ""}", style: Theme.of(context).primaryTextTheme.bodyText1,),
-                  accountEmail: Text("Email: ${_auth.currentUser.email}", style: Theme.of(context).primaryTextTheme.bodyText2),
+                  accountName: Text(
+                    "User: ${_auth.currentUser.displayName ?? ""}",
+                    style: Theme.of(context).primaryTextTheme.bodyText1,
+                  ),
+                  accountEmail:
+                      Text("Email: ${_auth.currentUser.email}", style: Theme.of(context).primaryTextTheme.bodyText2),
                 ),
                 ListTile(
                   leading: Icon(Icons.auto_awesome),

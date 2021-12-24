@@ -32,21 +32,21 @@ class PastSessionsState extends State<PastSessionsPage> {
       appBar: AppBar(title: Text(widget.title)),
       body: SafeArea(
         child: FutureBuilder(
-              future: oldCallsFuture,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  files = snapshot.data ?? [];
-                  print("redoing");
-                  return showPastSessions(context, files);
-                }
+          future: oldCallsFuture,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              files = snapshot.data ?? [];
+              print("redoing");
+              return showPastSessions(context, files);
+            }
 
-                if (snapshot.hasError) {
-                  return GeneralErrorWidget(errorText: "Error loading old calls", error: snapshot.error);
-                }
+            if (snapshot.hasError) {
+              return GeneralErrorWidget(errorText: "Error loading old calls", error: snapshot.error);
+            }
 
-                // Loading Screen
-                return Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
-              },
+            // Loading Screen
+            return Center(child: SizedBox(width: 50.0, height: 50.0, child: const CircularProgressIndicator()));
+          },
         ),
       ),
       floatingActionButton: multiSelect
@@ -120,7 +120,7 @@ class PastSessionsState extends State<PastSessionsPage> {
                     leading: selected.containsValue(true)
                         ? Checkbox(
                             value: selected[index] ?? false,
-                            activeColor: Theme.of(context).buttonColor,
+                            activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
                             onChanged: (bool value) {
                               setState(() {
                                 selected[index] = value;
