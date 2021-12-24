@@ -1,21 +1,15 @@
-import 'package:auto_call/ui/widgets/permission_widget.dart';
 import 'package:flutter/material.dart';
-
-import 'package:permission_handler/permission_handler.dart';
-
 import 'package:auto_call/pages/settings.dart';
 
 import 'package:auto_call/services/calls_and_messages_service.dart';
 import 'package:auto_call/services/file_manager.dart';
 import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/ui/drawer.dart';
 import 'package:auto_call/ui/call_table.dart';
 import 'package:auto_call/ui/call_table_light.dart';
 // import 'package:auto_call/ui/call_table_new.dart';
 // import 'package:auto_call/ui/call_table_sticky.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
-import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_page_widgets.dart';
 import 'package:auto_call/services/settings_manager.dart';
 
@@ -24,9 +18,7 @@ class CallSessionWidget extends StatefulWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
 
-  CallSessionWidget(
-      {Key key, @required this.phoneList, @required this.fileManager})
-      : super(key: key);
+  CallSessionWidget({Key key, @required this.phoneList, @required this.fileManager}) : super(key: key);
 
   @override
   CallSessionWidgetState createState() => new CallSessionWidgetState();
@@ -46,19 +38,15 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
 
   // Helpful Settings Getters
   bool get postCallPromptEnabled => globalSettingManager.get("postCallPrompt");
-  bool get autoCallEnabled => globalSettingManager.isPremium()
-      ? globalSettingManager.get("autoCall")
-      : false;
+  bool get autoCallEnabled => globalSettingManager.isPremium() ? globalSettingManager.get("autoCall") : false;
   bool get oneTouchCallEnabled => globalSettingManager.get("oneTouchCall");
-  bool get editColumnsEnabled => globalSettingManager.isPremium()
-      ? globalSettingManager.get("editColumns")
-      : false;
+  bool get editColumnsEnabled => globalSettingManager.isPremium() ? globalSettingManager.get("editColumns") : false;
   bool get showNotes => globalSettingManager.get("showNotes");
 
   @override
   void initState() {
     // Start up the Scroll Controller
-    _controller = ScrollController(keepScrollOffset: true);
+    _controller = ScrollController(keepScrollOffset: true, initialScrollOffset: rowSize * phoneList.iterator);
 
     // Set a setting to show that there is an active call session
     globalSettingManager.set("activeCallSession", true);
@@ -84,8 +72,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   Future<bool> managedCall() async {
     bool callState = false;
 
-    PhoneManager.call(
-        phoneList.currentPerson().phone, this.oneTouchCallEnabled);
+    PhoneManager.call(phoneList.currentPerson().phone, this.oneTouchCallEnabled);
 
 //    await waitForCallCompletion(phoneList.currentPerson().phone);
 
@@ -94,28 +81,28 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   }
 
   Future<void> makeCall(BuildContext context) async {
-      managedCall().then((callState) => inCall = callState);
-      print("make call - inCall $inCall");
+    managedCall().then((callState) => inCall = callState);
+    print("make call - inCall $inCall");
 
-      if (this.postCallPromptEnabled) {
-        // Show after call dialog after the call is complete
-        await showDialog(
-            context: context,
-            builder: (BuildContext context) => AfterCallPrompt(
-                  person: phoneList.currentPerson(),
-                  callIdx: phoneList.iterator,
-                  controller: textControllers[phoneList.iterator],
-                ));
-      }
+    if (this.postCallPromptEnabled) {
+      // Show after call dialog after the call is complete
+      await showDialog(
+          context: context,
+          builder: (BuildContext context) => AfterCallPrompt(
+                person: phoneList.currentPerson(),
+                callIdx: phoneList.iterator,
+                controller: textControllers[phoneList.iterator],
+              ));
+    }
 
-      // Update the Widgets on this page
-      setState(() {
-        phoneList.currentPerson().called = true;
-        advanceController(forward: true);
+    // Update the Widgets on this page
+    setState(() {
+      phoneList.currentPerson().called = true;
+      advanceController(forward: true);
 
-        // Async save to log the current progress each call
-        fileManager.saveCallSession(phoneList);
-      });
+      // Async save to log the current progress each call
+      fileManager.saveCallSession(phoneList);
+    });
   }
 
   Future<void> makeAutoCall(BuildContext context) async {
@@ -131,23 +118,24 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   }
 
   // Update the Scroll controller based on the given item offset
-  void updateController(int iteratorOffset) {
-    setState(() {
-      _controller.animateTo(
-        _controller.offset + rowSize * iteratorOffset,
-        curve: Curves.easeInOut,
-        duration: Duration(milliseconds: 400),
-      );
-    });
+  void updateController(int iterator) {
+    _controller.animateTo(
+      rowSize * iterator,
+      curve: Curves.easeInOut,
+      duration: Duration(milliseconds: 400),
+    );
   }
 
+  // Advance the scroll controller one place
   void advanceController({bool forward = true}) {
-    int origIterator = phoneList.iterator;
+    setState(() {
+      // int origIterator = phoneList.iterator;
 
-    phoneList.advance(forward: forward);
+      phoneList.advance(forward: forward);
 
-    int offset = phoneList.iterator - origIterator;
-    updateController(offset);
+      // int offset = phoneList.iterator - origIterator;
+      updateController(phoneList.iterator);
+    });
   }
 
   void setStateIterator(int i) {
@@ -155,8 +143,6 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
       FocusScope.of(context).unfocus();
 
       // Only do a scroll update if the selected item is kinda far away, to avoid annoying scroll animations
-      int desiredOffset = i - phoneList.iterator;
-      updateController(desiredOffset.abs() > 5 ? desiredOffset : 0);
       phoneList.iterator = i;
     });
   }
@@ -185,8 +171,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
               icon: Icon(Icons.settings),
               onPressed: () async {
                 // Trigger a Widget redraw after pulling form settings
-                await Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SettingsPage()));
+                await Navigator.of(context).push(MaterialPageRoute(builder: (context) => SettingsPage()));
 
                 setState(() {});
               })
@@ -194,13 +179,15 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
       ),
       body: showNotes
           ? CallTable(
-        phoneList: phoneList,
-        scrollController: _controller,
-        textControllers: textControllers,
-      ) : CallTableLight(
               phoneList: phoneList,
               scrollController: _controller,
               textControllers: textControllers,
+              callback: setStateIterator,
+            )
+          : CallTableLight(
+              phoneList: phoneList,
+              scrollController: _controller,
+              callback: setStateIterator,
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Align(
@@ -209,13 +196,10 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
             padding: EdgeInsets.symmetric(vertical: 10.0),
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [
-                    Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
-                    Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
-                  ]),
+              gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(1.0),
+                Theme.of(context).scaffoldBackgroundColor.withOpacity(0.0)
+              ]),
             ),
             child: !isComplete()
                 ? Row(
@@ -232,14 +216,12 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                       FloatingActionButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
-
                           await makeAutoCall(context);
                         },
                         heroTag: "btn_call",
                         tooltip: "Call",
                         child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                        backgroundColor:
-                            inCall ? Colors.red : Theme.of(context).accentColor,
+                        backgroundColor: inCall ? Colors.red : Theme.of(context).accentColor,
                       ),
                       FloatingActionButton.extended(
                         label: Text('Next'),
@@ -264,12 +246,10 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                       // Store information from the user prompt
                       var result = await showDialog(
                           context: context,
-                          builder: (_) => PostSessionPrompt(
-                              fileManager: fileManager, phoneList: phoneList));
+                          builder: (_) => PostSessionPrompt(fileManager: fileManager, phoneList: phoneList));
 
                       // Remove all pages in stack and return to home
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil("/home", (route) => false);
+                      Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
                     })
             // fill in required params
             ),

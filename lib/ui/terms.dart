@@ -23,7 +23,11 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
               padding: EdgeInsets.all(5),
               // color: Colors.grey,
               child: Scrollbar(
+                  showTrackOnHover: true,
+                  isAlwaysShown: true,
+                  interactive: true,
                   child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
                       child: Container(
                           padding: EdgeInsets.all(5),
                           child: FutureBuilder(
@@ -152,5 +156,4 @@ Widget autoCallCopyright({TextAlign textAlign = TextAlign.center}) =>
 // Whole page versions of the above
 Widget termsAndConditionsPage() =>
     Scaffold(appBar: AppBar(title: Text("Terms and Conditions")), body: termsAndConditions());
-Widget privacyPolicyPage() =>
-    Scaffold(appBar: AppBar(title: Text("Privacy Policy")), body: privacyPolicy());
+Widget privacyPolicyPage() => Scaffold(appBar: AppBar(title: Text("Privacy Policy")), body: privacyPolicy());

@@ -13,6 +13,8 @@ class SettingsPage extends StatefulWidget {
   static const String routeName = "/settings";
   final String title = "Settings";
 
+  SettingsPage({Key key}) : super(key: key);
+
   @override
   SettingsPageState createState() => new SettingsPageState();
 }
@@ -96,9 +98,13 @@ class SettingsPageState extends State<SettingsPage> {
                   ],
                 )),
 
-            HiddenSettings(
-                children:
-                    hiddenSettings.entries.map((entry) => buildStandardSettingWidget(entry.key, entry.value)).toList()),
+            // Enable hidden settings for running in debug mode
+            kDebugMode
+                ? HiddenSettings(
+                    children: hiddenSettings.entries
+                        .map((entry) => buildStandardSettingWidget(entry.key, entry.value))
+                        .toList())
+                : Container(),
 
             Divider(),
 
@@ -159,7 +165,6 @@ class SettingsPageState extends State<SettingsPage> {
 
       case int:
         {
-
           return Container();
         }
 
@@ -183,7 +188,7 @@ class SettingsPageState extends State<SettingsPage> {
 class SettingWidget extends StatefulWidget {
   final Setting setting;
   final String name;
-  const SettingWidget({@required this.name, @required this.setting});
+  const SettingWidget({Key key, @required this.name, @required this.setting}) : super(key: key);
 
   @override
   SettingWidgetState createState() => new SettingWidgetState();
@@ -217,17 +222,17 @@ class SettingWidgetState extends State<SettingWidget> {
             controlAffinity: ListTileControlAffinity.trailing,
             value: isPremiumSetting && !premiumUser ? false : widget.setting.value,
             activeColor: Theme.of(context).accentColor,
-            onChanged: isPremiumSetting && ! premiumUser
-                    ? null
-                    : (bool value) {
-                        setState(() {
-                          globalSettingManager.set(widget.name, value);
+            onChanged: isPremiumSetting && !premiumUser
+                ? null
+                : (bool value) {
+                    setState(() {
+                      globalSettingManager.set(widget.name, value);
 
-                          if (widget.name == "darkMode") {
-                            Provider.of<ThemeProvider>(context, listen: false).setTheme(value);
-                          }
-                        });
-                      },
+                      if (widget.name == "darkMode") {
+                        Provider.of<ThemeProvider>(context, listen: false).setTheme(value);
+                      }
+                    });
+                  },
           );
         }
       case int:
@@ -284,7 +289,7 @@ class SettingWidgetState extends State<SettingWidget> {
 ///
 class HiddenSettings extends StatefulWidget {
   final List<Widget> children;
-  const HiddenSettings({@required this.children});
+  const HiddenSettings({Key key, @required this.children}) : super(key: key);
 
   @override
   HiddenSettingsState createState() => new HiddenSettingsState();

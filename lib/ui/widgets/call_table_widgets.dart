@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class HeaderText extends StatelessWidget {
   final String text;
-  const HeaderText(this.text);
+  const HeaderText(this.text, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,8 @@ class CalledText extends StatelessWidget {
   final bool called;
   final TextAlign align;
 
-  const CalledText({@required this.text, @required this.called, this.align = TextAlign.left});
+  const CalledText({Key key, @required this.text, @required this.called, this.align = TextAlign.left})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

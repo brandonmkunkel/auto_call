@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 import 'package:data_table_2/data_table_2.dart';
 
@@ -12,12 +10,14 @@ class CallTable extends StatefulWidget {
   final ScrollController scrollController;
   final List<TextEditingController> textControllers;
   final List<bool> acceptedColumns;
+  final Function callback;
 
   CallTable(
       {Key key,
       @required this.phoneList,
       @required this.scrollController,
       @required this.textControllers,
+      @required this.callback,
       this.acceptedColumns})
       : super(key: key);
 
@@ -54,30 +54,14 @@ class _CallTableState extends State<CallTable> {
     focusNodes.forEach((focusNode) => focusNode?.dispose());
   }
 
-  // Update the Scroll controller based on the given item offset
-  void updateController(int iteratorOffset) {
-    widget.scrollController.animateTo(
-      widget.scrollController.offset + rowSize * iteratorOffset,
-      curve: Curves.easeIn,
-      duration: Duration(milliseconds: 400),
-    );
-  }
-
-  void setStateIterator(int i) {
-    setState(() {
-      FocusScope.of(context).unfocus();
-
-      // Only do a scroll update if the selected item is kinda far away, to avoid annoying scroll animations
-      int desiredOffset = i - widget.phoneList.iterator;
-      updateController(desiredOffset.abs() > 5 ? desiredOffset : 0);
-      widget.phoneList.iterator = i;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
+      showTrackOnHover: true,
+      isAlwaysShown: true,
+      interactive: true,
       child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         controller: widget.scrollController,
         scrollDirection: Axis.vertical,
         child: Column(
@@ -87,7 +71,7 @@ class _CallTableState extends State<CallTable> {
               SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(children: <Widget>[
-                    DataTable2(
+                    DataTable(
                       horizontalMargin: showCallNotes || additionalColumns ? 5.0 : 10.0,
                       columnSpacing: showCallNotes || additionalColumns ? 10.0 : 30.0,
                       dataRowHeight: rowSize,
@@ -154,11 +138,11 @@ class _CallTableState extends State<CallTable> {
                                 })),
                     CalledText(text: (i + 1).toString(), called: widget.phoneList.people[i].called),
                   ]),
-                  onTap: () => setStateIterator(i)),
+                  onTap: () => widget.callback(i)),
               DataCell(CalledText(text: widget.phoneList.people[i].name, called: widget.phoneList.people[i].called),
-                  onTap: () => setStateIterator(i)),
+                  onTap: () => widget.callback(i)),
               DataCell(CalledText(text: widget.phoneList.people[i].phone, called: widget.phoneList.people[i].called),
-                  onTap: () => setStateIterator(i)),
+                  onTap: () => widget.callback(i)),
             ] +
 
             // Additional Columns
@@ -168,7 +152,7 @@ class _CallTableState extends State<CallTable> {
                         CalledText(
                             text: widget.phoneList.people[i].additionalData[idx],
                             called: widget.phoneList.people[i].called),
-                        onTap: () => setStateIterator(i));
+                        onTap: () => widget.callback(i));
                   })
                 : []) +
             (showCallNotes
@@ -192,7 +176,7 @@ class _CallTableState extends State<CallTable> {
                           },
                           decoration: const InputDecoration(border: InputBorder.none, hintText: '..........'),
                         ),
-                        onTap: () => setStateIterator(i)),
+                        onTap: () => widget.callback(i)),
                     DataCell(
 //                        ButtonTheme(
 //                        alignedDropdown: true,
@@ -221,7 +205,7 @@ class _CallTableState extends State<CallTable> {
                                   ),
                                 )
                                 .toList()),
-                        onTap: () => setStateIterator(i)),
+                        onTap: () => widget.callback(i)),
                   ]
                 : []));
   }

@@ -46,7 +46,7 @@ dependencies:
   flutter_markdown:
 
   # Phone calls
-  data_table_2:
+  data_table_2: ^2.2.0
   contacts_service: ^0.6.3
   url_launcher:
   flutter_phone_direct_caller: ^2.1.0
