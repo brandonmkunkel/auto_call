@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'services/settings_manager.dart';
@@ -32,7 +31,7 @@ class _AutoCall extends State<AutoCall> {
   ThemeProvider themeChangeProvider = ThemeProvider(globalSettingManager.get("darkMode"));
 
   // Firebase Analytics observers
-  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
@@ -51,7 +50,9 @@ class _AutoCall extends State<AutoCall> {
           // Set apps first page by checking whether or not the user has been onboarded
           home: !globalSettingManager.get("userOnboarded")
               ? OnboardingPage()
-              : _auth.currentUser != null ? HomePage() : LoginPage(),
+              : _auth.currentUser != null
+                  ? HomePage()
+                  : LoginPage(),
 
           // Routes
           routes: {

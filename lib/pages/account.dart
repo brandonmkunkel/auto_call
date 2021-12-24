@@ -232,7 +232,7 @@ class AccountUpgradeCardState extends State<AccountUpgradeCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+      margin: EdgeInsets.symmetric(vertical: 5),
       child: ListTile(
         title: Text("Account Level: ${this.accountLevelDescriptor}"),
         trailing: ElevatedButton(

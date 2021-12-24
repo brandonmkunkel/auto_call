@@ -23,7 +23,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
         ? deletedCallSession
             ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 Card(
-                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+                  margin: EdgeInsets.symmetric(vertical: 5),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 15, bottom: 15),
                     child: Text(

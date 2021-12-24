@@ -5,6 +5,7 @@ import 'package:auto_call/services/phone_list.dart';
 import 'package:auto_call/services/settings_manager.dart';
 import 'package:auto_call/ui/prompts/pre_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
+import 'package:data_table_2/data_table_2.dart';
 
 class CallTable extends StatefulWidget {
   final PhoneList phoneList;
@@ -86,7 +87,7 @@ class _CallTableState extends State<CallTable> {
               SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(children: <Widget>[
-                    DataTable(
+                    DataTable2(
                       horizontalMargin: showCallNotes || additionalColumns ? 5.0 : 10.0,
                       columnSpacing: showCallNotes || additionalColumns ? 10.0 : 30.0,
                       dataRowHeight: rowSize,

@@ -26,15 +26,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: SafeArea(
         child: Container(
-          // padding: EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(10.0),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                AccountUpgradeCard(),
-                ActiveCallSessionCard(),
-                HomeStatsCard()
-              ],
+              children: <Widget>[AccountUpgradeCard(), ActiveCallSessionCard(), HomeStatsCard()],
             ),
           ),
         ),

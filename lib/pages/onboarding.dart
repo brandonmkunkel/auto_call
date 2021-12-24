@@ -26,9 +26,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
     globalSettingManager.set("userOnboarded", true);
 
     // Go to the home page (replacing this page)
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => _auth.currentUser != null ? HomePage() : LoginPage())
-    );
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (_) => _auth.currentUser != null ? HomePage() : LoginPage()));
   }
 
   Widget _buildImage(BuildContext context, String assetName) {
@@ -47,18 +46,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
+    Color contrastColor = Theme.of(context).primaryTextTheme.bodyText1.color;
+
     PageDecoration pageDecoration = PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: Colors.white),
-      bodyTextStyle: TextStyle(fontSize: 18.0, color: Colors.white),
-      pageColor: Theme.of(context).primaryColor,
+      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: contrastColor),
+      bodyTextStyle: TextStyle(fontSize: 18.0, color: contrastColor),
     );
 
     return Scaffold(
         primary: true,
-        body: Container(
-        color: Theme.of(context).primaryColor,
-        child: SafeArea(
-            child: IntroductionScreen(
+        body: IntroductionScreen(
+          globalBackgroundColor: Theme.of(context).primaryColor,
           key: introKey,
           pages: [
             PageViewModel(
@@ -85,15 +83,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
           showSkipButton: true,
           skipFlex: 0,
           nextFlex: 0,
-          skip: const Text('Skip', style: TextStyle(color: Colors.white)),
-          next: const Icon(Icons.arrow_forward, color: Colors.white),
-          done: Text('Done', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-          dotsDecorator: const DotsDecorator(
+          skip: Text('Skip', style: TextStyle(color: contrastColor)),
+          next: Icon(Icons.arrow_forward, color: contrastColor),
+          done: Text('Done', style: TextStyle(color: contrastColor, fontWeight: FontWeight.w600)),
+          isBottomSafeArea: true,
+          isTopSafeArea: true,
+          dotsDecorator: DotsDecorator(
             size: Size(10.0, 10.0),
             color: Colors.grey,
-            activeColor: Colors.white,
+            activeColor: contrastColor,
             activeSize: Size(22.0, 10.0),
           ),
-        ))));
+        ));
   }
 }

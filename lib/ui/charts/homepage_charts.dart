@@ -4,8 +4,6 @@ import 'package:auto_call/pages/analytics.dart';
 import 'package:auto_call/ui/charts/call_breakdown.dart';
 
 import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/services/call_database_manager.dart';
-import 'package:auto_call/services/account_database_manager.dart';
 
 class HomeStatsCard extends StatefulWidget {
   @override
@@ -16,7 +14,7 @@ class HomeStatsCardState extends State<HomeStatsCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
+        margin: EdgeInsets.symmetric(vertical: 5),
         child: Container(
             padding: EdgeInsets.all(15.0),
             child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
