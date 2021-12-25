@@ -26,7 +26,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    Color accentColor = Theme.of(context).colorScheme.secondary;
+    Color accentColor = Theme.of(context).colorScheme.primary;
     // Color accentColor = Theme.of(context).floatingActionButtonTheme.backgroundColor;
 
     Map<String, Setting> hiddenSettings = globalSettingManager.hiddenSettings();
@@ -154,7 +154,7 @@ class SettingsPageState extends State<SettingsPage> {
             subtitle: setting.description != null ? Text(setting.description as String) : null,
             controlAffinity: ListTileControlAffinity.trailing,
             value: setting.value,
-            activeColor: Theme.of(context).colorScheme.secondary,
+            activeColor: Theme.of(context).colorScheme.primary,
             onChanged: (bool value) {
               setState(() {
                 manager.set(key, value);
@@ -212,20 +212,18 @@ class SettingWidgetState extends State<SettingWidget> {
                 style: !isPremiumSetting
                     ? null
                     : TextStyle(
-                        color:
-                            !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.secondary)),
+                        color: !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary)),
             subtitle: setting.description != null
                 ? Text(setting.description as String,
                     style: !isPremiumSetting
                         ? null
                         : TextStyle(
-                            color: !premiumUser
-                                ? Theme.of(context).disabledColor
-                                : Theme.of(context).colorScheme.secondary))
+                            color:
+                                !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary))
                 : null,
             controlAffinity: ListTileControlAffinity.trailing,
             value: isPremiumSetting && !premiumUser ? false : widget.setting.value,
-            activeColor: Theme.of(context).colorScheme.secondary,
+            activeColor: Theme.of(context).colorScheme.primary,
             onChanged: isPremiumSetting && !premiumUser
                 ? null
                 : (bool value) {
@@ -251,7 +249,7 @@ class SettingWidgetState extends State<SettingWidget> {
           //   // subtitle: Text(setting.description),
           // trailing: Switch(
           //   value: setting.value,
-          //   activeColor: Theme.of(context).colorScheme.secondary,
+          //   activeColor: Theme.of(context).colorScheme.primary,
           //   onChanged: (bool value) {
           //     setState(() {
           //       manager.set(key, value);
@@ -268,9 +266,8 @@ class SettingWidgetState extends State<SettingWidget> {
                   style: !isPremiumSetting
                       ? null
                       : TextStyle(
-                          color: !premiumUser
-                              ? Theme.of(context).disabledColor
-                              : Theme.of(context).colorScheme.secondary)),
+                          color:
+                              !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary)),
               subtitle: setting.description != null
                   ? Text(setting.description as String,
                       style: !isPremiumSetting
@@ -278,15 +275,14 @@ class SettingWidgetState extends State<SettingWidget> {
                           : TextStyle(
                               color: !premiumUser
                                   ? Theme.of(context).disabledColor
-                                  : Theme.of(context).colorScheme.secondary))
+                                  : Theme.of(context).colorScheme.primary))
                   : null,
               trailing: Text(setting.value,
                   style: !isPremiumSetting
                       ? null
                       : TextStyle(
-                          color: !premiumUser
-                              ? Theme.of(context).disabledColor
-                              : Theme.of(context).colorScheme.secondary)));
+                          color:
+                              !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.primary)));
         }
     }
 

@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               TextSpan(text: 'I agree to the '),
                               TextSpan(
                                   text: 'Terms of Service',
-                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.of(context)
@@ -123,7 +123,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               TextSpan(text: 'I have read and understand the '),
                               TextSpan(
                                   text: 'Privacy Policy',
-                                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.primary),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.of(context)

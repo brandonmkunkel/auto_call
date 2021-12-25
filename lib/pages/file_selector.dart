@@ -211,7 +211,7 @@ class FileSelectorState extends State<FileSelectorPage> {
               heroTag: "accept_file",
               icon: Icon(Icons.check),
               label: Text("Continue"),
-              backgroundColor: Theme.of(context).colorScheme.secondary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               onPressed: () async {
                 // Navigator.of(context).pushReplacement(MaterialPageRoute(
                 //     builder: (context) => CallSessionPage(fileManager: FileManager(_paths[0].path))));

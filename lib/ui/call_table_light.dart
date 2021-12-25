@@ -106,7 +106,7 @@ class _RowWidgetState extends State<RowWidget> {
                         padding: const EdgeInsets.all(0.0),
                         icon: Icon(Icons.check_circle,
                             color: widget.person.called
-                                ? Theme.of(context).colorScheme.secondary
+                                ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).disabledColor),
                         onPressed: () {
                           setState(() {

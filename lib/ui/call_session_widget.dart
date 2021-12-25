@@ -205,14 +205,16 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                 ? Row(
                     children: <Widget>[
                       FloatingActionButton.extended(
-                          label: Text('Back'),
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            advanceController(forward: false);
-                          },
-                          heroTag: "btn_back",
-                          tooltip: "Back"),
+                        label: Text('Back'),
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          advanceController(forward: false);
+                        },
+                        heroTag: "btn_back",
+                        tooltip: "Back",
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                      ),
                       FloatingActionButton(
                         onPressed: () async {
                           FocusScope.of(context).unfocus();
@@ -221,7 +223,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                         heroTag: "btn_call",
                         tooltip: "Call",
                         child: inCall ? Icon(Icons.cancel) : Icon(Icons.call),
-                        backgroundColor: inCall ? Colors.red : Theme.of(context).colorScheme.secondary,
+                        backgroundColor: inCall ? Colors.red : Theme.of(context).colorScheme.primary,
                       ),
                       FloatingActionButton.extended(
                         label: Text('Next'),
@@ -232,6 +234,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
                         },
                         heroTag: "btn_next",
                         tooltip: "Forward",
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                       ),
                     ],
                     crossAxisAlignment: CrossAxisAlignment.center,
