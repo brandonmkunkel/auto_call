@@ -1,22 +1,22 @@
+import 'package:auto_call/classes/person.dart';
 import 'package:flutter/material.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/settings_manager.dart';
+import 'package:auto_call/classes/phone_list.dart';
 
 class AfterCallPrompt extends StatefulWidget {
   final Person person;
   final int callIdx;
   final TextEditingController controller;
 
-  AfterCallPrompt({Key key, @required this.person, @required this.callIdx, @required this.controller})
-      : super(key: key);
+  AfterCallPrompt({Key? key, required this.person, required this.callIdx, required this.controller}) : super(key: key);
 
   @override
   AfterCallPromptState createState() => new AfterCallPromptState();
 }
 
 class AfterCallPromptState extends State<AfterCallPrompt> {
-  FocusNode _focusNode;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
   @override
   void dispose() {
     super.dispose();
-    _focusNode?.dispose();
+    _focusNode.dispose();
   }
 
   @override
@@ -90,10 +90,10 @@ class AfterCallPromptState extends State<AfterCallPrompt> {
                     trailing: DropdownButton<String>(
                         hint: Text("Result"),
                         value: widget.person.result.isEmpty ? null : widget.person.result,
-                        onChanged: (String value) {
+                        onChanged: (String? value) {
                           _focusNode.unfocus();
                           setState(() {
-                            widget.person.result = value;
+                            widget.person.result = value as String;
                           });
                         },
                         elevation: 16,

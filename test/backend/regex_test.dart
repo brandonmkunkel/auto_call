@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:auto_call/services/regex.dart';
+import 'package:auto_call/classes/regex.dart';
 
 ///
 /// The purpose of these tests is to verify behavior of Regex string patterns

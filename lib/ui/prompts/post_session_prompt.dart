@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/phone_list.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 class PostSessionPrompt extends StatefulWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
 
-  PostSessionPrompt({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
+  PostSessionPrompt({Key? key, required this.fileManager, required this.phoneList}) : super(key: key);
 
   @override
   PostSessionPromptState createState() => new PostSessionPromptState();

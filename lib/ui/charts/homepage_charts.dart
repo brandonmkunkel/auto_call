@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/analytics.dart';
 import 'package:auto_call/ui/charts/call_breakdown.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 class HomeStatsCard extends StatefulWidget {
   @override
@@ -28,7 +28,7 @@ class HomeStatsCardState extends State<HomeStatsCard> {
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 OutlinedButton(
                   child: Text("Go to Stats Page"),
-                  style: OutlinedButton.styleFrom(primary: Theme.of(context).textTheme.bodyText1.color),
+                  style: OutlinedButton.styleFrom(primary: Theme.of(context).textTheme.bodyText1?.color),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => AnalyticsPage()));
                   },

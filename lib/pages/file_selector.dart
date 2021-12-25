@@ -18,20 +18,20 @@ class FileSelectorPage extends StatefulWidget {
 }
 
 class FileSelectorState extends State<FileSelectorPage> {
-  String _fileName;
-  FilePickerResult _result;
-  List<PlatformFile> _paths;
-  List<String> _extension = ["txt", "csv", "xls", "xlsx"];
+  String? _fileName;
+  FilePickerResult? _result;
+  List<PlatformFile>? _paths;
+  final List<String> _extension = ["txt", "csv", "xls", "xlsx"];
   bool _loadingPath = false;
   bool _multiPick = false;
 
-  TextEditingController controller1;
-  TextEditingController controller2;
-  FocusNode _focusNode1;
-  FocusNode _focusNode2;
+  late TextEditingController controller1;
+  late TextEditingController controller2;
+  late FocusNode _focusNode1;
+  late FocusNode _focusNode2;
 
   /// Multiple paths selected
-  bool get isMultiPath => _paths != null && _paths.isNotEmpty;
+  bool get isMultiPath => _paths != null && _paths!.isNotEmpty;
 
   @override
   void initState() {
@@ -45,10 +45,10 @@ class FileSelectorState extends State<FileSelectorPage> {
 
   @override
   void dispose() {
-    _focusNode1?.dispose();
-    _focusNode2?.dispose();
-    controller1?.dispose();
-    controller2?.dispose();
+    _focusNode1.dispose();
+    _focusNode2.dispose();
+    controller1.dispose();
+    controller2.dispose();
     super.dispose();
   }
 
@@ -71,7 +71,7 @@ class FileSelectorState extends State<FileSelectorPage> {
           );
         }
 
-        _paths = _result?.files;
+        _paths = _result?.files ?? [];
       } on PlatformException catch (e) {
         print("Unsupported operation" + e.toString());
       } catch (ex) {
@@ -82,7 +82,7 @@ class FileSelectorState extends State<FileSelectorPage> {
 
       setState(() {
         _loadingPath = false;
-        _fileName = _paths != null ? _paths.map((e) => e.name).toString() : '...';
+        _fileName = _paths != null ? _paths!.map((e) => e.name).toString() : '...';
       });
     } else {
       print("no storage permissions");
@@ -125,13 +125,13 @@ class FileSelectorState extends State<FileSelectorPage> {
                                         ? Container(
                                             child: ListView.separated(
                                               shrinkWrap: true,
-                                              itemCount: _paths != null && _paths.isNotEmpty ? _paths.length : 1,
+                                              itemCount: _paths != null && _paths!.isNotEmpty ? _paths!.length : 1,
                                               itemBuilder: (BuildContext context, int index) {
-                                                final String name = (isMultiPath
-                                                    ? _paths.map((e) => e.name).toList()[index]
-                                                    : _fileName ?? '...');
+                                                final String? name = (isMultiPath
+                                                    ? _paths!.map((e) => e.name).toList()[index]
+                                                    : _fileName);
                                                 final String path =
-                                                    _paths.map((e) => e.path).toList()[index].toString();
+                                                    _paths!.map((e) => e.path).toList()[index].toString();
 
                                                 return ListTile(
                                                   title: Text('File Name: $name'),
@@ -151,8 +151,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                                   padding: EdgeInsets.all(5.0),
                                   alignment: Alignment.bottomRight,
                                   child: ElevatedButton.icon(
-                                    icon:
-                                        Icon(Icons.upload_file, color: Theme.of(context).primaryTextTheme.button.color),
+                                    icon: Icon(Icons.upload_file,
+                                        color: Theme.of(context).primaryTextTheme.button?.color),
                                     label: Text(_paths != null ? "Reselect File" : "Select File",
                                         style: Theme.of(context).primaryTextTheme.button),
                                     style: ElevatedButton.styleFrom(
@@ -217,7 +217,8 @@ class FileSelectorState extends State<FileSelectorPage> {
                 //     builder: (context) => CallSessionPage(fileManager: FileManager(_paths[0].path))));
 
                 await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => CallSessionPage(fileManager: FileManager.fromFile(_paths[0].path))));
+                    builder: (context) =>
+                        CallSessionPage(fileManager: FileManager.fromFile(_paths![0].path as String))));
 
                 setState(() {});
               }),

@@ -1,20 +1,21 @@
-import 'package:auto_call/services/settings_manager.dart';
 import 'package:flutter/material.dart';
+
+import 'package:auto_call/classes/settings_manager.dart';
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/phone_list.dart';
 
 class PreSessionPrompt extends StatefulWidget {
   final FileManager fileManager;
   final PhoneList phoneList;
 
-  PreSessionPrompt({Key key, @required this.fileManager, @required this.phoneList}) : super(key: key);
+  PreSessionPrompt({Key? key, required this.fileManager, required this.phoneList}) : super(key: key);
 
   @override
   PreSessionPromptState createState() => new PreSessionPromptState();
 }
 
 class PreSessionPromptState extends State<PreSessionPrompt> {
-  List<bool> columns;
+  List<bool> columns = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +42,8 @@ class PreSessionPromptState extends State<PreSessionPrompt> {
                       return ListTile(
                         leading: Checkbox(
                             value: true,
-                            onChanged: (bool value) {
-                              columns[idx] = value;
+                            onChanged: (bool? value) {
+                              columns[idx] = value!;
                             }),
                         title: Text(widget.phoneList.additionalLabels[idx]),
                       );

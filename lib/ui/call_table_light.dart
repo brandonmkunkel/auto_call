@@ -1,20 +1,15 @@
+import 'package:auto_call/classes/person.dart';
 import 'package:flutter/material.dart';
 
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/phone_list.dart';
 import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class CallTableLight extends StatefulWidget {
   final PhoneList phoneList;
   final ScrollController scrollController;
-  final List<bool> acceptedColumns;
   final Function callback;
 
-  CallTableLight(
-      {Key key,
-      @required this.phoneList,
-      @required this.scrollController,
-      @required this.callback,
-      this.acceptedColumns})
+  CallTableLight({Key? key, required this.phoneList, required this.scrollController, required this.callback})
       : super(key: key);
 
   @override
@@ -28,7 +23,7 @@ class _CallTableState extends State<CallTableLight> {
   Widget build(BuildContext context) {
     return Column(children: [
       Container(
-        decoration: BoxDecoration(color: Theme.of(context).textTheme.subtitle1.backgroundColor),
+        decoration: BoxDecoration(color: Theme.of(context).textTheme.subtitle1?.backgroundColor),
         child: ListTile(
           dense: true,
           leading: SizedBox(width: 65),
@@ -79,7 +74,14 @@ class RowWidget extends StatefulWidget {
   final Person person;
   final Function callback;
 
-  const RowWidget({Key key, this.i, this.iterator, this.height, this.person, this.callback}) : super(key: key);
+  const RowWidget(
+      {Key? key,
+      required this.i,
+      required this.iterator,
+      required this.height,
+      required this.person,
+      required this.callback})
+      : super(key: key);
 
   @override
   _RowWidgetState createState() => _RowWidgetState();

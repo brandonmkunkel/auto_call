@@ -1,24 +1,24 @@
+import 'package:auto_call/classes/person.dart';
 import 'package:flutter/material.dart';
 
-import 'package:auto_call/services/phone_list.dart';
-import 'package:auto_call/services/settings_manager.dart';
-import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 import 'package:data_table_2/data_table_2.dart';
+
+import 'package:auto_call/classes/phone_list.dart';
+import 'package:auto_call/classes/settings_manager.dart';
+import 'package:auto_call/ui/widgets/call_table_widgets.dart';
 
 class CallTable extends StatefulWidget {
   final PhoneList phoneList;
   final ScrollController scrollController;
   final List<TextEditingController> textControllers;
-  final List<bool> acceptedColumns;
   final Function callback;
 
   CallTable(
-      {Key key,
-      @required this.phoneList,
-      @required this.scrollController,
-      @required this.textControllers,
-      @required this.callback,
-      this.acceptedColumns})
+      {Key? key,
+      required this.phoneList,
+      required this.scrollController,
+      required this.textControllers,
+      required this.callback})
       : super(key: key);
 
   @override
@@ -51,7 +51,7 @@ class _CallTableState extends State<CallTable> {
   @override
   void dispose() {
     super.dispose();
-    focusNodes.forEach((focusNode) => focusNode?.dispose());
+    focusNodes.forEach((focusNode) => focusNode.dispose());
   }
 
   @override
@@ -165,7 +165,7 @@ class _CallTableState extends State<CallTable> {
                           style: TextStyle(
                               color: widget.phoneList.people[i].called
                                   ? Theme.of(context).disabledColor
-                                  : Theme.of(context).textTheme.bodyText1.color),
+                                  : Theme.of(context).textTheme.bodyText1?.color),
                           autofocus: false,
                           onChanged: (String text) {
                             widget.phoneList.people[i].note = text;
@@ -183,10 +183,10 @@ class _CallTableState extends State<CallTable> {
 //                            child: DropdownButton<String>(
                         DropdownButton<String>(
                             value: widget.phoneList.people[i].result.isEmpty ? null : widget.phoneList.people[i].result,
-                            onChanged: (String outcome) {
+                            onChanged: (String? outcome) {
                               setState(() {
                                 focusNodes[i].unfocus();
-                                widget.phoneList.people[i].result = outcome;
+                                widget.phoneList.people[i].result = outcome!;
                               });
                             },
                             hint: CalledText(text: "Result", called: widget.phoneList.people[i].called),

@@ -5,7 +5,7 @@ class PhoneManager {
   /// One touch call requires no interaction from the user to work correctly
   static Future<bool> oneTouchCall(String phoneNumber) async {
     print("one touch call start");
-    bool res = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
+    bool res = await FlutterPhoneDirectCaller.callNumber(phoneNumber) as bool;
     print("one touch call done with result: $res");
     return res;
   }

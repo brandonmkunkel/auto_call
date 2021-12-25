@@ -9,7 +9,7 @@ class ScrollableAssetText extends StatefulWidget {
   final String assetPath;
   final TextAlign textAlign;
 
-  ScrollableAssetText({Key key, @required this.assetPath, this.textAlign = TextAlign.center}) : super(key: key);
+  ScrollableAssetText({Key? key, required this.assetPath, this.textAlign = TextAlign.center}) : super(key: key);
 
   @override
   ScrollableAssetTextState createState() => ScrollableAssetTextState();
@@ -32,9 +32,9 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
                           padding: EdgeInsets.all(5),
                           child: FutureBuilder(
                               future: rootBundle.loadString(widget.assetPath),
-                              builder: (context, snapshot) {
+                              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                                 return Text(
-                                  snapshot.data ?? '',
+                                  snapshot.data ?? "",
                                   softWrap: true,
                                   textAlign: widget.textAlign,
                                 );
@@ -45,7 +45,7 @@ class ScrollableAssetTextState extends State<ScrollableAssetText> {
 
 class ReleaseNotes extends StatefulWidget {
   final bool mostRecentOnly;
-  ReleaseNotes({Key key, this.mostRecentOnly = false}) : super(key: key);
+  ReleaseNotes({Key? key, this.mostRecentOnly = false}) : super(key: key);
 
   @override
   ReleaseNotesState createState() => ReleaseNotesState();
@@ -65,9 +65,11 @@ class ReleaseNotesState extends State<ReleaseNotes> {
           //             : snapshot.data)),
           //   )
           // ]);
+          String? data =
+              widget.mostRecentOnly ? snapshot.data?.substring(0, snapshot.data?.indexOf("#", 1)) : snapshot.data;
 
           return Markdown(
-            data: widget.mostRecentOnly ? snapshot.data.substring(0, snapshot.data.indexOf("#", 1)) : snapshot.data,
+            data: data as String,
             selectable: true,
             extensionSet: md.ExtensionSet.commonMark,
           );
@@ -116,15 +118,15 @@ class VersionText extends StatefulWidget {
 }
 
 class VersionTextState extends State<VersionText> {
-  String appName;
-  String version;
-  String buildNumber;
+  late String appName;
+  late String version;
+  late String buildNumber;
 
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
       // Executes after build is done
       getVersion();
     });

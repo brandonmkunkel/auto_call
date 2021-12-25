@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
@@ -6,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 import 'package:auto_call/ui/terms.dart';
-import 'package:auto_call/services/regex.dart';
+import 'package:auto_call/classes/regex.dart';
 import 'package:auto_call/pages/home.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  FirebaseAuthException exception;
+  late FirebaseAuthException exception;
 
   String _failureString = "";
   String _userEmail = '';
@@ -59,8 +58,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               controller: _emailController,
                               inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r"\s\b|\b\s"))],
                               decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-                              validator: (String value) {
-                                if (value.isEmpty) {
+                              validator: (String? value) {
+                                if ((value as String).isEmpty) {
                                   return 'Please enter a valid email address';
                                 } else if (!MagicRegex.isEmail(value)) {
                                   return 'Invalid email format';
@@ -73,8 +72,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               controller: _passwordController,
                               decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
-                              validator: (String value) {
-                                if (value.isEmpty) {
+                              validator: (String? value) {
+                                if ((value as String).isEmpty) {
                                   return 'Please enter a valid password';
                                 }
                                 return null;
@@ -95,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
                               },
                               value: this.agreedToTerms,
-                              activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
+                              activeColor: Theme.of(context).buttonTheme.colorScheme?.primary,
                             ),
                             title: RichText(
                                 text: TextSpan(style: Theme.of(context).textTheme.bodyText2, children: <TextSpan>[
@@ -117,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
                               },
                               value: this.agreedToPrivacyPolicy,
-                              activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
+                              activeColor: Theme.of(context).buttonTheme.colorScheme?.primary,
                             ),
                             title: RichText(
                                 text: TextSpan(style: Theme.of(context).textTheme.bodyText2, children: <TextSpan>[
@@ -141,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   icon: Icons.person_add,
                                   backgroundColor: Colors.indigo,
                                   onPressed: () async {
-                                    if (_formKey.currentState.validate()) {
+                                    if (_formKey.currentState?.validate() ?? false) {
                                       _register(context);
                                     } else {
                                       setState(() {
@@ -170,21 +169,21 @@ class _RegisterPageState extends State<RegisterPage> {
   // Example code for registration.
   void _register(BuildContext context) async {
     try {
-      final User user = (await _auth.createUserWithEmailAndPassword(
+      final User? user = (await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       ))
           .user;
 
       setState(() {
-        _userEmail = user.email;
+        _userEmail = user?.email as String;
 
         // Go to the home page on successful log-in
         Navigator.of(context).pushNamedAndRemoveUntil(HomePage.routeName, (route) => false);
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
-        _failureString = e.message;
+        _failureString = e.toString();
       });
 
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Registration Failure: ${e.code}")));

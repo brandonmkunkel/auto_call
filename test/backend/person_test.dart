@@ -1,7 +1,5 @@
+import 'package:auto_call/classes/person.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:auto_call/services/phone_list.dart';
-
 
 ///
 /// The purpose of these tests is to verify the Person class used for storing maintaining the call information
@@ -28,7 +26,6 @@ void main() {
     test("email is blank", () => expect(person.email, ""));
     test("note is blank", () => expect(person.note, ""));
     test("not called", () => expect(person.called, false));
-
   });
 
   group('Person constructor default', () {
@@ -66,8 +63,7 @@ void main() {
         note: note,
         result: result,
         called: called,
-        additionalData: additionalData
-    );
+        additionalData: additionalData);
 
     // Verify that our counter has incremented.
     test("id is correct", () => expect(person.id, id));
@@ -79,5 +75,4 @@ void main() {
     test("called is correct", () => expect(person.called, called));
     test("additional data is correct", () => expect(person.additionalData, additionalData));
   });
-
 }

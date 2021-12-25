@@ -21,7 +21,7 @@ class PastSessionsState extends State<PastSessionsPage> {
   Future<List<String>> oldCallsFuture = FileManager.findOldCalls(recentFirst: true);
 
   Map<int, bool> selected = Map<int, bool>();
-  List<String> files;
+  late List<String> files;
 
   /// Whether multi select is on
   bool get multiSelect => selected.containsValue(true);
@@ -120,10 +120,10 @@ class PastSessionsState extends State<PastSessionsPage> {
                     leading: selected.containsValue(true)
                         ? Checkbox(
                             value: selected[index] ?? false,
-                            activeColor: Theme.of(context).buttonTheme.colorScheme.primary,
-                            onChanged: (bool value) {
+                            activeColor: Theme.of(context).buttonTheme.colorScheme?.primary,
+                            onChanged: (bool? value) {
                               setState(() {
-                                selected[index] = value;
+                                selected[index] = value!;
                               });
                             })
                         : Container(
@@ -137,7 +137,7 @@ class PastSessionsState extends State<PastSessionsPage> {
                           )),
                     onTap: () {
                       setState(() {
-                        selected[index] = selected.containsKey(index) ? !selected[index] : true;
+                        selected[index] = selected.containsKey(index) ? !(selected[index] as bool) : true;
                       });
                     },
                     onLongPress: () {

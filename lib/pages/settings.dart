@@ -1,10 +1,11 @@
+import 'package:auto_call/classes/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
 import 'package:auto_call/ui/terms.dart';
 import 'package:auto_call/ui/theme.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 import 'account.dart';
 
@@ -12,7 +13,7 @@ class SettingsPage extends StatefulWidget {
   static const String routeName = "/settings";
   final String title = "Settings";
 
-  SettingsPage({Key key}) : super(key: key);
+  SettingsPage({Key? key}) : super(key: key);
 
   @override
   SettingsPageState createState() => new SettingsPageState();
@@ -79,7 +80,7 @@ class SettingsPageState extends State<SettingsPage> {
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: isPremium ? accentColor : Theme.of(context).disabledColor,
-                                  fontSize: Theme.of(context).primaryTextTheme.subtitle1.fontSize),
+                                  fontSize: Theme.of(context).primaryTextTheme.subtitle1?.fontSize),
                             ),
                             Icon(Icons.stars, color: isPremium ? accentColor : Theme.of(context).disabledColor),
                           ],
@@ -150,7 +151,7 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return SwitchListTile.adaptive(
             title: Text(setting.text),
-            subtitle: setting.description != null ? Text(setting.description) : null,
+            subtitle: setting.description != null ? Text(setting.description as String) : null,
             controlAffinity: ListTileControlAffinity.trailing,
             value: setting.value,
             activeColor: Theme.of(context).colorScheme.secondary,
@@ -171,7 +172,7 @@ class SettingsPageState extends State<SettingsPage> {
         {
           return ListTile(
               title: Text(setting.text),
-              subtitle: setting.description != null ? Text(setting.description) : null,
+              subtitle: setting.description != null ? Text(setting.description as String) : null,
               trailing: Text(setting.value.isNotEmpty ? setting.value : "None"));
         }
     }
@@ -187,7 +188,7 @@ class SettingsPageState extends State<SettingsPage> {
 class SettingWidget extends StatefulWidget {
   final Setting setting;
   final String name;
-  const SettingWidget({Key key, @required this.name, @required this.setting}) : super(key: key);
+  const SettingWidget({Key? key, required this.name, required this.setting}) : super(key: key);
 
   @override
   SettingWidgetState createState() => new SettingWidgetState();
@@ -214,7 +215,7 @@ class SettingWidgetState extends State<SettingWidget> {
                         color:
                             !premiumUser ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.secondary)),
             subtitle: setting.description != null
-                ? Text(setting.description,
+                ? Text(setting.description as String,
                     style: !isPremiumSetting
                         ? null
                         : TextStyle(
@@ -271,7 +272,7 @@ class SettingWidgetState extends State<SettingWidget> {
                               ? Theme.of(context).disabledColor
                               : Theme.of(context).colorScheme.secondary)),
               subtitle: setting.description != null
-                  ? Text(setting.description,
+                  ? Text(setting.description as String,
                       style: !isPremiumSetting
                           ? null
                           : TextStyle(
@@ -298,7 +299,7 @@ class SettingWidgetState extends State<SettingWidget> {
 ///
 class HiddenSettings extends StatefulWidget {
   final List<Widget> children;
-  const HiddenSettings({Key key, @required this.children}) : super(key: key);
+  const HiddenSettings({Key? key, required this.children}) : super(key: key);
 
   @override
   HiddenSettingsState createState() => new HiddenSettingsState();

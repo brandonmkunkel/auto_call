@@ -23,7 +23,7 @@ void showFileEmptyError(BuildContext context) {
 class GeneralErrorWidget extends StatelessWidget {
   final String errorText;
   final dynamic error;
-  const GeneralErrorWidget({this.errorText, this.error});
+  const GeneralErrorWidget({Key? key, required this.errorText, this.error}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +38,7 @@ class GeneralErrorWidget extends StatelessWidget {
           Navigator.of(context).pop();
         },
       ),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+      body: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
         Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.all(30),

@@ -16,7 +16,7 @@ FirebaseAuth _auth = FirebaseAuth.instance;
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.subtitle1;
+    TextStyle textStyle = Theme.of(context).textTheme.subtitle1 as TextStyle;
 
     return Drawer(
         child: Container(
@@ -52,7 +52,7 @@ class AppDrawer extends StatelessWidget {
                     //   Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (route) => false);
                     // },),
                     IconButton(
-                      icon: Icon(Icons.settings, color: Theme.of(context).primaryTextTheme.bodyText1.color),
+                      icon: Icon(Icons.settings, color: Theme.of(context).primaryTextTheme.bodyText1?.color),
                       onPressed: () {
                         Navigator.of(context).popAndPushNamed(SettingsPage.routeName);
                       },
@@ -60,11 +60,11 @@ class AppDrawer extends StatelessWidget {
                   ],
 
                   accountName: Text(
-                    "User: ${_auth.currentUser.displayName ?? ""}",
+                    "User: ${_auth.currentUser?.displayName ?? ""}",
                     style: Theme.of(context).primaryTextTheme.bodyText1,
                   ),
                   accountEmail:
-                      Text("Email: ${_auth.currentUser.email}", style: Theme.of(context).primaryTextTheme.bodyText2),
+                      Text("Email: ${_auth.currentUser?.email}", style: Theme.of(context).primaryTextTheme.bodyText2),
                 ),
                 ListTile(
                   leading: Icon(Icons.auto_awesome),

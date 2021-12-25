@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_call/pages/call_page.dart';
 import 'package:auto_call/pages/past_sessions.dart';
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 class ActiveCallSessionCard extends StatefulWidget {
   @override
@@ -29,7 +29,7 @@ class ActiveCallSessionCardState extends State<ActiveCallSessionCard> {
                     child: Text(
                       "Deleted Last Call Session",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red, fontSize: Theme.of(context).textTheme.subtitle1.fontSize),
+                      style: TextStyle(color: Colors.red, fontSize: Theme.of(context).textTheme.subtitle1?.fontSize),
                     ),
                   ),
                 ),

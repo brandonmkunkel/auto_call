@@ -19,7 +19,7 @@ import 'package:auto_call/pages/file_selector.dart';
 import 'package:auto_call/pages/past_sessions.dart';
 import 'package:auto_call/pages/settings.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 Widget buildTestableWidget(Widget widget) {
   return MediaQuery(data: MediaQueryData(), child: MaterialApp(home: widget));

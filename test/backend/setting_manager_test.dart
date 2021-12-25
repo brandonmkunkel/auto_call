@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 ///
 /// The purpose of these tests is to verify behavior of SettingManager patterns
@@ -22,7 +22,7 @@ void main() {
   // });
 
   // test('SettingManager check getSettingList() is List', () async {
-    // Correct Tests
+  // Correct Tests
 //    SettingManager settingManager = SettingManager();
 
 //    loadGlobalSettings();
@@ -40,6 +40,4 @@ void main() {
 //    expect(settingManager.getSettingList(true).runtimeType, List<Setting>().runtimeType);
 //    expect(settingManager.getSettingList(false).runtimeType, List<Setting>().runtimeType);
 //  });
-
-
 }

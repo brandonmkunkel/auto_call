@@ -1,5 +1,6 @@
+import 'package:auto_call/classes/setting.dart';
 import 'package:auto_call/pages/upgrade.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 import 'package:auto_call/ui/charts/homepage_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_call/ui/charts/call_breakdown.dart';

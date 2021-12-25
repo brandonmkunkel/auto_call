@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:contacts_service/contacts_service.dart';
@@ -5,12 +7,12 @@ import 'package:intl/intl.dart';
 
 import 'package:auto_call/ui/call_session_widget.dart';
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/phone_list.dart';
 import 'package:auto_call/ui/prompts/errors.dart';
 
 /// iOS only: Localized labels language setting is equal to CFBundleDevelopmentRegion value (Info.plist) of the iOS project
 /// Set iOSLocalizedLabels=false if you always want english labels whatever is the CFBundleDevelopmentRegion value.
-const iOSLocalizedLabels = false;
+const bool iOSLocalizedLabels = false;
 
 ///
 /// The [PhoneContactsWidget] Widget is used to interact with the user's local contacts
@@ -33,7 +35,7 @@ class PhoneContactsPageState extends State<PhoneContactsPage> {
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          List<Contact> contacts = snapshot.data.where((Contact c) => c.phones.isNotEmpty).toList();
+          List<Contact> contacts = snapshot.data.where((Contact c) => c.phones?.isNotEmpty).toList();
 
           return contacts.isEmpty
               ? Center(child: Text("No contacts found!", style: Theme.of(context).textTheme.subtitle1))
@@ -60,7 +62,7 @@ class PhoneContactsPageState extends State<PhoneContactsPage> {
 class PhoneContactsWidget extends StatefulWidget {
   final List<Contact> contacts;
 
-  PhoneContactsWidget({@required this.contacts});
+  PhoneContactsWidget({required this.contacts});
 
   @override
   _PhoneContactsWidgetState createState() => _PhoneContactsWidgetState();
@@ -78,7 +80,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
     return Stack(
       children: [
         ListView.builder(
-          itemCount: widget.contacts.length ?? 0,
+          itemCount: widget.contacts.length,
           itemBuilder: (BuildContext context, int index) {
             Contact c = widget.contacts.elementAt(index);
             return ListTile(
@@ -94,9 +96,9 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
               },
               leading: IconButton(
                 icon: multiSelect && selected[index] == true
-                    ? Icon(Icons.check_circle, color: Theme.of(context).buttonTheme.colorScheme.primary)
-                    : (c.avatar != null && c.avatar.length > 0)
-                        ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
+                    ? Icon(Icons.check_circle, color: Theme.of(context).buttonTheme.colorScheme?.primary)
+                    : (c.avatar != null && (c.avatar?.length ?? 0) > 0)
+                        ? CircleAvatar(backgroundImage: MemoryImage(c.avatar as Uint8List))
                         : CircleAvatar(child: Text(c.initials())),
                 onPressed: () {
                   setState(() {
@@ -107,7 +109,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
                 padding: EdgeInsets.all(0),
                 alignment: Alignment.centerLeft,
               ),
-              trailing: Text(c.phones.elementAt(0).value),
+              trailing: Text(c.phones?.elementAt(0).value as String),
               title: Text(c.displayName ?? ""),
             );
           },
@@ -164,7 +166,7 @@ class _PhoneContactsWidgetState extends State<PhoneContactsWidget> {
 }
 
 class ContactDetailsPage extends StatelessWidget {
-  ContactDetailsPage(this._contact, {this.onContactDeviceSave});
+  ContactDetailsPage(this._contact, {required this.onContactDeviceSave});
 
   final Contact _contact;
   final Function(Contact) onContactDeviceSave;
@@ -172,9 +174,7 @@ class ContactDetailsPage extends StatelessWidget {
   _openExistingContactOnDevice(BuildContext context) async {
     try {
       var contact = await ContactsService.openExistingContact(_contact, iOSLocalizedLabels: iOSLocalizedLabels);
-      if (onContactDeviceSave != null) {
-        onContactDeviceSave(contact);
-      }
+      onContactDeviceSave(contact);
       Navigator.of(context).pop();
     } on FormOperationException catch (e) {
       switch (e.errorCode) {
@@ -238,7 +238,8 @@ class ContactDetailsPage extends StatelessWidget {
           ),
           ListTile(
             title: Text("Birthday"),
-            trailing: Text(_contact.birthday != null ? DateFormat('dd-MM-yyyy').format(_contact.birthday) : ""),
+            trailing:
+                Text(_contact.birthday != null ? DateFormat('dd-MM-yyyy').format(_contact.birthday as DateTime) : ""),
           ),
           ListTile(
             title: Text("Company"),
@@ -252,9 +253,9 @@ class ContactDetailsPage extends StatelessWidget {
             title: Text("Account Type"),
             trailing: Text((_contact.androidAccountType != null) ? _contact.androidAccountType.toString() : ""),
           ),
-          AddressesTile(_contact.postalAddresses),
-          ItemsTile("Phones", _contact.phones),
-          ItemsTile("Emails", _contact.emails)
+          AddressesTile(_contact.postalAddresses as List<PostalAddress>),
+          ItemsTile("Phones", _contact.phones as List<Item>),
+          ItemsTile("Emails", _contact.emails as List<Item>)
         ],
       ),
     );
@@ -355,7 +356,7 @@ class _AddContactPageState extends State<AddContactPage> {
         actions: <Widget>[
           TextButton(
             onPressed: () {
-              _formKey.currentState.save();
+              _formKey.currentState?.save();
               contact.postalAddresses = [address];
               ContactsService.addContact(contact);
               Navigator.of(context).pop();
@@ -437,7 +438,7 @@ class _AddContactPageState extends State<AddContactPage> {
 }
 
 class UpdateContactsPage extends StatefulWidget {
-  UpdateContactsPage({@required this.contact});
+  UpdateContactsPage({required this.contact});
 
   final Contact contact;
 
@@ -446,7 +447,7 @@ class UpdateContactsPage extends StatefulWidget {
 }
 
 class _UpdateContactsPageState extends State<UpdateContactsPage> {
-  Contact contact;
+  late Contact contact;
   PostalAddress address = PostalAddress(label: "Home");
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -468,7 +469,7 @@ class _UpdateContactsPageState extends State<UpdateContactsPage> {
               color: Colors.white,
             ),
             onPressed: () async {
-              _formKey.currentState.save();
+              _formKey.currentState?.save();
               contact.postalAddresses = [address];
               await ContactsService.updateContact(contact);
               Navigator.of(context).pop();

@@ -1,8 +1,9 @@
+import 'package:auto_call/classes/setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 import 'package:auto_call/pages/upgrade.dart';
 import 'package:auto_call/pages/login.dart';
 
@@ -21,7 +22,7 @@ class AccountPageState extends State<AccountPage> {
   bool accountChanged = false;
   AccountType get accountType => globalSettingManager.accountType;
 
-  // Turn the account levle into a string
+  // Turn the account level into a string
   String get accountLevelString => accountType.toString().split(".")[1];
 
   String get accountLevelDescriptor => "${accountLevelString[0].toUpperCase()}${accountLevelString.substring(1)}";
@@ -41,7 +42,7 @@ class AccountPageState extends State<AccountPage> {
           actions: [
             TextButton(
               child: Text("Sign Out"),
-              style: TextButton.styleFrom(primary: Theme.of(context).primaryTextTheme.button.color),
+              style: TextButton.styleFrom(primary: Theme.of(context).primaryTextTheme.button?.color),
               onPressed: () async {
                 await _auth.signOut();
 
@@ -79,11 +80,11 @@ class AccountPageState extends State<AccountPage> {
                 margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10.0),
                 child: Column(
                   children: [
-                    ListTile(title: Text("User ID: "), trailing: Text("${_auth.currentUser.uid}")),
-                    ListTile(title: Text("Username: "), trailing: Text("${_auth.currentUser.displayName ?? ""}")),
-                    ListTile(title: Text("Email"), trailing: Text("${_auth.currentUser.email}")),
+                    ListTile(title: Text("User ID: "), trailing: Text("${_auth.currentUser?.uid}")),
+                    ListTile(title: Text("Username: "), trailing: Text("${_auth.currentUser?.displayName}")),
+                    ListTile(title: Text("Email"), trailing: Text("${_auth.currentUser?.email}")),
                     ListTile(title: Text("Password"), trailing: Text("*" * 8)),
-                    ListTile(title: Text("Phone Number"), trailing: Text("${_auth.currentUser.phoneNumber ?? ""}")),
+                    ListTile(title: Text("Phone Number"), trailing: Text("${_auth.currentUser?.phoneNumber}")),
                   ],
                 ),
               ),
@@ -176,7 +177,7 @@ class DeleteAccountState extends State<DeleteAccountDialog> {
               style: TextButton.styleFrom(primary: Colors.red),
               onPressed: () async {
                 try {
-                  await _auth.currentUser.delete();
+                  await _auth.currentUser?.delete();
 
                   // Pop all routes and then push the login page
                   Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.routeName, (Route<dynamic> route) => false);

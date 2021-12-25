@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'home.dart';
@@ -37,16 +37,16 @@ class _OnboardingPageState extends State<OnboardingPage> {
     );
   }
 
-  Widget _buildSVG(BuildContext context, String assetName, {String semanticsLabel}) {
+  Widget _buildSVG(BuildContext context, String assetName) {
     return Container(
       alignment: Alignment.bottomCenter,
-      child: SvgPicture.asset('assets/svg/$assetName.svg', color: Colors.white, semanticsLabel: semanticsLabel),
+      child: SvgPicture.asset('assets/svg/$assetName.svg', color: Colors.white),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    Color contrastColor = Theme.of(context).primaryTextTheme.bodyText1.color;
+    Color contrastColor = Theme.of(context).primaryTextTheme.bodyText1?.color as Color;
 
     PageDecoration pageDecoration = PageDecoration(
       titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700, color: contrastColor),

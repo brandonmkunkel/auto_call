@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/phone_list.dart';
 
 ///
 /// CSV FILES
@@ -31,43 +31,42 @@ class CSVWrapper {
 /// Excel Files
 ///
 class ExcelWrapper {
-  SpreadsheetDecoder decoder;
+  SpreadsheetDecoder? decoder;
+
+  Map<String, SpreadsheetTable> get tables => decoder?.tables as Map<String, SpreadsheetTable>;
 
   Future<List<List<dynamic>>> readBytes(Uint8List bytes) async {
     decoder = SpreadsheetDecoder.decodeBytes(bytes, update: true);
-    return List.generate(decoder.tables[decoder.tables.keys.first].maxRows, (int idx) {
-      return decoder.tables[decoder.tables.keys.first].rows[idx];
+    return List.generate(tables[tables.keys.first]!.maxRows, (int idx) {
+      return tables[tables.keys.first]!.rows[idx];
     });
   }
 
   Future<List<List<dynamic>>> read(String path) async {
     Uint8List bytes = File(path).readAsBytesSync();
-    decoder = SpreadsheetDecoder.decodeBytes(bytes, update: true);
-    return List.generate(decoder.tables[decoder.tables.keys.first].maxRows, (int idx) {
-      return decoder.tables[decoder.tables.keys.first].rows[idx];
-    });
+    return readBytes(bytes);
   }
 
   Future<void> save(String path, List<List<dynamic>> data) async {
-    var sheet = decoder.tables.keys.first;
+    var sheet = tables.keys.first;
 
-    if (data[0].length != decoder.tables[decoder.tables.keys.first].maxCols) {
-      int missingCols = data[0].length - decoder.tables[decoder.tables.keys.first].maxCols;
+    if (data[0].length != tables[tables.keys.first]!.maxCols) {
+      int missingCols = data[0].length - tables[tables.keys.first]!.maxCols;
       for (int idx = 0; idx < missingCols; idx++) {
-        decoder.insertColumn(sheet, decoder.tables[decoder.tables.keys.first].maxCols);
+        decoder?.insertColumn(sheet, tables[tables.keys.first]!.maxCols);
       }
     }
 
     int rowIdx = 0;
     for (List row in data) {
       for (int idx = 0; idx < row.length; idx++) {
-        decoder.updateCell(sheet, idx, rowIdx, row[idx]);
+        decoder?.updateCell(sheet, idx, rowIdx, row[idx]);
       }
     }
 
     File(path)
       ..createSync(recursive: true)
-      ..writeAsBytesSync(decoder.encode());
+      ..writeAsBytesSync(decoder?.encode() as List<int>);
   }
 }
 
@@ -82,11 +81,10 @@ class FileManager {
     "xlsx": ExcelWrapper(),
   };
   String path;
-  String formattedTime;
+  late String formattedTime;
 
   /// Construct a FileManager object based off a file path
-  FileManager.fromFile(String path, {bool reuseDateTime = false}) {
-    this.path = path;
+  FileManager.fromFile(this.path, {bool reuseDateTime = false}) {
     this.formattedTime = reuseDateTime ? "" : getFormattedTime();
 
     if (!this.checkValidExtension()) {
@@ -175,7 +173,7 @@ class FileManager {
 
   static Future<String> userDirectory() async {
     // Get the user Directory from the Path Provider lib
-    Directory dir = await getExternalStorageDirectory();
+    Directory dir = await getExternalStorageDirectory() as Directory;
     return dir.path;
   }
 
@@ -198,7 +196,7 @@ class FileManager {
   static String callFilePath(String path, {String date = ""}) {
     // Split at the extension label, add "update" and rejoin to not overwrite the excel sheet
     List name = getFileName(path).split(".");
-    String dateString = date ?? getFormattedTime();
+    String dateString = date.isEmpty ? getFormattedTime() : date;
     name[name.lastIndexOf(name.last) - 1] += "_" + dateString;
     return name.join(".");
   }
@@ -215,7 +213,7 @@ class FileManager {
     _files.sort((a, b) => File(b.path).lastModifiedSync().compareTo(File(a.path).lastModifiedSync()));
 
     if (!recentFirst) {
-      _files = _files.reversed;
+      _files = List.from(_files.reversed);
     }
 
     return List.generate(_files.length, (int idx) => _files[idx].path);

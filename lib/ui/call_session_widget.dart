@@ -3,7 +3,7 @@ import 'package:auto_call/pages/settings.dart';
 
 import 'package:auto_call/services/calls_and_messages_service.dart';
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/phone_list.dart';
 import 'package:auto_call/ui/call_table.dart';
 import 'package:auto_call/ui/call_table_light.dart';
 // import 'package:auto_call/ui/call_table_new.dart';
@@ -11,14 +11,14 @@ import 'package:auto_call/ui/call_table_light.dart';
 import 'package:auto_call/ui/prompts/call_prompts.dart';
 import 'package:auto_call/ui/prompts/post_session_prompt.dart';
 import 'package:auto_call/ui/widgets/call_page_widgets.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 class CallSessionWidget extends StatefulWidget {
   final String title = "Call Session";
   final FileManager fileManager;
   final PhoneList phoneList;
 
-  CallSessionWidget({Key key, @required this.phoneList, @required this.fileManager}) : super(key: key);
+  CallSessionWidget({Key? key, required this.phoneList, required this.fileManager}) : super(key: key);
 
   @override
   CallSessionWidgetState createState() => new CallSessionWidgetState();
@@ -27,7 +27,7 @@ class CallSessionWidget extends StatefulWidget {
 class CallSessionWidgetState extends State<CallSessionWidget> {
   bool inCall = false;
   double rowSize = kMinInteractiveDimension;
-  ScrollController _controller;
+  late ScrollController _controller;
   List<TextEditingController> textControllers = [];
   List<FocusNode> focusNodes = [];
   List<bool> acceptedColumns = [];
@@ -51,7 +51,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     // Set a setting to show that there is an active call session
     globalSettingManager.set("activeCallSession", true);
 
-    fileManager?.outputFilePath()?.then((String path) {
+    fileManager.outputFilePath().then((String path) {
       globalSettingManager.set("activeCallSessionPath", path);
     });
 
@@ -64,9 +64,9 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
     super.dispose();
 
     // Dispose of text/scroll controllers
-    _controller?.dispose();
-    textControllers.forEach((_textController) => _textController?.dispose());
-    focusNodes.forEach((focusNode) => focusNode?.dispose());
+    _controller.dispose();
+    textControllers.forEach((_textController) => _textController.dispose());
+    focusNodes.forEach((focusNode) => focusNode.dispose());
   }
 
   Future<bool> managedCall() async {
@@ -148,7 +148,7 @@ class CallSessionWidgetState extends State<CallSessionWidget> {
   }
 
   // Check that the phonelist is complete
-  bool isComplete() => phoneList?.isComplete() ?? false;
+  bool isComplete() => phoneList.isComplete();
 
   @override
   Widget build(BuildContext context) {

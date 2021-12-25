@@ -1,7 +1,8 @@
+import 'package:auto_call/classes/setting.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -14,7 +15,7 @@ class UpgradePage extends StatefulWidget {
 }
 
 class UpgradePageState extends State<UpgradePage> {
-  AccountType accountType;
+  late AccountType accountType;
 
   // Turn the account level into a string
   String get accountLevelString => accountType.toString().split(".")[1];
@@ -43,9 +44,9 @@ class UpgradePageState extends State<UpgradePage> {
               title: const Text('Free'),
               value: AccountType.free,
               groupValue: accountType,
-              onChanged: (AccountType value) {
+              onChanged: (AccountType? value) {
                 setState(() {
-                  globalSettingManager.set("accountLevel", value.index);
+                  globalSettingManager.set("accountLevel", value?.index);
                 });
               },
             ),
@@ -53,9 +54,9 @@ class UpgradePageState extends State<UpgradePage> {
               title: const Text('Premium'),
               value: AccountType.premium,
               groupValue: accountType,
-              onChanged: (AccountType value) {
+              onChanged: (AccountType? value) {
                 setState(() {
-                  globalSettingManager.set("accountLevel", value.index);
+                  globalSettingManager.set("accountLevel", value?.index);
                 });
               },
             ),
@@ -63,9 +64,9 @@ class UpgradePageState extends State<UpgradePage> {
               title: const Text('Enterprise'),
               value: AccountType.enterprise,
               groupValue: accountType,
-              onChanged: (AccountType value) {
+              onChanged: (AccountType? value) {
                 setState(() {
-                  globalSettingManager.set("accountLevel", value.index);
+                  globalSettingManager.set("accountLevel", value?.index);
                 });
               },
             ),
@@ -94,7 +95,7 @@ class UpgradePromptWidget extends StatefulWidget {
   final String featureName;
   final Widget child;
 
-  UpgradePromptWidget({@required this.requiredAccountType, @required this.featureName, @required this.child});
+  UpgradePromptWidget({required this.requiredAccountType, required this.featureName, required this.child});
 
   @override
   UpgradePromptWidgetState createState() => new UpgradePromptWidgetState();

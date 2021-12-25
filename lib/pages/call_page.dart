@@ -2,10 +2,10 @@ import 'package:auto_call/ui/prompts/errors.dart';
 import 'package:flutter/material.dart';
 
 import 'package:auto_call/services/file_manager.dart';
-import 'package:auto_call/services/phone_list.dart';
+import 'package:auto_call/classes/phone_list.dart';
 import 'package:auto_call/ui/call_session_widget.dart';
 import 'package:auto_call/ui/widgets/permission_widget.dart';
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class CallSessionPage extends StatefulWidget {
@@ -13,14 +13,14 @@ class CallSessionPage extends StatefulWidget {
   final String title = "Call Session";
   final FileManager fileManager;
 
-  CallSessionPage({Key key, @required this.fileManager}) : super(key: key);
+  CallSessionPage({Key? key, required this.fileManager}) : super(key: key);
 
   @override
   CallSessionPageState createState() => new CallSessionPageState();
 }
 
 class CallSessionPageState extends State<CallSessionPage> {
-  Future<PhoneList> phoneListFuture;
+  late Future<PhoneList> phoneListFuture;
 
   // Getter for file manager from widget parent
   FileManager get fileManager => widget.fileManager;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 // Import firebase plugins
 import 'package:firebase_core/firebase_core.dart';
 
-import 'services/settings_manager.dart';
+import 'classes/settings_manager.dart';
 
 import 'autocall.dart';
 

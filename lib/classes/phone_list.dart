@@ -2,101 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:contacts_service/contacts_service.dart';
 
-import 'package:auto_call/services/regex.dart';
-
-enum Result {
-  Empty,
-  BadNumber,
-  Voicemail,
-  Answered,
-  NotInterested,
-  FollowUp,
-  Success,
-}
-
-class Person {
-  int id = 0;
-  String name = "";
-  String phone = "";
-  String email = "";
-  bool called = false;
-  String note = "";
-  String result = "";
-  List<String> additionalData = [];
-  List<String> additionalLabels = [];
-  Map<String, String> additional;
-
-  static final List<String> labels = ["name", "phone", "email", "result", "note", "called"];
-  static final List<String> requiredLabels = ["name", "phone"];
-
-  static final Map<String, Result> resultMap = {
-    "": Result.Empty,
-    "Bad Number": Result.BadNumber,
-    "Voicemail": Result.Voicemail,
-    "Answered": Result.Answered,
-    "Not Interested": Result.NotInterested,
-    "Follow Up": Result.FollowUp,
-    "Success": Result.Success,
-  };
-
-  Person(
-      {@required int id,
-      @required String name,
-      @required String phone,
-      String email = "",
-      String result = "",
-      String note = "",
-      bool called = false,
-      List<dynamic> additionalLabels,
-      List<dynamic> additionalData}) {
-    this.id = id;
-    this.name = name;
-    this.phone = phone;
-    this.email = email;
-
-    this.called = called;
-    this.result = result;
-    this.note = note;
-    this.additionalData = additionalData != null ? additionalData.cast<String>() : [];
-    this.additionalLabels = additionalLabels != null ? additionalData.cast<String>() : [];
-  }
-
-  static Person fromContact(int id, Contact contact) {
-    return Person(id: id, name: "${contact.givenName} ${contact.familyName}", phone: contact.phones.elementAt(0).value);
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> out = {
-      "name": name,
-      "phone": phone,
-      "email": email,
-      "result": result,
-      "note": note,
-      "called": called,
-    };
-    out.addAll(this.additional);
-    return out;
-  }
-
-  String string() {
-    return "Person{name: $name, phone: $phone, email: $email}";
-  }
-
-  static List<List<String>> orderedLabels() {
-    return [
-      ["name", "phone", "email"],
-      ["result", "note", "called"]
-    ];
-  }
-
-  List<String> encode() {
-    return [name, phone, email] + additionalData + [result, note, called.toString()];
-  }
-}
+import 'package:auto_call/classes/regex.dart';
+import 'package:auto_call/classes/person.dart';
 
 class PhoneList {
-  String path;
-  String name;
+  late String path;
+  late String name;
 
   bool headerPresent = false;
   Map<String, int> labelMap = new Map();
@@ -179,7 +90,7 @@ class PhoneList {
       label = header[idx].toString().toLowerCase().trim();
       match = StringSimilarity.findBestMatch(label, Person.labels);
 
-      if (match.bestMatch.rating > 0.75) {
+      if (match.bestMatch.rating! > 0.75) {
         labelMap[label] = match.bestMatchIndex;
       } else {
         // If we have not found any matched, register this inside or label map
@@ -206,22 +117,22 @@ class PhoneList {
     // within each `row`
 
     rows.asMap().forEach((id, entry) {
-      if (MagicRegex.isName(entry[labelMap["name"]].toString()) &&
-          MagicRegex.isNumber(entry[labelMap["phone"]].toString())) {
+      if (MagicRegex.isName(entry[labelMap["name"]!].toString()) &&
+          MagicRegex.isNumber(entry[labelMap["phone"]!].toString())) {
         people.add(Person(
           id: id,
-          name: entry[labelMap["name"]].trim(),
-          phone: entry[labelMap["phone"]].toString().trim(),
-          email: labelMap.containsKey("email") ? entry[labelMap["email"]].trim() : "",
-          note: labelMap.containsKey("note") ? entry[labelMap["note"]].trim() : "",
-          result: labelMap.containsKey("result") ? entry[labelMap["result"]].trim() : "",
+          name: entry[labelMap["name"]!].trim(),
+          phone: entry[labelMap["phone"]!].toString().trim(),
+          email: labelMap.containsKey("email") ? entry[labelMap["email"]!].trim() : "",
+          note: labelMap.containsKey("note") ? entry[labelMap["note"]!].trim() : "",
+          result: labelMap.containsKey("result") ? entry[labelMap["result"]!].trim() : "",
           called: labelMap.containsKey("called")
-              ? entry[labelMap["called"]].toString().toLowerCase().trim() == "true"
+              ? entry[labelMap["called"]!].toString().toLowerCase().trim() == "true"
               : false,
           additionalLabels: List.generate(
               additionalLabels.length, (int index) => labelMap[additionalLabels[index]].toString().trim()),
           additionalData: List.generate(
-              additionalLabels.length, (int index) => entry[labelMap[additionalLabels[index]]].toString().trim()),
+              additionalLabels.length, (int index) => entry[labelMap[additionalLabels[index]]!].toString().trim()),
         ));
       }
     });
@@ -272,7 +183,7 @@ class PhoneList {
   List getAdditionalColumns() {
     return List.generate(people.length, (int i) {
       return List.generate(additionalLabels.length, (int idx) {
-        return people[i].additionalData[labelMap[additionalLabels[idx]]];
+        return people[i].additionalData[labelMap[additionalLabels[idx]]!];
       });
     });
   }
@@ -281,7 +192,7 @@ class PhoneList {
   Person currentPerson() => people[iterator];
 
   /// Check if the call list is complete, which requires all persons to be called
-  bool isComplete() => people?.every((Person person) => person.called == true) ?? false;
+  bool isComplete() => people.every((Person person) => person.called == true);
 
   /// Find the iterator range of the uncalled persons within the list
   void checkRemainingCallRange() {

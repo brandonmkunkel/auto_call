@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'services/settings_manager.dart';
+import 'classes/settings_manager.dart';
 
 import 'pages/onboarding.dart';
 import 'pages/login.dart';
@@ -38,11 +38,9 @@ class _AutoCall extends State<AutoCall> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => themeChangeProvider,
-      child: Consumer<ThemeProvider>(builder: (BuildContext context, value, Widget child) {
+      child: Consumer<ThemeProvider>(builder: (BuildContext context, value, Widget? child) {
         return MaterialApp(
           title: widget.title,
-          // theme: Provider.of<ThemeProvider>(context).getTheme(),
-
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: Provider.of<ThemeProvider>(context).themeMode(),

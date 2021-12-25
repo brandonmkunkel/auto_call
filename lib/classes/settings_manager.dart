@@ -1,29 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Enumerator for describing setting access
-enum SettingType { hidden, free, premium, enterprise }
-enum AccountType { free, premium, enterprise }
-
-// Setting class used in Map
-class Setting {
-  Setting({this.text, this.description, this.type, this.settingType});
-
-  final String text;
-  final String description;
-  final SettingType settingType;
-  final Type type;
-  var value;
-
-  String toString() {
-    return "Setting(text: $text, description: $description, type: $type, settingType: $settingType, value: $value)";
-  }
-}
+import 'setting.dart';
 
 ///
 /// Setting Manager takes care of most of the work around saving/loading settings
 ///
 class SettingManager {
-  static SharedPreferences prefs;
+  static SharedPreferences? prefs;
 
   /// Asynchronous init function for calling in at app start up
   Future init() async {
@@ -37,15 +20,17 @@ class SettingManager {
       loaded = true;
     }
   }
-  
+
   // Class attributes
   bool loaded = false;
 
   static final Map<String, Setting> settings = {
     // Hidden Settings
     "userOnboarded": Setting(text: "Has user completed onboarding", type: bool, settingType: SettingType.hidden),
-    "agreedToTerms": Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.hidden),
-    "agreedToPrivacyPolicy": Setting(text: "Has user agreed to privacy policy", type: bool, settingType: SettingType.hidden),
+    "agreedToTerms":
+        Setting(text: "Has user agreed to terms and conditions", type: bool, settingType: SettingType.hidden),
+    "agreedToPrivacyPolicy":
+        Setting(text: "Has user agreed to privacy policy", type: bool, settingType: SettingType.hidden),
     "ratedApp": Setting(text: "Has User Given Feedback on App Store", type: bool, settingType: SettingType.hidden),
     "activeCallSession": Setting(text: "Active Call Session", type: bool, settingType: SettingType.hidden),
     "activeCallSessionPath": Setting(text: "Active Call Session File", type: String, settingType: SettingType.hidden),
@@ -61,7 +46,11 @@ class SettingManager {
     "darkMode": Setting(text: "Dark Mode", type: bool, settingType: SettingType.premium),
     "autoCall": Setting(text: "Automatically Call Next Person", type: bool, settingType: SettingType.premium),
     "additionalColumns": Setting(text: "Additional Table Columns", type: bool, settingType: SettingType.premium),
-    "editColumns": Setting(text: "Edit Additional Table Columns", description: "Not implemented yet", type: bool, settingType: SettingType.premium),
+    "editColumns": Setting(
+        text: "Edit Additional Table Columns",
+        description: "Not implemented yet",
+        type: bool,
+        settingType: SettingType.premium),
   };
 
   /// Start up functions, loads the setting values into the settings map
@@ -71,12 +60,12 @@ class SettingManager {
 
   /// Clear the user preferences cache, this may be used with account deletion
   void clear() {
-    prefs.clear();
+    prefs?.clear();
   }
 
   // Check to see if the user is premium
-  bool isPremium() => (prefs.getInt("accountLevel") ?? 0) >= 1;
-  bool isEnterprise() => (prefs.getInt("accountLevel") ?? 0) == 2;
+  bool isPremium() => (prefs?.getInt("accountLevel") ?? 0) >= 1;
+  bool isEnterprise() => (prefs?.getInt("accountLevel") ?? 0) == 2;
 
   AccountType get accountType => AccountType.values[globalSettingManager.get("accountLevel")];
 
@@ -116,14 +105,14 @@ class SettingManager {
     if (!settings.containsKey(key)) {
       print("SettingManager.getSetting() can't access setting named '$key'");
     }
-    Setting setting = settings[key];
+    Setting setting = settings[key]!;
 
     if (setting.type == bool) {
-      return prefs.getBool(key) ?? false;
+      return prefs?.getBool(key) ?? false;
     } else if (setting.type == int) {
-      return prefs.getInt(key) ?? 0;
+      return prefs?.getInt(key) ?? 0;
     } else if (setting.type == String) {
-      return prefs.getString(key) ?? "";
+      return prefs?.getString(key) ?? "";
     }
   }
 
@@ -132,24 +121,24 @@ class SettingManager {
       ArgumentError("SettingManager.setSetting() can't access setting named '$key'");
     }
 
-    Setting setting = settings[key];
+    Setting setting = settings[key]!;
 
     // Update the setting object
     setting.value = value;
 
     // Update setting in shared_preferences
     if (setting.type == bool) {
-      await prefs.setBool(key, value);
+      await prefs?.setBool(key, value);
     } else if (setting.type == int) {
-      await prefs.setInt(key, value);
+      await prefs?.setInt(key, value);
     } else if (setting.type == String) {
-      await prefs.setString(key, value);
+      await prefs?.setString(key, value);
     } else {
       print("SettingManaer.set($key, $value), receiving some no registered type ( ${value.runtimeType} )");
-      await prefs.setString(key, value.toString());
+      await prefs?.setString(key, value.toString());
     }
   }
 }
 
 // Single global instance of SettingManager
-final SettingManager globalSettingManager = SettingManager(); 
+final SettingManager globalSettingManager = SettingManager();

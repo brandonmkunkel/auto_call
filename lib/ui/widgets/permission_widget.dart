@@ -9,22 +9,28 @@ import 'package:auto_call/ui/prompts/errors.dart';
 class PermissionsWidget extends StatefulWidget {
   final Permission requestedPermission;
   final Widget child;
-  PermissionsWidget({Key key, @required this.child, @required this.requestedPermission}) : super(key: key);
+  PermissionsWidget({Key? key, required this.child, required this.requestedPermission}) : super(key: key);
 
   @override
   PermissionsState createState() => new PermissionsState();
 }
 
 class PermissionsState extends State<PermissionsWidget> {
-  PermissionStatus permissionStatus;
+  late PermissionStatus permissionStatus;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: widget.requestedPermission.request(),
       builder: (BuildContext context, AsyncSnapshot<PermissionStatus> snapshot) {
+        if (snapshot.hasError) {
+          return GeneralErrorWidget(
+              errorText: "Error loading ${widget.requestedPermission.toString().split(".")[1]} permission:",
+              error: snapshot.error);
+        }
+
         if (snapshot.connectionState == ConnectionState.done) {
-          return snapshot.data.isGranted
+          return snapshot.data!.isGranted
               ? widget.child
               : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Padding(
@@ -46,12 +52,6 @@ class PermissionsState extends State<PermissionsWidget> {
                     },
                   )
                 ]);
-        }
-
-        if (snapshot.hasError) {
-          return GeneralErrorWidget(
-              errorText: "Error loading ${widget.requestedPermission.toString().split(".")[1]} permission:",
-              error: snapshot.error);
         }
 
         return Column(mainAxisAlignment: MainAxisAlignment.center, children: [

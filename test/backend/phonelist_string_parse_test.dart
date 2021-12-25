@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:auto_call/services/phone_list.dart';
-
+import 'package:auto_call/classes/person.dart';
+import 'package:auto_call/classes/phone_list.dart';
 
 ///
 /// The purpose of these tests is to verify the reading/parsing of string data for PhoneList information
@@ -18,9 +18,9 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList;
+    late PhoneList phoneList;
     PhoneList.fromData(data).then((PhoneList _phoneList) {
-      phoneList=_phoneList;
+      phoneList = _phoneList;
     });
 
     // Verify that our counter has incremented.
@@ -38,9 +38,9 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList;
+    late PhoneList phoneList;
     PhoneList.fromData(data).then((PhoneList _phoneList) {
-      phoneList=_phoneList;
+      phoneList = _phoneList;
     });
 
     // Verify that our counter has incremented.
@@ -52,19 +52,19 @@ void main() {
   });
 
   group('PhoneList Build from data with header but split names', () {
-   // List<List<dynamic>> data = [
-   //   ["first name", "last name", "phone"],
-   //   ["bob", "squarepants", 8007766437],
-   //   ["edward", "tentacles", 8007784339]
-   // ];
-   // // Instantiation
-   // PhoneList phoneList = PhoneList.fromData(data);
-   //
-   // // Verify that our counter has incremented.
-   // test("header present", () => expect(phoneList.headerPresent, true));
-   // test("not empty", () => expect(phoneList.isNotEmpty(), true));
-   // test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
-   // test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
+    // List<List<dynamic>> data = [
+    //   ["first name", "last name", "phone"],
+    //   ["bob", "squarepants", 8007766437],
+    //   ["edward", "tentacles", 8007784339]
+    // ];
+    // // Instantiation
+    // PhoneList phoneList = PhoneList.fromData(data);
+    //
+    // // Verify that our counter has incremented.
+    // test("header present", () => expect(phoneList.headerPresent, true));
+    // test("not empty", () => expect(phoneList.isNotEmpty(), true));
+    // test("label mapping - name match", () => expect(phoneList.labelMapping["name"], 0));
+    // test("label mapping - phone match", () => expect(phoneList.labelMapping["phone"], 1));
   });
 
   group('PhoneList Build from data with poor formatting', () {
@@ -75,9 +75,9 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList;
+    late PhoneList phoneList;
     PhoneList.fromData(data).then((PhoneList _phoneList) {
-      phoneList=_phoneList;
+      phoneList = _phoneList;
     });
 
     // Verify that our counter has incremented.
@@ -96,9 +96,9 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList;
+    late PhoneList phoneList;
     PhoneList.fromData(data).then((PhoneList _phoneList) {
-      phoneList=_phoneList;
+      phoneList = _phoneList;
     });
 
     // Verify that our counter has incremented.
@@ -125,9 +125,9 @@ void main() {
     ];
 
     // Instantiation
-    PhoneList phoneList;
+    late PhoneList phoneList;
     PhoneList.fromData(data).then((PhoneList _phoneList) {
-      phoneList=_phoneList;
+      phoneList = _phoneList;
     });
 
     // Verify that our counter has incremented.

@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'package:auto_call/services/settings_manager.dart';
+import 'package:auto_call/classes/settings_manager.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -30,7 +30,7 @@ class _SignInPageState extends State<SignInPage> {
             return TextButton(
               child: const Text('Sign out'),
               onPressed: () async {
-                final User user = _auth.currentUser;
+                final User? user = _auth.currentUser;
                 if (user == null) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('No one has signed in.'),
@@ -115,8 +115,8 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                     child: TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(labelText: 'Email', border: OutlineInputBorder()),
-                      validator: (String value) {
-                        if (value.isEmpty) return 'Please enter some text';
+                      validator: (String? value) {
+                        if (value!.isEmpty) return 'Please enter some text';
                         return null;
                       },
                     )),
@@ -126,8 +126,8 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                       expands: false,
                       controller: _passwordController,
                       decoration: InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
-                      validator: (String value) {
-                        if (value.isEmpty) return 'Please enter some text';
+                      validator: (String? value) {
+                        if (value!.isEmpty) return 'Please enter some text';
                         return null;
                       },
                       obscureText: true,
@@ -139,7 +139,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
                     Buttons.Email,
                     text: "Sign In",
                     onPressed: () async {
-                      if (_formKey.currentState.validate()) {
+                      if (_formKey.currentState!.validate()) {
                         _signInWithEmailAndPassword(context);
                       }
                     },
@@ -161,7 +161,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
   // Example code of how to sign in with email and password.
   void _signInWithEmailAndPassword(BuildContext context) async {
     try {
-      final User user = (await _auth.signInWithEmailAndPassword(
+      final User? user = (await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       ))
@@ -205,8 +205,8 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email'),
-                validator: (String value) {
-                  if (value.isEmpty) return 'Please enter your email.';
+                validator: (String? value) {
+                  if (value!.isEmpty) return 'Please enter your email.';
                   return null;
                 },
               ),
@@ -216,7 +216,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
                 child: SignInButtonBuilder(
                   icon: Icons.insert_link,
                   text: "Sign In",
-                  backgroundColor: Colors.blueGrey[700],
+                  backgroundColor: Colors.blueGrey[700] as Color,
                   onPressed: () async {
                     _signInWithEmailAndLink();
                   },
@@ -263,7 +263,7 @@ class _AnonymouslySignInSection extends StatefulWidget {
 }
 
 class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
-  bool _success;
+  late bool _success;
   String _userID = '';
 
   @override
@@ -308,10 +308,10 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
   // Example code of how to sign in anonymously.
   void _signInAnonymously() async {
     try {
-      final User user = (await _auth.signInAnonymously()).user;
+      final User? user = (await _auth.signInAnonymously()).user;
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Signed in Anonymously as user ${user.uid}"),
+        content: Text("Signed in Anonymously as user ${user?.uid}"),
       ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -335,7 +335,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
   final TextEditingController _smsController = TextEditingController();
 
   String _message = '';
-  String _verificationId;
+  late String _verificationId;
 
   @override
   Widget build(BuildContext context) {
@@ -369,8 +369,8 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
               TextFormField(
                 controller: _phoneNumberController,
                 decoration: const InputDecoration(labelText: 'Phone number (+x xxx-xxx-xxxx)'),
-                validator: (String value) {
-                  if (value.isEmpty) {
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Phone number (+x xxx-xxx-xxxx)';
                   }
                   return null;
@@ -381,7 +381,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
                 alignment: Alignment.center,
                 child: SignInButtonBuilder(
                   icon: Icons.contact_phone,
-                  backgroundColor: Colors.deepOrangeAccent[700],
+                  backgroundColor: Colors.deepOrangeAccent[700] as Color,
                   text: "Verify Number",
                   onPressed: () async {
                     _verifyPhoneNumber();
@@ -397,7 +397,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
                 alignment: Alignment.center,
                 child: SignInButtonBuilder(
                     icon: Icons.phone,
-                    backgroundColor: Colors.deepOrangeAccent[400],
+                    backgroundColor: Colors.deepOrangeAccent[400] as Color,
                     onPressed: () async {
                       _signInWithPhoneNumber();
                     },
@@ -438,7 +438,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
       });
     };
 
-    PhoneCodeSent codeSent = (String verificationId, [int forceResendingToken]) async {
+    PhoneCodeSent codeSent = (String verificationId, [int? forceResendingToken]) async {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Please check your phone for the verification code.'),
       ));
@@ -471,10 +471,10 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         verificationId: _verificationId,
         smsCode: _smsController.text,
       );
-      final User user = (await _auth.signInWithCredential(credential)).user;
+      final User? user = (await _auth.signInWithCredential(credential)).user;
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Successfully signed in UID: ${user.uid}"),
+        content: Text("Successfully signed in UID: ${user?.uid}"),
       ));
     } catch (e) {
       print(e);
@@ -600,9 +600,9 @@ class _OtherProvidersSignInSectionState extends State<_OtherProvidersSignInSecti
     );
   }
 
-  void _handleRadioButtonSelected(int value) {
+  void _handleRadioButtonSelected(int? value) {
     setState(() {
-      _selection = value;
+      _selection = value!;
 
       switch (_selection) {
         case 0:
@@ -644,12 +644,6 @@ class _OtherProvidersSignInSectionState extends State<_OtherProvidersSignInSecti
       case 0:
         _signInWithGithub();
         break;
-      case 1:
-        _signInWithFacebook();
-        break;
-      case 2:
-        _signInWithTwitter();
-        break;
       default:
         _signInWithGoogle();
     }
@@ -672,58 +666,12 @@ class _OtherProvidersSignInSectionState extends State<_OtherProvidersSignInSecti
       final user = userCredential.user;
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Sign In ${user.uid} with GitHub"),
+        content: Text("Sign In ${user?.uid} with GitHub"),
       ));
     } catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Failed to sign in with GitHub: $e"),
-      ));
-    }
-  }
-
-  // Example code of how to sign in with Facebook.
-  void _signInWithFacebook() async {
-    try {
-      final AuthCredential credential = FacebookAuthProvider.credential(
-        _tokenController.text,
-      );
-      final User user = (await _auth.signInWithCredential(credential)).user;
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Sign In ${user.uid} with Facebook"),
-      ));
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Failed to sign in with Facebook: $e"),
-      ));
-    }
-  }
-
-  // Example code of how to sign in with Twitter.
-  void _signInWithTwitter() async {
-    try {
-      UserCredential userCredential;
-
-      if (kIsWeb) {
-        TwitterAuthProvider twitterProvider = TwitterAuthProvider();
-        await _auth.signInWithPopup(twitterProvider);
-      } else {
-        final AuthCredential credential =
-            TwitterAuthProvider.credential(accessToken: _tokenController.text, secret: _tokenSecretController.text);
-        userCredential = await _auth.signInWithCredential(credential);
-      }
-
-      final user = userCredential.user;
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Sign In ${user.uid} with Twitter"),
-      ));
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Failed to sign in with Twitter: $e"),
       ));
     }
   }
@@ -737,9 +685,9 @@ class _OtherProvidersSignInSectionState extends State<_OtherProvidersSignInSecti
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
-        final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        final GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(
+        final GoogleSignInAccount googleUser = (await GoogleSignIn().signIn())!;
+        final GoogleSignInAuthentication googleAuth = (await googleUser.authentication);
+        final OAuthCredential googleAuthCredential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
@@ -748,7 +696,7 @@ class _OtherProvidersSignInSectionState extends State<_OtherProvidersSignInSecti
 
       final user = userCredential.user;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Sign In ${user.uid} with Google"),
+        content: Text("Sign In ${user?.uid} with Google"),
       ));
     } catch (e) {
       print(e);
