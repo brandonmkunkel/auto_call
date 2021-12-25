@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:auto_call/classes/person.dart';
 import 'package:auto_call/classes/phone_list.dart';
 
 ///

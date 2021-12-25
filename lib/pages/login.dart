@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/button_builder.dart';
 
-import 'package:auto_call/classes/settings_manager.dart';
-import 'package:auto_call/pages/home.dart';
-
 import 'package:auto_call/pages/register.dart';
 import 'package:auto_call/pages/sign_in.dart';
 import 'package:auto_call/ui/terms.dart';

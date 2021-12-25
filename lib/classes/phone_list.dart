@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:string_similarity/string_similarity.dart';
 import 'package:contacts_service/contacts_service.dart';
 

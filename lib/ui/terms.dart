@@ -118,9 +118,9 @@ class VersionText extends StatefulWidget {
 }
 
 class VersionTextState extends State<VersionText> {
-  late String appName;
-  late String version;
-  late String buildNumber;
+  String? appName = "none";
+  String version = "0";
+  String buildNumber = "0";
 
   @override
   void initState() {
@@ -144,7 +144,7 @@ class VersionTextState extends State<VersionText> {
   }
 
   Widget build(BuildContext context) {
-    return Text('$appName version: $version+$buildNumber');
+    return Text('${appName ?? ""} version: $version+$buildNumber');
   }
 }
 
